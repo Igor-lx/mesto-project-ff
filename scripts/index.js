@@ -48,7 +48,7 @@ function deleteCard(item) {
 
 /*---------------------------------------*/
 
-
-cardPlace.append(cardItem);
+initialCards.forEach(function (index) {
+cardPlace.append(cardItem)});
 
 /*---------------------------------------*/
