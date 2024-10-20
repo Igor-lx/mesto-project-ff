@@ -8,47 +8,56 @@
 
 // @todo: Вывести карточки на страницу
 
-const cardPlace = document.querySelector('.places__list'); // место в DOM
+//const cardPlace = document.querySelector('.places__list'); // место в DOM
 
-const cardItem = document.querySelector('#card-template').content.cloneNode(true); // сама карточка
+// const cardItem = document.querySelector('#card-template').content.cloneNode(true); // сама карточка
 /* или по отдельности
 const cardItemTemplate= document.querySelector('#card-template');
 const cardItem = cardItemTemplate.content.cloneNode(true); */
 
 /*---------------------------------------*/
 
-const cardItemImage = cardItem.querySelector(".card__image");
-const cardItemTitle = cardItem.querySelector(".card__title");
+// const cardItemImage = cardItem.querySelector(".card__image");
+// const cardItemTitle = cardItem.querySelector(".card__title");
 
-cardItemImage.src = //initialCards.link;
-cardItemTitle.textContent = //initialCards.name;
-
-/*---------------------------------------*/
-
-const deleteButton = cardItem.querySelector(".card__delete-button");
+// cardItemImage.src = //initialCards.link;
+// cardItemTitle.textContent = //initialCards.name;
 
 /*---------------------------------------*/
 
-function add (xxx, deleteCard) {
+// const deleteButton = cardItem.querySelector(".card__delete-button");
 
-  deleteCardButton.addEventListener("click", function (evt) {
-    deleteCard(evt.target.parentElement);
-  });
+/*---------------------------------------*/
 
+function addCard(xxx, deleteCard) {
+  const cardPlace = document.querySelector(".places__list");
+  const cardItem = document
+    .querySelector("#card-template")
+    .content.cloneNode(true);
 
-  return cardItem;
+  const cardItemImage = cardItem.querySelector(".card__image");
+  const cardItemTitle = cardItem.querySelector(".card__title");
+
+  cardItemImage.src = //initialCards.link;
+    cardItemTitle.textContent = //initialCards.name;
+      deleteCardButton.addEventListener("click", function (evt) {
+        deleteCard(evt.target.parentElement);
+      });
+
+  return;
 }
-
 
 /*---------------------------------------*/
 
 function deleteCard(item) {
+  const deleteButton = cardItem.querySelector(".card__delete-button");
   item.remove();
 }
 
 /*---------------------------------------*/
 
 initialCards.forEach(function (index) {
-cardPlace.append(cardItem)});
+  cardPlace.append(cardItem);
+});
 
 /*---------------------------------------*/
