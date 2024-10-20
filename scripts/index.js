@@ -15,22 +15,31 @@ const cardItem = document.querySelector('#card-template').content.cloneNode(true
 const cardItemTemplate= document.querySelector('#card-template');
 const cardItem = cardItemTemplate.content.cloneNode(true); */
 
-/* -----------------   */
+/*---------------------------------------*/
+
 const cardItemImage = cardItem.querySelector(".card__image");
 const cardItemTitle = cardItem.querySelector(".card__title");
 
 cardItemImage.src = //initialCards.link;
 cardItemTitle.textContent = //initialCards.name;
 
-/* ----------------   */
+/*---------------------------------------*/
 
 const deleteButton = cardItem.querySelector(".card__delete-button");
 
-deleteButton.addEventListener("click", function (evt) {
-  evt.target.parentElement.remove();
-});
+/*---------------------------------------*/
 
-/* -------------------- */ 
+function add (xxx, delete) {
+
+  deleteButton.addEventListener("click", function (evt) {
+    evt.target.parentElement.remove();
+  });
+
+  return cardItem;
+}
+
+
 
 cardPlace.append(cardItem);
 
+/*---------------------------------------*/
