@@ -29,15 +29,24 @@ const deleteButton = cardItem.querySelector(".card__delete-button");
 
 /*---------------------------------------*/
 
-function add (xxx, delete) {
+function add (xxx, deleteCard) {
 
-  deleteButton.addEventListener("click", function (evt) {
-    evt.target.parentElement.remove();
+  deleteCardButton.addEventListener("click", function (evt) {
+    deleteCard(evt.target.parentElement);
   });
+
 
   return cardItem;
 }
 
+
+/*---------------------------------------*/
+
+function deleteCard(item) {
+  item.remove();
+}
+
+/*---------------------------------------*/
 
 
 cardPlace.append(cardItem);
