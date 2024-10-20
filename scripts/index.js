@@ -8,15 +8,29 @@
 
 // @todo: Вывести карточки на страницу
 
-/*  const initialCards - массив объектов карточек
-    initialCard.name - имя карточки
-    initialCards.ink - ссылка
-*/
+const cardPlace = document.querySelector('.places__list'); // место в DOM
 
-const cardPlaceNode = document.querySelector('.places__list'); 
-const cardItem = document.querySelector('#card-template').content.cloneNode(true);
+const cardItem = document.querySelector('#card-template').content.cloneNode(true); // сама карточка
+/* или по отдельности
+const cardItemTemplate= document.querySelector('#card-template');
+const cardItem = cardItemTemplate.content.cloneNode(true); */
 
-cardItem.querySelector('.card__image').src = 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg';
-cardItem.querySelector('.card__title').textContent = 'Дюк Корморант';
+/* -----------------   */
+const cardItemImage = cardItem.querySelector(".card__image");
+const cardItemTitle = cardItem.querySelector(".card__title");
 
-cardPlaceNode.append(cardItem);
+cardItemImage.src = //initialCards.link;
+cardItemTitle.textContent = //initialCards.name;
+
+/* ----------------   */
+
+const deleteButton = cardItem.querySelector(".card__delete-button");
+
+deleteButton.addEventListener("click", function (evt) {
+  evt.target.parentElement.remove();
+});
+
+/* -------------------- */ 
+
+cardPlace.append(cardItem);
+
