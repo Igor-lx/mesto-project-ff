@@ -30,7 +30,7 @@ const cardItem = cardItemTemplate.content.cloneNode(true); */
 /*---------------------------------------*/
 
 function addCard(cardData) {
-  // const cardPlace = document.querySelector(".places__list");
+
   const cardItem = document
     .querySelector("#card-template")
     .content.cloneNode(true);
@@ -41,9 +41,9 @@ function addCard(cardData) {
   cardItemImage.src = cardData.link;
   cardItemTitle.textContent = cardData.name;
 
- // deleteCardButton.addEventListener("click", function (evt) {
-   // evt.target.parentElement.remove();
-  //});
+  //deleteCardButton.addEventListener("click", function (evt) {
+   // evt.target.parentElement.remove();}
+ // );
 
   return cardItem;
 }
@@ -56,9 +56,10 @@ function addCard(cardData) {
 //}
 
 /*---------------------------------------*/
-const cardPlace = document.querySelector(".places__list");
+
 
 initialCards.forEach(function (xxx) {
+  const cardPlace = document.querySelector(".places__list");
   cardPlace.append(addCard(xxx));
 });
 
