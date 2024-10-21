@@ -12,7 +12,7 @@ const initialCards = [
     link: "./images/CG3.jpg",
   },
   {
-    name: "Мост через реку Тара ",
+    name: "Свети Стефан",
     link: "./images/CG4.jpg",
   },
   {
@@ -20,7 +20,7 @@ const initialCards = [
     link: "./images/CG5.jpg",
   },
   {
-    name: "Будванская балерина>",
+    name: "Будванская балерина",
     link: "./images/CG6.jpg",
   },
 ];

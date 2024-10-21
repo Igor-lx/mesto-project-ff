@@ -1,8 +1,9 @@
 .profile__info {
   display: grid;
-  grid-template-areas: "title button"
-  "description description";
-  grid-template-columns: minmax(auto, 295px) auto;
+  grid-template-areas:
+    "title button"
+    "description description";
+  grid-template-columns: minmax(auto, 325px) auto;
   grid-gap: 9px 17px;
 }
 
