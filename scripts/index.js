@@ -30,7 +30,6 @@ const cardItem = cardItemTemplate.content.cloneNode(true); */
 /*---------------------------------------*/
 
 function addCard(cardData) {
-
   const cardItem = document
     .querySelector("#card-template")
     .content.cloneNode(true);
@@ -41,26 +40,25 @@ function addCard(cardData) {
   cardItemImage.src = cardData.link;
   cardItemTitle.textContent = cardData.name;
 
-  //deleteCardButton.addEventListener("click", function (evt) {
-   // evt.target.parentElement.remove();}
- // );
+  deleteCardButton.addEventListener("click", function (evt) {
+    deleteCard(evt.target.parentElement);
+  });
 
   return cardItem;
 }
 
 /*---------------------------------------*/
 
-//function deleteCard(item) {
-//  const deleteButton = cardItem.querySelector(".card__delete-button");
-// item.remove();
-//}
+function deleteCard(card) {
+  card.remove();
+}
+
+const deleteButton = cardItem.querySelector(".card__delete-button");
 
 /*---------------------------------------*/
 
-
-initialCards.forEach(function (xxx) {
-  const cardPlace = document.querySelector(".places__list");
-  cardPlace.append(addCard(xxx));
+initialCards.forEach(function (index) {
+  cardPlace.append(addCard(index, deleteCard));
 });
 
 /*---------------------------------------*/
