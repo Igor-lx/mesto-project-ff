@@ -28,7 +28,7 @@ const cardItem = cardItemTemplate.content.cloneNode(true); */
 // const deleteButton = cardItem.querySelector(".card__delete-button");
 
 /*---------------------------------------*/
-const cardPlace = document.querySelector(".places__list");
+
 function addCard(cardData) {
   // const cardPlace = document.querySelector(".places__list");
   const cardItem = document
@@ -41,11 +41,11 @@ function addCard(cardData) {
   cardItemImage.src = cardData.link;
   cardItemTitle.textContent = cardData.name;
 
-  deleteCardButton.addEventListener("click", function (evt) {
-    evt.target.parentElement.remove();
-  });
+ // deleteCardButton.addEventListener("click", function (evt) {
+   // evt.target.parentElement.remove();
+  //});
 
-  return addCard;
+  return cardItem;
 }
 
 /*---------------------------------------*/
@@ -56,9 +56,10 @@ function addCard(cardData) {
 //}
 
 /*---------------------------------------*/
+const cardPlace = document.querySelector(".places__list");
 
-initialCards.forEach(function (item) {
-  cardPlace.append(addCard);
+initialCards.forEach(function (xxx) {
+  cardPlace.append(addCard(xxx));
 });
 
 /*---------------------------------------*/
