@@ -1,15 +1,15 @@
 const initialCards = [
     {
-      name: "CG1",
+      name: "мост через реку Тара, Черногория.",
       link: "./images/CG1.jpg",
     },
     {
-      name: "Челябинская область",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
+      name: "Будва, старый город",
+      link: "./images/CG2.jpg",
     },
     {
-      name: "Иваново",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
+      name: "Бечичи",
+      link: "./images/CG3.jpg",
     },
     {
       name: "Камчатка",
