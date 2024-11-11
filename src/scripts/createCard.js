@@ -1,7 +1,3 @@
-export {createCard, deleteCard, processImgDownldError}; 
-
-/* ------------------------------------------------------------------------------------------------------------------ */
-
 function createCard(paramArray, paramFunction, errorCallback) {
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
@@ -54,5 +50,6 @@ function processImgDownldError(Image, Title, Description, Button) {
 }
 /* ---------------------------------------------------------------------------------------------------------------- */
 
-
-
+/* ------------------------------------------------- ЭКСПОРТ ---- */
+export { createCard, deleteCard, processImgDownldError };
+/* -------------------------------------------------------------- */

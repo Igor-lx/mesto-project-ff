@@ -1,26 +1,35 @@
-export const initialCards = [
+/* -------------------------------------------------- ИМПОРТ ---- */
+import { importedImages } from "../index";
+
+/* -------------------------------------------------------------- */
+
+const initialCards = [
   {
     name: "Бечичи",
-    link: "./images/CG1.jpg",
+    link: importedImages["CG1.jpg"],
   },
   {
     name: "Будва, старый город",
-    link: "./images/CG2.jpg",
+    link: importedImages["CG2.jpg"],
   },
   {
     name: "Петровац",
-    link: "./images/CG3.jpg",
+    link: importedImages["CG3.jpg"],
   },
   {
     name: "Свети Стефан",
-    link: "./images/CG4.jpg",
+    link: importedImages["CG4.jpg"],
   },
   {
     name: "Котор",
-    link: "./images/CG5.jpg",
+    link: importedImages["CG5.jpg"],
   },
   {
     name: "Будванская балерина",
-    link: "./images/CG6.jpg",
+    link: importedImages["CG6.jpg"],
   },
 ];
+
+/* ------------------------------------------------- ЭКСПОРТ ---- */
+export { initialCards };
+/* -------------------------------------------------------------- */
