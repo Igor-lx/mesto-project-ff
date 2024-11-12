@@ -3,7 +3,7 @@ import { importedImages } from "../index";
 
 /* -------------------------------------------------------------- */
 
-const initialCards = [
+const initialCardsArray = [
   {
     name: "Бечичи",
     link: importedImages["CG1.jpg"],
@@ -31,5 +31,5 @@ const initialCards = [
 ];
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { initialCards };
+export { initialCardsArray };
 /* -------------------------------------------------------------- */

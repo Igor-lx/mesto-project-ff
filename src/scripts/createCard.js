@@ -1,3 +1,7 @@
+/* ---------------------------------------------------- ИМПОРТ---- */
+import { initialCardsArray } from "../index";
+/* --------------------------------------------------------------- */
+
 function createCard(paramArray, paramFunction, errorCallback) {
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
@@ -50,6 +54,13 @@ function processImgDownldError(Image, Title, Description, Button) {
 }
 /* ---------------------------------------------------------------------------------------------------------------- */
 
+function renderCard() {
+  const cardPlace = document.querySelector(".places__list");
+  initialCardsArray.forEach(function (i) {
+    cardPlace.append(createCard(i, deleteCard, processImgDownldError));
+  });
+}
+
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { createCard, deleteCard, processImgDownldError };
+export { renderCard };
 /* -------------------------------------------------------------- */

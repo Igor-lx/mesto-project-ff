@@ -28,17 +28,21 @@
           ></div>
           <div class="profile__info">
             <h1 class="profile__title">Игорь Бирюков</h1>
+
             <button
               class="profile__edit-button"
               type="button"
+              data-target="popup_type_edit"
               aria-label="редактировать профиль"
             ></button>
+
             <p class="profile__description">Исследователь Черногории</p>
           </div>
           <button
             class="profile__add-button"
             type="button"
-            aria-label="добавить профиль"
+            data-target="popup_type_new-card"
+            aria-label="добавить новое место"
           ></button>
         </section>
 
@@ -54,9 +58,15 @@
         <p class="footer__copyright">© 2024 Mesto CG</p>
         <!-- 2021, Russia -->
       </footer>
+
       <div class="popup popup_type_edit">
         <div class="popup__content">
-          <button type="button" class="popup__close"></button>
+          <button
+            type="button"
+            data-target="popup_type_edit"
+            class="popup__close"
+          ></button>
+
           <h3 class="popup__title">Редактировать профиль</h3>
           <form class="popup__form" name="edit-profile">
             <input
@@ -81,7 +91,11 @@
       </div>
       <div class="popup popup_type_new-card">
         <div class="popup__content">
-          <button type="button" class="popup__close"></button>
+          <button
+            type="button"
+            data-target="popup_type_new-card"
+            class="popup__close"
+          ></button>
           <h3 class="popup__title">Новое место</h3>
           <form class="popup__form" name="new-place">
             <input

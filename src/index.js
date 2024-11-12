@@ -2,22 +2,18 @@
 import "./index.css";
 
 import { importedImages } from "./scripts/importImages";
-import { initialCards as initialCardsArray } from "./scripts/cardData";
-import {
-  createCard,
-  deleteCard,
-  processImgDownldError,
-} from "./scripts/createCard";
+import { initialCardsArray } from "./scripts/cardData";
+import { renderCard } from "./scripts/createCard";
 
-/* ------------------------------------------------------ ГЛОБАЛЬНЫЕ КОНСТАНТЫ ---- */
-
-const cardPlace = document.querySelector(".places__list");
+import { openAndCloseModal } from "./scripts/modal";
 
 /* ------------------------------------------------------------ ИСПОЛНЯЕМЫЙ JS ---- */
 
-initialCardsArray.forEach(function (i) {
-  cardPlace.append(createCard(i, deleteCard, processImgDownldError));
+renderCard();
+
+document.addEventListener("click", function (evt) {
+  openAndCloseModal(evt);
 });
 
 /* ------------------------------------------------------------------- ЭКСПОРТ ---- */
-export { importedImages };
+export { importedImages, initialCardsArray };
