@@ -15,5 +15,6 @@ document.addEventListener("click", function (evt) {
   openAndCloseModal(evt);
 });
 
+
 /* ------------------------------------------------------------------- ЭКСПОРТ ---- */
 export { importedImages, initialCardsArray };
