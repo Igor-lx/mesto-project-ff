@@ -1,3 +1,4 @@
+const editProfileFormElement = document.querySelector('[name="edit-profile"]');
 let targetBlock;
 
 function openAndCloseModal(item) {
@@ -22,6 +23,9 @@ function openModal() {
 function closeModal() {
   targetBlock.classList.remove("popup_is-opened");
   removeEscListener();
+  setTimeout(() => {
+    editProfileFormElement.reset();
+  }, 600);
 }
 
 function closeModalByOverlay(i) {
@@ -45,5 +49,5 @@ function removeEscListener() {
 }
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { openAndCloseModal };
+export { openAndCloseModal, closeModal, editProfileFormElement };
 /* -------------------------------------------------------------- */
