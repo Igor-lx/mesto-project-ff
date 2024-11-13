@@ -1,10 +1,11 @@
-function createCard(name, link, deleteCallback, errorCallback) {
+function createCard(name, link, deleteCallback, errorCallback, likeCallback) {
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
 
   const cardItemImage = cardItem.querySelector(".card__image");
   const cardItemTitle = cardItem.querySelector(".card__title");
   const deleteCardButton = cardItem.querySelector(".card__delete-button");
+  const cardLikeButton = cardItem.querySelector(".card__like-button");
 
   cardItemTitle.textContent = name;
   cardItemImage.src = link;
@@ -15,9 +16,12 @@ function createCard(name, link, deleteCallback, errorCallback) {
     deleteCallback(cardItem);
   });
 
+  cardLikeButton.addEventListener("click", function (evt) {
+    likeCallback(evt.target);
+  });
+
   /* -------------------------------------------------------------------- + выравнивание при ошибке загрузки img---- */
   const cardItemDescription = cardItem.querySelector(".card__description");
-  const cardLikeButton = cardItem.querySelector(".card__like-button");
 
   cardItemImage.onerror = () => {
     errorCallback(
@@ -34,6 +38,10 @@ function createCard(name, link, deleteCallback, errorCallback) {
 
 function deleteCard(i) {
   i.remove();
+}
+
+function likeCard(i) {
+  i.classList.toggle("card__like-button_is-active");
 }
 
 /* ----------------------------------------------------------------------------------------------------------------- */
@@ -56,12 +64,18 @@ function renderCard(cards) {
   if (Array.isArray(cards)) {
     cards.forEach(function (i) {
       cardPlace.append(
-        createCard(i.name, i.link, deleteCard, processImgDownldError)
+        createCard(i.name, i.link, deleteCard, processImgDownldError, likeCard)
       );
     });
   } else {
     cardPlace.prepend(
-      createCard(cards.name, cards.link, deleteCard, processImgDownldError)
+      createCard(
+        cards.name,
+        cards.link,
+        deleteCard,
+        processImgDownldError,
+        likeCard
+      )
     );
   }
 }
