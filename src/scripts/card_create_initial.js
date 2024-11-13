@@ -1,8 +1,4 @@
-/* ---------------------------------------------------- ИМПОРТ---- */
-import { initialCardsArray } from "../index";
-/* --------------------------------------------------------------- */
-
-function createCard(paramArray, paramFunction, errorCallback) {
+function createCard(name, link, deleteCallback, errorCallback) {
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
 
@@ -10,13 +6,13 @@ function createCard(paramArray, paramFunction, errorCallback) {
   const cardItemTitle = cardItem.querySelector(".card__title");
   const deleteCardButton = cardItem.querySelector(".card__delete-button");
 
-  cardItemImage.src = paramArray.link;
-  // cardItemImage.setAttribute("src", paramArray.link);  // а можно вот так
-  cardItemImage.alt = 'фотография: "' + paramArray.name + '"';
-  cardItemTitle.textContent = paramArray.name;
+  cardItemTitle.textContent = name;
+  cardItemImage.src = link;
+  // cardItemImage.setAttribute("src", link);  // а можно вот так
+  cardItemImage.alt = 'фотография: "' + name + '"';
 
   deleteCardButton.addEventListener("click", function () {
-    paramFunction(cardItem);
+    deleteCallback(cardItem);
   });
 
   /* -------------------------------------------------------------------- + выравнивание при ошибке загрузки img---- */
@@ -54,13 +50,21 @@ function processImgDownldError(Image, Title, Description, Button) {
 }
 /* ---------------------------------------------------------------------------------------------------------------- */
 
-function renderCard() {
+function renderCard(cards) {
   const cardPlace = document.querySelector(".places__list");
-  initialCardsArray.forEach(function (i) {
-    cardPlace.append(createCard(i, deleteCard, processImgDownldError));
-  });
-}
 
+  if (Array.isArray(cards)) {
+    cards.forEach(function (i) {
+      cardPlace.append(
+        createCard(i.name, i.link, deleteCard, processImgDownldError)
+      );
+    });
+  } else {
+    cardPlace.prepend(
+      createCard(cards.name, cards.link, deleteCard, processImgDownldError)
+    );
+  }
+}
 /* ------------------------------------------------- ЭКСПОРТ ---- */
 export { renderCard };
 /* -------------------------------------------------------------- */

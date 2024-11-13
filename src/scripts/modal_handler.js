@@ -1,4 +1,6 @@
 const editProfileFormElement = document.querySelector('[name="edit-profile"]');
+const submitCardFormElement = document.querySelector('[name="new-place"]');
+
 let targetBlock;
 
 function openAndCloseModal(item) {
@@ -26,6 +28,10 @@ function closeModal() {
   setTimeout(() => {
     editProfileFormElement.reset();
   }, 600);
+
+  setTimeout(() => {
+    submitCardFormElement.reset();
+  }, 600);
 }
 
 function closeModalByOverlay(i) {
@@ -49,5 +55,5 @@ function removeEscListener() {
 }
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { openAndCloseModal, closeModal, editProfileFormElement };
+export { openAndCloseModal, closeModal, editProfileFormElement, submitCardFormElement };
 /* -------------------------------------------------------------- */
