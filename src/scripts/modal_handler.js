@@ -24,7 +24,6 @@ function closeModal() {
   removeEscListener();
 }
 
-
 function closeModalByOverlay(i) {
   if (i.target === targetBlock) {
     closeModal();
@@ -44,7 +43,6 @@ function addEscListener() {
 function removeEscListener() {
   document.removeEventListener("keydown", closeModalByEsc);
 }
-
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
 export { openAndCloseModal };

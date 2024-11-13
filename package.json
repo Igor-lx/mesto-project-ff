@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "babel.config.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack serve"
+    "build": "webpack --mode production --watch",
+    "dev": "webpack serve --watch"
   },
   "keywords": [],
   "author": "",

@@ -16,6 +16,7 @@ module.exports = {
   devServer: {
     static: path.resolve(__dirname, "./dist"),
     open: true,
+    watchFiles: ["src/index.html"],
     compress: true,
     port: 8080,
   },

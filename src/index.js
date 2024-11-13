@@ -1,11 +1,11 @@
 /* -------------------------------------------------------------------- ИМПОРТ ---- */
 import "./index.css";
 
-import { importedImages } from "./scripts/importImages";
-import { initialCardsArray } from "./scripts/cardData";
-import { renderCard } from "./scripts/createCard";
+import { importedImages } from "./scripts/images_import";
+import { initialCardsArray } from "./scripts/card_data";
+import { renderCard } from "./scripts/card_create";
 
-import { openAndCloseModal } from "./scripts/modal";
+import { openAndCloseModal } from "./scripts/modal_handler";
 
 /* ------------------------------------------------------------ ИСПОЛНЯЕМЫЙ JS ---- */
 
