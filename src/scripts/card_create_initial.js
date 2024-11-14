@@ -1,6 +1,5 @@
 function createCard(
-  name,
-  link,
+  cardsArray,
   deleteCallback,
   errorCallback,
   likeCallback,
@@ -12,10 +11,10 @@ function createCard(
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
 
-  cardItemTitle.textContent = name;
-  cardItemImage.src = link;
+  cardItemTitle.textContent = cardsArray.name;
+  cardItemImage.src = cardsArray.link;
   // cardItemImage.setAttribute("src", link);  // а можно вот так
-  cardItemImage.alt = 'фотография: "' + name + '"';
+  cardItemImage.alt = 'фотография: "' + cardsArray.name + '"';
 
   const deleteCardButton = cardItem.querySelector(".card__delete-button");
   deleteCardButton.addEventListener("click", function () {
@@ -34,7 +33,7 @@ function createCard(
   /* ---------------------------------------------------------------------- + обработчик ошибки загрузки img ---- */
   const cardItemDescription = cardItem.querySelector(".card__description");
 
-  cardItemImage.onerror = () => {
+  cardItemImage.onerror = function () {
     errorCallback(
       cardItemImage,
       cardItemTitle,
@@ -55,10 +54,10 @@ function likeCard(i) {
   i.classList.toggle("card__like-button_is-active");
 }
 
-function openFullscreenImage(i) {
-  const popupImage = document.querySelector(".popup__image");
-  const popupImageCaption = document.querySelector(".popup__caption");
+const popupImage = document.querySelector(".popup__image");
+const popupImageCaption = document.querySelector(".popup__caption");
 
+function openFullscreenImage(i) {
   popupImage.src = i.src;
   popupImage.alt = i.alt;
   popupImageCaption.textContent =
@@ -78,36 +77,22 @@ function processImgDownldError(Image, Title, Description, Button) {
   Button.style.display = "none";
 }
 /* ----------------------------------------------------------------------------------------------------------- */
+const cardPlace = document.querySelector(".places__list");
 
-function renderCard(cards) {
-  const cardPlace = document.querySelector(".places__list");
-
-  if (Array.isArray(cards)) {
-    cards.forEach(function (i) {
-      cardPlace.append(
-        createCard(
-          i.name,
-          i.link,
-          deleteCard,
-          processImgDownldError,
-          likeCard,
-          openFullscreenImage
-        )
-      );
-    });
-  } else {
+function renderCard(cardsData) {
+  cardsData.reverse().forEach(function (i) {
     cardPlace.prepend(
       createCard(
-        cards.name,
-        cards.link,
+        i,
         deleteCard,
         processImgDownldError,
         likeCard,
         openFullscreenImage
       )
     );
-  }
+  });
 }
+
 /* ------------------------------------------------- ЭКСПОРТ ---- */
 export { renderCard };
 /* -------------------------------------------------------------- */

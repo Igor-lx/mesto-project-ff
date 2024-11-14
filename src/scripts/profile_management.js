@@ -11,7 +11,7 @@ const jobInputField = document.querySelector('[name="description"]');
 nameInputField.placeholder = `${profileTitle.textContent}   / Имя`;
 jobInputField.placeholder = `${profileDescription.textContent}   / Род занятий`;
 
-function handleFormSubmit(evt) {
+function editProfile(evt) {
   evt.preventDefault();
 
   profileTitle.textContent = nameInputField.value;
@@ -20,9 +20,8 @@ function handleFormSubmit(evt) {
   nameInputField.placeholder = `${profileTitle.textContent}   / Имя`;
   jobInputField.placeholder = `${profileDescription.textContent}   / Род занятий`;
 
-  closeModal();
 }
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { handleFormSubmit };
+export {editProfile };
 /* -------------------------------------------------------------- */

@@ -1,22 +1,25 @@
-/* ---------------------------------------------------- ИМПОРТ---- */
-import { closeModal, renderCard } from "../index";
+
 
 /* --------------------------------------------------------------- */
 
-const newPlaceNameInputField = document.querySelector('[name="place-name"]');
-const linkToCustomImageInputField = document.querySelector('[name="link"]');
+const newplaceNameInputField = document.querySelector('[name="place-name"]');
+const newplaceImageInputField = document.querySelector('[name="link"]');
 
-function handleCardSubmit(evt) {
+function createCustomCard(evt) {
   evt.preventDefault();
 
-  renderCard({
-    name: newPlaceNameInputField.value,
-    link: linkToCustomImageInputField.value,
-  });
+  return [
+    {
+      name: newplaceNameInputField.value,
+      link: newplaceImageInputField.value,
+    },
+  ];
 
-  closeModal();
+
+
+ 
 }
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { handleCardSubmit };
+export { createCustomCard };
 /* -------------------------------------------------------------- */

@@ -12,8 +12,8 @@ import {
   submitCardFormElement,
 } from "./scripts/modal_handler";
 
-import { handleFormSubmit } from "./scripts/profile_management";
-import { handleCardSubmit } from "./scripts/card_create_custom";
+import { editProfile } from "./scripts/profile_management";
+import { createCustomCard } from "./scripts/card_create_custom";
 
 /* ------------------------------------------------------------ ИСПОЛНЯЕМЫЙ JS ---- */
 
@@ -23,20 +23,21 @@ document.addEventListener("click", function (evt) {
   openAndCloseModal(evt);
 });
 
-editProfileFormElement.addEventListener("submit", handleFormSubmit);
-submitCardFormElement.addEventListener("submit", handleCardSubmit);
+editProfileFormElement.addEventListener("submit", editProfile);
+
+submitCardFormElement.addEventListener("submit", function (evt) {
+  const newCardData = createCustomCard(evt);
+  renderCard(newCardData);
+  closeModal();
+});
 
 /* ------------------------------------------------------------------- ЭКСПОРТ ---- */
 export { importedImages, initialCardsArray, closeModal, renderCard };
-//
-//
-//
-//
-//
 
-/* ----------------------------------------------------------------------------------------- */
-/* -------------------------------    TEST MODULE CODE    ---------------------------------- */
-/* ----------------------------------------------------------------------------------------- */
-
-//  TEST CUSTOM IMAGE LINK
+//
+//
+//
+//
+//
+//
 // https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg

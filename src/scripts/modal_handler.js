@@ -55,5 +55,10 @@ function removeEscListener() {
 }
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export { openAndCloseModal, closeModal, editProfileFormElement, submitCardFormElement };
+export {
+  openAndCloseModal,
+  closeModal,
+  editProfileFormElement,
+  submitCardFormElement,
+};
 /* -------------------------------------------------------------- */
