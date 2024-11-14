@@ -20,8 +20,9 @@ function editProfile(evt) {
   nameInputField.placeholder = `${profileTitle.textContent}   / Имя`;
   jobInputField.placeholder = `${profileDescription.textContent}   / Род занятий`;
 
+  closeModal();
 }
 
 /* ------------------------------------------------- ЭКСПОРТ ---- */
-export {editProfile };
+export { editProfile };
 /* -------------------------------------------------------------- */

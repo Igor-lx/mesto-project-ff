@@ -1,64 +1,32 @@
-const editProfileFormElement = document.querySelector('[name="edit-profile"]');
-const submitCardFormElement = document.querySelector('[name="new-place"]');
+function openModal(element) {
+  element.classList.add("popup_is-opened");
+  document.addEventListener("keydown", (evt) => closeModalByKey(evt, element));
+  document.addEventListener("click", (evt) => closeModalByClick(evt, element));
+}
 
-let targetBlock;
+function closeModal(element) {
+  element.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", (evt) =>
+    closeModalByKey(evt, element)
+  );
+  document.removeEventListener("click", (evt) =>
+    closeModalByClick(evt, element)
+  );
+}
 
-function openAndCloseModal(item) {
-  const targetBlockClass = item.target.getAttribute("data-target");
-  if (targetBlockClass) {
-    targetBlock = document.querySelector(`.${targetBlockClass}`);
-    if (!targetBlock.classList.contains("popup_is-opened")) {
-      openModal();
-    } else {
-      closeModal();
-    }
-  } else {
-    closeModalByOverlay(item);
+function closeModalByClick(evt, element) {
+  if (
+    evt.target.classList.contains("popup_is-opened") ||
+    evt.target.classList.contains("popup__close")
+  ) {
+    closeModal(element);
   }
 }
 
-function openModal() {
-  targetBlock.classList.add("popup_is-opened");
-  addEscListener();
-}
-
-function closeModal() {
-  targetBlock.classList.remove("popup_is-opened");
-  removeEscListener();
-  setTimeout(() => {
-    editProfileFormElement.reset();
-  }, 600);
-
-  setTimeout(() => {
-    submitCardFormElement.reset();
-  }, 600);
-}
-
-function closeModalByOverlay(i) {
-  if (i.target === targetBlock) {
-    closeModal();
-  }
-}
-
-function closeModalByEsc(evt) {
+function closeModalByKey(evt, element) {
   if (evt.key === "Escape") {
-    closeModal();
+    closeModal(element);
   }
 }
 
-function addEscListener() {
-  document.addEventListener("keydown", closeModalByEsc);
-}
-
-function removeEscListener() {
-  document.removeEventListener("keydown", closeModalByEsc);
-}
-
-/* ------------------------------------------------- ЭКСПОРТ ---- */
-export {
-  openAndCloseModal,
-  closeModal,
-  editProfileFormElement,
-  submitCardFormElement,
-};
-/* -------------------------------------------------------------- */
+export { openModal, closeModal };
