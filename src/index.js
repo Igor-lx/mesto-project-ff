@@ -43,9 +43,9 @@ const newplaceModalWindow = document.querySelector(".popup_type_new-card");
 const newplaceInputfieldName = document.querySelector('[name="place-name"]');
 const newplaceInputfieldLink = document.querySelector('[name="link"]');
 
-const popupedImage = document.querySelector(".popup__image");
-const popupedImageCaption = document.querySelector(".popup__caption");
-const cardImageModalWindow = document.querySelector(".popup_type_image");
+const popupImage = document.querySelector(".popup__image");
+const popupImageCaption = document.querySelector(".popup__caption");
+const popupImageModalWindow = document.querySelector(".popup_type_image");
 
 /* ----------- обработка модальных окон ------------------ */
 profileEditButton.addEventListener("click", manageProfile);
@@ -65,10 +65,10 @@ function manageNewPlace() {
 
 /* ----------------------  */
 function openFullscreenImage(cardItemData) {
-  popupedImage.src = cardItemData.link;
-  popupedImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupedImageCaption.textContent = cardItemData.name;
-  openModal(cardImageModalWindow);
+  popupImage.src = cardItemData.link;
+  popupImage.alt = 'фотография: "' + cardItemData.name + '"';
+  popupImageCaption.textContent = cardItemData.name;
+  openModal(popupImageModalWindow);
 }
 /* -------------- обработка формы профиля ----------------- */
 
