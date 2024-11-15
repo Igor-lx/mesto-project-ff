@@ -53,15 +53,6 @@ function deleteCard(cardItem) {
 function likeCard(cardLikeButton) {
   cardLikeButton.classList.toggle("card__like-button_is-active");
 }
-/* -------------------------------------------------------- */
-const popupedImage = document.querySelector(".popup__image");
-const popupedImageCaption = document.querySelector(".popup__caption");
-
-function openFullscreenImage(cardItemData) {
-  popupedImage.src = cardItemData.link;
-  popupedImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupedImageCaption.textContent = cardItemData.name;
-}
 /* ---- ++ функция выравнивания при ошибке загрузки img ---- */
 function processImgDownldError(
   cardItemImage,
@@ -81,11 +72,5 @@ function processImgDownldError(
   cardItemImage.style.pointerEvents = "none";
 }
 /* ----------------------------- */
-export {
-  createCard,
-  deleteCard,
-  likeCard,
-  openFullscreenImage,
-  processImgDownldError,
-};
+export { createCard, deleteCard, likeCard, processImgDownldError };
 /* ---------------------------- */

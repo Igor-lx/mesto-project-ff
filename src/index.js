@@ -5,7 +5,6 @@ import {
   createCard,
   deleteCard,
   likeCard,
-  openFullscreenImage,
   processImgDownldError,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
@@ -15,20 +14,18 @@ import { openModal, closeModal } from "./scripts/modal";
 const cardPlace = document.querySelector(".places__list");
 
 function renderCards(cardsData) {
-  cardsData.reverse().forEach(function (cardItemData) {
-    cardPlace.prepend(
-      createCard(
-        cardItemData,
-        deleteCard,
-        processImgDownldError,
-        likeCard,
-        openFullscreenImage
-      )
-    );
-  });
+  cardPlace.prepend(
+    createCard(
+      cardsData,
+      deleteCard,
+      processImgDownldError,
+      likeCard,
+      openFullscreenImage
+    )
+  );
 }
 
-renderCards(initialCardsArray);
+initialCardsArray.reverse().forEach(renderCards);
 
 /* ------------------------------------------------------- */
 
@@ -46,7 +43,8 @@ const newplaceModalWindow = document.querySelector(".popup_type_new-card");
 const newplaceInputfieldName = document.querySelector('[name="place-name"]');
 const newplaceInputfieldLink = document.querySelector('[name="link"]');
 
-const cardImageContainer = document.querySelector(".places__list");
+const popupedImage = document.querySelector(".popup__image");
+const popupedImageCaption = document.querySelector(".popup__caption");
 const cardImageModalWindow = document.querySelector(".popup_type_image");
 
 /* ----------- обработка модальных окон ------------------ */
@@ -62,12 +60,12 @@ newplaceAddButton.addEventListener("click", () => {
   openModal(newplaceModalWindow);
 });
 /* ----------------------  */
-cardImageContainer.addEventListener("click", (evt) => {
-  const cardImage = evt.target.closest(".card__image");
-  if (cardImage) {
-    openModal(cardImageModalWindow);
-  }
-});
+function openFullscreenImage(cardItemData) {
+  popupedImage.src = cardItemData.link;
+  popupedImage.alt = 'фотография: "' + cardItemData.name + '"';
+  popupedImageCaption.textContent = cardItemData.name;
+  openModal(cardImageModalWindow);
+}
 /* -------------- обработка формы профиля ----------------- */
 
 profileFormElement.addEventListener("submit", editProfile);
@@ -78,19 +76,18 @@ function editProfile(evt) {
   profileJob.textContent = profileInputfieldJob.value;
   closeModal(profileModalWindow);
 }
-
 /* ----------- обработка формы новой карточки ------------- */
 
 newplaceFormElement.addEventListener("submit", addNewPlace);
 
 function addNewPlace(evt) {
   evt.preventDefault();
-  const newсardData = [
-    {
-      name: newplaceInputfieldName.value,
-      link: newplaceInputfieldLink.value,
-    },
-  ];
+
+  const newсardData = {
+    name: newplaceInputfieldName.value,
+    link: newplaceInputfieldLink.value,
+  };
+
   renderCards(newсardData);
   closeModal(newplaceModalWindow);
   newplaceFormElement.reset();
