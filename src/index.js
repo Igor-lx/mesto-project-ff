@@ -1,12 +1,12 @@
 import "./index.css";
 
 import { initialCardsArray } from "./scripts/cards";
-import { renderCard } from "./scripts/card";
+import { renderCards } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
 
-renderCard(initialCardsArray);
+renderCards(initialCardsArray);
 
 /* ------------------------------------------------------- */
 
@@ -69,7 +69,7 @@ function addNewPlace(evt) {
       link: newplaceInputfieldLink.value,
     },
   ];
-  renderCard(newсardData);
+  renderCards(newсardData);
   closeModal(newplaceModalWindow);
   newplaceFormElement.reset();
 }

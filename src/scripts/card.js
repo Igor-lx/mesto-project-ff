@@ -46,39 +46,44 @@ function createCard(
 /* ========================================================================================================= */
 /* --------------------------------------- Callback Functions ---------------------------------------------- */
 
-function deleteCard(i) {
-  i.remove();
+function deleteCard(cardItem) {
+  cardItem.remove();
 }
 /* -------------------------------------------------------- */
-function likeCard(i) {
-  i.classList.toggle("card__like-button_is-active");
+function likeCard(cardLikeButton) {
+  cardLikeButton.classList.toggle("card__like-button_is-active");
 }
 /* -------------------------------------------------------- */
 const popupedImage = document.querySelector(".popup__image");
 const popupedImageCaption = document.querySelector(".popup__caption");
 
-function openFullscreenImage(i) {
-  popupedImage.src = i.src;
-  popupedImage.alt = i.alt;
+function openFullscreenImage(cardItemImage) {
+  popupedImage.src = cardItemImage.src;
+  popupedImage.alt = cardItemImage.alt;
   popupedImageCaption.textContent =
-    i.parentElement.querySelector(".card__title").textContent;
+  cardItemImage.parentElement.querySelector(".card__title").textContent;
 }
 /* ---- ++ функция выравнивания при ошибке загрузки img ---- */
-function processImgDownldError(Image, Title, Description, Button) {
-  Image.classList.add(
+function processImgDownldError(
+  cardItemImage,
+  cardItemTitle,
+  cardItemDescription,
+  cardLikeButton
+) {
+  cardItemImage.classList.add(
     "card__image__load_failure__textstile",
     "card__image__load_failure"
   );
-  Title.classList.add("card__image__load_failure__textstile");
-  Title.textContent =
+  cardItemTitle.classList.add("card__image__load_failure__textstile");
+  cardItemTitle.textContent =
     "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
-  Description.classList.add("card__image__load_failure__description");
-  Button.style.display = "none";
+  cardItemDescription.classList.add("card__image__load_failure__description");
+  cardLikeButton.style.display = "none";
 }
 /* ========================================================================================================= */
 const cardPlace = document.querySelector(".places__list");
 
-function renderCard(cardsData) {
+function renderCards(cardsData) {
   cardsData.reverse().forEach(function (i) {
     cardPlace.prepend(
       createCard(
@@ -93,5 +98,5 @@ function renderCard(cardsData) {
 }
 
 /* ----------------------------- */
-export { renderCard };
+export { renderCards };
 /* ---------------------------- */

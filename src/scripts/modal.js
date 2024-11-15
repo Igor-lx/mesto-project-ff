@@ -1,31 +1,35 @@
-function openModal(element) {
-  element.classList.add("popup_is-opened");
-  document.addEventListener("keydown", (evt) => closeModalByKey(evt, element));
-  document.addEventListener("click", (evt) => closeModalByClick(evt, element));
+function openModal(modalWindowElement) {
+  modalWindowElement.classList.add("popup_is-opened");
+  document.addEventListener("keydown", (evt) =>
+    closeModalByKey(evt, modalWindowElement)
+  );
+  document.addEventListener("click", (evt) =>
+    closeModalByClick(evt, modalWindowElement)
+  );
 }
 
-function closeModal(element) {
-  element.classList.remove("popup_is-opened");
+function closeModal(modalWindowElement) {
+  modalWindowElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", (evt) =>
-    closeModalByKey(evt, element)
+    closeModalByKey(evt, modalWindowElement)
   );
   document.removeEventListener("click", (evt) =>
-    closeModalByClick(evt, element)
+    closeModalByClick(evt, modalWindowElement)
   );
 }
 
-function closeModalByClick(evt, element) {
+function closeModalByClick(evt, modalWindowElement) {
   if (
     evt.target.classList.contains("popup_is-opened") ||
     evt.target.classList.contains("popup__close")
   ) {
-    closeModal(element);
+    closeModal(modalWindowElement);
   }
 }
 
-function closeModalByKey(evt, element) {
+function closeModalByKey(evt, modalWindowElement) {
   if (evt.key === "Escape") {
-    closeModal(element);
+    closeModal(modalWindowElement);
   }
 }
 
