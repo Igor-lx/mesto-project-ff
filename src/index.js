@@ -4,11 +4,11 @@ import { initialCardsArray } from "./scripts/cards";
 import { renderCard } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
-/* -------------------------------------------------------------------------------- */
+/* ------------------------------------------------------- */
 
 renderCard(initialCardsArray);
 
-/* открытие модалок */
+/* ----------- обработка модальных окон ------------------ */
 
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileModalWindow = document.querySelector(".popup_type_edit");
@@ -18,13 +18,13 @@ const newcardModalWindow = document.querySelector(".popup_type_new-card");
 
 const cardImageContainer = document.querySelector(".places__list");
 const cardImageModalWindow = document.querySelector(".popup_type_image");
-
+/* ----------------------------- */
 profileEditButton.addEventListener("click", () => {
-  nameInputField.value = profileName.textContent;
-  jobInputField.value = profileJob.textContent;
+  InputFieldName.value = profileName.textContent;
+  InputFieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
 });
-
+/* ----------------------------- */
 newcardAddButton.addEventListener("click", () => openModal(newcardModalWindow));
 
 cardImageContainer.addEventListener("click", (evt) => {
@@ -33,17 +33,16 @@ cardImageContainer.addEventListener("click", (evt) => {
     openModal(cardImageModalWindow);
   }
 });
-
-/* редактирование профиля */
+/* ----------- обработка формы профиля ------------------ */
 
 const ProfileFormElement = document.querySelector('[name="edit-profile"]');
 
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__description");
 
-const nameInputField = document.querySelector('[name="person_name"]');
-const jobInputField = document.querySelector('[name="description"]');
-
+const InputFieldName = document.querySelector('[name="person_name"]');
+const InputFieldJob = document.querySelector('[name="description"]');
+/* ----------------------------- */
 ProfileFormElement.addEventListener("submit", (evt) => {
   editProfile(evt);
   closeModal(profileModalWindow);
@@ -51,16 +50,15 @@ ProfileFormElement.addEventListener("submit", (evt) => {
 
 function editProfile(evt) {
   evt.preventDefault();
-  profileName.textContent = nameInputField.value;
-  profileJob.textContent = jobInputField.value;
+  profileName.textContent = InputFieldName.value;
+  profileJob.textContent = InputFieldJob.value;
 }
-
-/* добавление карточек */
+/* ----------- обработка формы новой карточки ------------------ */
 
 const cardFormElement = document.querySelector('[name="new-place"]');
 const newplaceNameInputField = document.querySelector('[name="place-name"]');
 const newplaceImageInputField = document.querySelector('[name="link"]');
-
+/* ----------------------------- */
 cardFormElement.addEventListener("submit", function (evt) {
   evt.preventDefault();
   const newCardData = [
@@ -74,7 +72,5 @@ cardFormElement.addEventListener("submit", function (evt) {
   cardFormElement.reset();
 });
 
-//
-//
-//
-// https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
+//  test image
+//  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg

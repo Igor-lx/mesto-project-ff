@@ -29,4 +29,6 @@ function closeModalByKey(evt, element) {
   }
 }
 
+/* ----------------------------- */
 export { openModal, closeModal };
+/* ----------------------------- */

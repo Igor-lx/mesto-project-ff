@@ -7,30 +7,28 @@ function createCard(
 ) {
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
-
+  /* -------------------------------------------------------- */
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
 
   cardItemTitle.textContent = cardsArray.name;
   cardItemImage.src = cardsArray.link;
-  // cardItemImage.setAttribute("src", link);  // а можно вот так
   cardItemImage.alt = 'фотография: "' + cardsArray.name + '"';
-
+  /* -------------------------------------------------------- */
   const deleteCardButton = cardItem.querySelector(".card__delete-button");
   deleteCardButton.addEventListener("click", function () {
     deleteCallback(cardItem);
   });
-
+  /* -------------------------------------------------------- */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
   cardLikeButton.addEventListener("click", function (evt) {
     likeCallback(evt.target);
   });
-
+  /* -------------------------------------------------------- */
   cardItemImage.addEventListener("click", function (evt) {
     fullscreenCallback(evt.target);
   });
-
-  /* ---------------------------------------------------------------------- + обработчик ошибки загрузки img ---- */
+  /*---------- ++ обработчик ошибки загрузки img ---------- */
   const cardItemDescription = cardItem.querySelector(".card__description");
 
   cardItemImage.onerror = function () {
@@ -41,19 +39,21 @@ function createCard(
       cardLikeButton
     );
   };
-  /* ----------------------------------------------------------------------------------------------------------- */
+  /* -------------------------------------------------------- */
 
   return cardItem;
 }
+/* ========================================================================================================= */
+/* --------------------------------------- Callback Functions ---------------------------------------------- */
 
 function deleteCard(i) {
   i.remove();
 }
-
+/* -------------------------------------------------------- */
 function likeCard(i) {
   i.classList.toggle("card__like-button_is-active");
 }
-
+/* -------------------------------------------------------- */
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 
@@ -63,8 +63,7 @@ function openFullscreenImage(i) {
   popupImageCaption.textContent =
     i.parentElement.querySelector(".card__title").textContent;
 }
-
-/* ------------------------------------------------------- + функция выравнивания при ошибке загрузки img ---- */
+/* ---- ++ функция выравнивания при ошибке загрузки img ---- */
 function processImgDownldError(Image, Title, Description, Button) {
   Image.classList.add(
     "card__image__load_failure__textstile",
@@ -76,7 +75,7 @@ function processImgDownldError(Image, Title, Description, Button) {
   Description.classList.add("card__image__load_failure__description");
   Button.style.display = "none";
 }
-/* ----------------------------------------------------------------------------------------------------------- */
+/* ========================================================================================================= */
 const cardPlace = document.querySelector(".places__list");
 
 function renderCard(cardsData) {
@@ -93,6 +92,6 @@ function renderCard(cardsData) {
   });
 }
 
-/* -------------------------------------------------------------- */
+/* ----------------------------- */
 export { renderCard };
-/* -------------------------------------------------------------- */
+/* ---------------------------- */
