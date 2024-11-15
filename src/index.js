@@ -1,10 +1,32 @@
 import "./index.css";
 
 import { initialCardsArray } from "./scripts/cards";
-import { renderCards } from "./scripts/card";
+import {
+  createCard,
+  deleteCard,
+  likeCard,
+  openFullscreenImage,
+  processImgDownldError,
+} from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
+
+const cardPlace = document.querySelector(".places__list");
+
+function renderCards(cardsData) {
+  cardsData.reverse().forEach(function (cardItemData) {
+    cardPlace.prepend(
+      createCard(
+        cardItemData,
+        deleteCard,
+        processImgDownldError,
+        likeCard,
+        openFullscreenImage
+      )
+    );
+  });
+}
 
 renderCards(initialCardsArray);
 

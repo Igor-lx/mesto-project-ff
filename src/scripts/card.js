@@ -16,22 +16,22 @@ function createCard(
   cardItemImage.alt = 'фотография: "' + cardsArray.name + '"';
   /* -------------------------------------------------------- */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
-  cardDeleteButton.addEventListener("click", function () {
+  cardDeleteButton.addEventListener("click", () => {
     deleteCallback(cardItem);
   });
   /* -------------------------------------------------------- */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
-  cardLikeButton.addEventListener("click", function (evt) {
+  cardLikeButton.addEventListener("click", (evt) => {
     likeCallback(evt.target);
   });
   /* -------------------------------------------------------- */
-  cardItemImage.addEventListener("click", function (evt) {
-    fullscreenCallback(evt.target);
+  cardItemImage.addEventListener("click", () => {
+    fullscreenCallback(cardsArray);
   });
   /*---------- ++ обработчик ошибки загрузки img ---------- */
   const cardItemDescription = cardItem.querySelector(".card__description");
 
-  cardItemImage.onerror = function () {
+  cardItemImage.onerror = () => {
     errorCallback(
       cardItemImage,
       cardItemTitle,
@@ -57,11 +57,10 @@ function likeCard(cardLikeButton) {
 const popupedImage = document.querySelector(".popup__image");
 const popupedImageCaption = document.querySelector(".popup__caption");
 
-function openFullscreenImage(cardItemImage) {
-  popupedImage.src = cardItemImage.src;
-  popupedImage.alt = cardItemImage.alt;
-  popupedImageCaption.textContent =
-  cardItemImage.parentElement.querySelector(".card__title").textContent;
+function openFullscreenImage(cardItemData) {
+  popupedImage.src = cardItemData.link;
+  popupedImage.alt = 'фотография: "' + cardItemData.name + '"';
+  popupedImageCaption.textContent = cardItemData.name;
 }
 /* ---- ++ функция выравнивания при ошибке загрузки img ---- */
 function processImgDownldError(
@@ -79,24 +78,14 @@ function processImgDownldError(
     "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
   cardItemDescription.classList.add("card__image__load_failure__description");
   cardLikeButton.style.display = "none";
+  cardItemImage.style.pointerEvents = "none";
 }
-/* ========================================================================================================= */
-const cardPlace = document.querySelector(".places__list");
-
-function renderCards(cardsData) {
-  cardsData.reverse().forEach(function (i) {
-    cardPlace.prepend(
-      createCard(
-        i,
-        deleteCard,
-        processImgDownldError,
-        likeCard,
-        openFullscreenImage
-      )
-    );
-  });
-}
-
 /* ----------------------------- */
-export { renderCards };
+export {
+  createCard,
+  deleteCard,
+  likeCard,
+  openFullscreenImage,
+  processImgDownldError,
+};
 /* ---------------------------- */
