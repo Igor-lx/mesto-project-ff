@@ -49,15 +49,11 @@ cardImageContainer.addEventListener("click", (evt) => {
 /* -------------- обработка формы профиля ----------------- */
 
 profileFormElement.addEventListener("submit", (evt) => {
-  editProfile(evt);
-  closeModal(profileModalWindow);
-});
-
-function editProfile(evt) {
   evt.preventDefault();
   profileName.textContent = profileInputfieldName.value;
   profileJob.textContent = profileInputfieldJob.value;
-}
+  closeModal(profileModalWindow);
+});
 /* ----------- обработка формы новой карточки ------------ */
 
 newplaceFormElement.addEventListener("submit", function (evt) {
