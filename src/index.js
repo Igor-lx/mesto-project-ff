@@ -21,8 +21,6 @@ const profileInputfieldJob = document.querySelector('[name="description"]');
 const newplaceFormElement = document.querySelector('[name="new-place"]');
 const newplaceAddButton = document.querySelector(".profile__add-button");
 const newplaceModalWindow = document.querySelector(".popup_type_new-card");
-//const newplaceName
-//const newplaceLink
 const newplaceInputfieldName = document.querySelector('[name="place-name"]');
 const newplaceInputfieldLink = document.querySelector('[name="link"]');
 
