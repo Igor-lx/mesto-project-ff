@@ -48,17 +48,21 @@ const popupedImageCaption = document.querySelector(".popup__caption");
 const cardImageModalWindow = document.querySelector(".popup_type_image");
 
 /* ----------- обработка модальных окон ------------------ */
+profileEditButton.addEventListener("click", manageProfile);
 
-profileEditButton.addEventListener("click", () => {
+function manageProfile() {
   profileInputfieldName.value = profileName.textContent;
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
-});
+}
 /* ----------------------  */
-newplaceAddButton.addEventListener("click", () => {
+newplaceAddButton.addEventListener("click", manageNewPlace);
+
+function manageNewPlace() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
-});
+}
+
 /* ----------------------  */
 function openFullscreenImage(cardItemData) {
   popupedImage.src = cardItemData.link;
