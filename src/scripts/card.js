@@ -43,7 +43,7 @@ function createCard(
 
   return cardItem;
 }
-/* ========================================================================================================= */
+
 /* --------------------------------------- Callback Functions ---------------------------------------------- */
 
 function deleteCard(cardItem) {
@@ -71,6 +71,7 @@ function processImgDownldError(
   cardLikeButton.style.display = "none";
   cardItemImage.style.pointerEvents = "none";
 }
+
 /* ----------------------------- */
 export { createCard, deleteCard, likeCard, processImgDownldError };
 /* ---------------------------- */

@@ -28,10 +28,28 @@ module.exports = {
         exclude: "/node_modules/",
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
+        test: /\.(png|jpg|jpeg|gif)$/i,
         type: "asset/resource",
         generator: {
-          filename: "images/[name].[hash][ext]",
+          filename: "images/pictures/[name].[hash][ext]",
+        },
+      },
+      {
+        test: /\.svg$/i,
+        type: "asset/resource",
+        generator: {
+          filename: (pathData) => {
+            return pathData.filename.includes("favicon")
+              ? "images/favicon/[name].[hash][ext]"
+              : "images/svg/[name].[hash][ext]";
+          },
+        },
+      },
+      {
+        test: /\.ico$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "images/favicon/[name].[hash][ext]",
         },
       },
       {
