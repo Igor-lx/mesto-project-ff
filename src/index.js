@@ -37,9 +37,10 @@ profileEditButton.addEventListener("click", () => {
   openModal(profileModalWindow);
 });
 /* ----------------------  */
-newplaceAddButton.addEventListener("click", () =>
-  openModal(newplaceModalWindow)
-);
+newplaceAddButton.addEventListener("click", () => {
+  newplaceFormElement.reset();
+  openModal(newplaceModalWindow);
+});
 /* ----------------------  */
 cardImageContainer.addEventListener("click", (evt) => {
   const cardImage = evt.target.closest(".card__image");
