@@ -1,14 +1,10 @@
-/* -------------------------------------------------------------------- ИМПОРТ ---- */
 import "./index.css";
 
-import { importedImages } from "./scripts/images_import";
-import { initialCardsArray } from "./scripts/card_data";
-import { renderCard } from "./scripts/card_create_initial";
-import { openModal, closeModal } from "./scripts/modal_handler";
+import { initialCardsArray } from "./scripts/cards";
+import { renderCard } from "./scripts/card";
+import { openModal, closeModal } from "./scripts/modal";
 
-//import { createCustomCard } from "./scripts/card_create_custom";
-
-/* ------------------------------------------------------------ ИСПОЛНЯЕМЫЙ JS ---- */
+/* -------------------------------------------------------------------------------- */
 
 renderCard(initialCardsArray);
 
@@ -20,7 +16,7 @@ const profileModalWindow = document.querySelector(".popup_type_edit");
 const newcardAddButton = document.querySelector(".profile__add-button");
 const newcardModalWindow = document.querySelector(".popup_type_new-card");
 
-const cardImage = document.querySelectorAll(".card__image");
+const cardImageContainer = document.querySelector(".places__list");
 const cardImageModalWindow = document.querySelector(".popup_type_image");
 
 profileEditButton.addEventListener("click", () => {
@@ -31,8 +27,11 @@ profileEditButton.addEventListener("click", () => {
 
 newcardAddButton.addEventListener("click", () => openModal(newcardModalWindow));
 
-cardImage.forEach((item) => {
-  item.addEventListener("click", () => openModal(cardImageModalWindow));
+cardImageContainer.addEventListener("click", (evt) => {
+  const cardImage = evt.target.closest(".card__image");
+  if (cardImage) {
+    openModal(cardImageModalWindow);
+  }
 });
 
 /* редактирование профиля */
@@ -56,21 +55,25 @@ function editProfile(evt) {
   profileJob.textContent = jobInputField.value;
 }
 
-/*
-const submitCardFormElement = document.querySelector('[name="new-place"]');
-submitCardFormElement.addEventListener("submit", function (evt) {
-  const newCardData = createCustomCard(evt);
+/* добавление карточек */
+
+const cardFormElement = document.querySelector('[name="new-place"]');
+const newplaceNameInputField = document.querySelector('[name="place-name"]');
+const newplaceImageInputField = document.querySelector('[name="link"]');
+
+cardFormElement.addEventListener("submit", function (evt) {
+  evt.preventDefault();
+  const newCardData = [
+    {
+      name: newplaceNameInputField.value,
+      link: newplaceImageInputField.value,
+    },
+  ];
   renderCard(newCardData);
-  closeModal();
+  closeModal(newcardModalWindow);
+  cardFormElement.reset();
 });
-*/
 
-/* ------------------------------------------------------------------- ЭКСПОРТ ---- */
-export { importedImages, initialCardsArray, renderCard };
-
-//
-//
-//
 //
 //
 //
