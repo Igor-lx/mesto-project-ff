@@ -48,15 +48,20 @@ cardImageContainer.addEventListener("click", (evt) => {
 });
 /* -------------- обработка формы профиля ----------------- */
 
-profileFormElement.addEventListener("submit", (evt) => {
+profileFormElement.addEventListener("submit", editProfile);
+
+function editProfile(evt) {
   evt.preventDefault();
   profileName.textContent = profileInputfieldName.value;
   profileJob.textContent = profileInputfieldJob.value;
   closeModal(profileModalWindow);
-});
+}
+
 /* ----------- обработка формы новой карточки ------------- */
 
-newplaceFormElement.addEventListener("submit", function (evt) {
+newplaceFormElement.addEventListener("submit", addNewPlace);
+
+function addNewPlace(evt) {
   evt.preventDefault();
   const newсardData = [
     {
@@ -67,7 +72,7 @@ newplaceFormElement.addEventListener("submit", function (evt) {
   renderCard(newсardData);
   closeModal(newplaceModalWindow);
   newplaceFormElement.reset();
-});
+}
 
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
