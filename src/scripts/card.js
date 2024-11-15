@@ -15,8 +15,8 @@ function createCard(
   cardItemImage.src = cardsArray.link;
   cardItemImage.alt = 'фотография: "' + cardsArray.name + '"';
   /* -------------------------------------------------------- */
-  const deleteCardButton = cardItem.querySelector(".card__delete-button");
-  deleteCardButton.addEventListener("click", function () {
+  const cardDeleteButton = cardItem.querySelector(".card__delete-button");
+  cardDeleteButton.addEventListener("click", function () {
     deleteCallback(cardItem);
   });
   /* -------------------------------------------------------- */
@@ -54,13 +54,13 @@ function likeCard(i) {
   i.classList.toggle("card__like-button_is-active");
 }
 /* -------------------------------------------------------- */
-const popupImage = document.querySelector(".popup__image");
-const popupImageCaption = document.querySelector(".popup__caption");
+const popupedImage = document.querySelector(".popup__image");
+const popupedImageCaption = document.querySelector(".popup__caption");
 
 function openFullscreenImage(i) {
-  popupImage.src = i.src;
-  popupImage.alt = i.alt;
-  popupImageCaption.textContent =
+  popupedImage.src = i.src;
+  popupedImage.alt = i.alt;
+  popupedImageCaption.textContent =
     i.parentElement.querySelector(".card__title").textContent;
 }
 /* ---- ++ функция выравнивания при ошибке загрузки img ---- */

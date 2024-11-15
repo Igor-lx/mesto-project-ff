@@ -8,68 +8,70 @@ import { openModal, closeModal } from "./scripts/modal";
 
 renderCard(initialCardsArray);
 
-/* ----------- обработка модальных окон ------------------ */
+/* ------------------------------------------------------- */
 
+const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileModalWindow = document.querySelector(".popup_type_edit");
+const profileName = document.querySelector(".profile__title");
+const profileJob = document.querySelector(".profile__description");
+const profileInputfieldName = document.querySelector('[name="person_name"]');
+const profileInputfieldJob = document.querySelector('[name="description"]');
 
-const newcardAddButton = document.querySelector(".profile__add-button");
-const newcardModalWindow = document.querySelector(".popup_type_new-card");
+const newplaceFormElement = document.querySelector('[name="new-place"]');
+const newplaceAddButton = document.querySelector(".profile__add-button");
+const newplaceModalWindow = document.querySelector(".popup_type_new-card");
+//const newplaceName
+//const newplaceLink
+const newplaceInputfieldName = document.querySelector('[name="place-name"]');
+const newplaceInputfieldLink = document.querySelector('[name="link"]');
 
 const cardImageContainer = document.querySelector(".places__list");
 const cardImageModalWindow = document.querySelector(".popup_type_image");
-/* ----------------------------- */
+
+/* ----------- обработка модальных окон ------------------ */
+
 profileEditButton.addEventListener("click", () => {
-  InputFieldName.value = profileName.textContent;
-  InputFieldJob.value = profileJob.textContent;
+  profileInputfieldName.value = profileName.textContent;
+  profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
 });
-/* ----------------------------- */
-newcardAddButton.addEventListener("click", () => openModal(newcardModalWindow));
-
+/* ----------------------  */
+newplaceAddButton.addEventListener("click", () =>
+  openModal(newplaceModalWindow)
+);
+/* ----------------------  */
 cardImageContainer.addEventListener("click", (evt) => {
   const cardImage = evt.target.closest(".card__image");
   if (cardImage) {
     openModal(cardImageModalWindow);
   }
 });
-/* ----------- обработка формы профиля ------------------ */
+/* -------------- обработка формы профиля ----------------- */
 
-const ProfileFormElement = document.querySelector('[name="edit-profile"]');
-
-const profileName = document.querySelector(".profile__title");
-const profileJob = document.querySelector(".profile__description");
-
-const InputFieldName = document.querySelector('[name="person_name"]');
-const InputFieldJob = document.querySelector('[name="description"]');
-/* ----------------------------- */
-ProfileFormElement.addEventListener("submit", (evt) => {
+profileFormElement.addEventListener("submit", (evt) => {
   editProfile(evt);
   closeModal(profileModalWindow);
 });
 
 function editProfile(evt) {
   evt.preventDefault();
-  profileName.textContent = InputFieldName.value;
-  profileJob.textContent = InputFieldJob.value;
+  profileName.textContent = profileInputfieldName.value;
+  profileJob.textContent = profileInputfieldJob.value;
 }
-/* ----------- обработка формы новой карточки ------------------ */
+/* ----------- обработка формы новой карточки ------------ */
 
-const cardFormElement = document.querySelector('[name="new-place"]');
-const newplaceNameInputField = document.querySelector('[name="place-name"]');
-const newplaceImageInputField = document.querySelector('[name="link"]');
-/* ----------------------------- */
-cardFormElement.addEventListener("submit", function (evt) {
+newplaceFormElement.addEventListener("submit", function (evt) {
   evt.preventDefault();
-  const newCardData = [
+  const newсardData = [
     {
-      name: newplaceNameInputField.value,
-      link: newplaceImageInputField.value,
+      name: newplaceInputfieldName.value,
+      link: newplaceInputfieldLink.value,
     },
   ];
-  renderCard(newCardData);
-  closeModal(newcardModalWindow);
-  cardFormElement.reset();
+  renderCard(newсardData);
+  closeModal(newplaceModalWindow);
+  newplaceFormElement.reset();
 });
 
 //  test image
