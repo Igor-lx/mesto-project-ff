@@ -54,7 +54,7 @@ profileFormElement.addEventListener("submit", (evt) => {
   profileJob.textContent = profileInputfieldJob.value;
   closeModal(profileModalWindow);
 });
-/* ----------- обработка формы новой карточки ------------ */
+/* ----------- обработка формы новой карточки ------------- */
 
 newplaceFormElement.addEventListener("submit", function (evt) {
   evt.preventDefault();
