@@ -72,9 +72,9 @@ function openFullscreenImage(cardItemData) {
 }
 /* -------------- обработка формы профиля ----------------- */
 
-profileFormElement.addEventListener("submit", editProfile);
+profileFormElement.addEventListener("submit", submitProfile);
 
-function editProfile(evt) {
+function submitProfile(evt) {
   evt.preventDefault();
   profileName.textContent = profileInputfieldName.value;
   profileJob.textContent = profileInputfieldJob.value;
@@ -82,9 +82,9 @@ function editProfile(evt) {
 }
 /* ----------- обработка формы новой карточки ------------- */
 
-newplaceFormElement.addEventListener("submit", editNewPlace);
+newplaceFormElement.addEventListener("submit", submitNewPlace);
 
-function editNewPlace(evt) {
+function submitNewPlace(evt) {
   evt.preventDefault();
 
   const newсardData = {
