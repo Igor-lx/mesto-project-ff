@@ -13,7 +13,7 @@ import { openModal, closeModal } from "./scripts/modal";
 
 const cardPlace = document.querySelector(".places__list");
 
-function renderCards(cardsData) {
+function renderCard(cardsData) {
   cardPlace.prepend(
     createCard(
       cardsData,
@@ -25,7 +25,7 @@ function renderCards(cardsData) {
   );
 }
 
-initialCardsArray.reverse().forEach(renderCards);
+initialCardsArray.reverse().forEach(renderCard);
 
 /* ------------------------------------------------------- */
 
@@ -92,7 +92,7 @@ function submitNewPlace(evt) {
     link: newplaceInputfieldLink.value,
   };
 
-  renderCards(newсardData);
+  renderCard(newсardData);
   closeModal(newplaceModalWindow);
   newplaceFormElement.reset();
 }
