@@ -10,8 +10,6 @@ function importAllImages() {
   return imageArray;
 }
 
-const importedImages = importAllImages();
+/* ----------------------------- */
 
-/* ----------------------------- */
-export { importedImages };
-/* ----------------------------- */
+export const importedImages = importAllImages();

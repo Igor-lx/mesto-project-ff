@@ -48,17 +48,17 @@ const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
 /* ----------- обработка модальных окон ------------------ */
-profileEditButton.addEventListener("click", manageProfile);
+profileEditButton.addEventListener("click", openProfileModal);
 
-function manageProfile() {
+function openProfileModal() {
   profileInputfieldName.value = profileName.textContent;
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
 }
 /* ----------------------  */
-newplaceAddButton.addEventListener("click", manageNewPlace);
+newplaceAddButton.addEventListener("click", openNewPlaceModal);
 
-function manageNewPlace() {
+function openNewPlaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
 }
@@ -82,9 +82,9 @@ function editProfile(evt) {
 }
 /* ----------- обработка формы новой карточки ------------- */
 
-newplaceFormElement.addEventListener("submit", addNewPlace);
+newplaceFormElement.addEventListener("submit", editNewPlace);
 
-function addNewPlace(evt) {
+function editNewPlace(evt) {
   evt.preventDefault();
 
   const newсardData = {
