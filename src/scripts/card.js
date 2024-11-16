@@ -26,6 +26,9 @@ function createCard(
   });
   /* ------------------------------------------------------ */
   cardItemImage.addEventListener("click", () => {
+    if (cardItemImage.classList.contains("card__image__load_failure")) {
+      return;
+    }
     fullscreenCallback(cardsArray);
   });
   /*---------- ++ обработчик ошибки загрузки img ---------- */
@@ -69,7 +72,7 @@ function processImgDownldError(
     "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
   cardItemDescription.classList.add("card__image__load_failure__description");
   cardLikeButton.style.display = "none";
-  cardItemImage.style.pointerEvents = "none";
+  cardItemImage.style.cursor = "not-allowed";
 }
 
 /* ----------------------------- */
