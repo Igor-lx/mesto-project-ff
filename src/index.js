@@ -13,10 +13,10 @@ import { openModal, closeModal } from "./scripts/modal";
 
 const cardPlace = document.querySelector(".places__list");
 
-function renderCard(cardData) {
+function renderCard(cardItemData) {
   cardPlace.prepend(
     createCard(
-      cardData,
+      cardItemData,
       deleteCard,
       processImgDownldError,
       likeCard,
@@ -56,9 +56,9 @@ function openProfileModal() {
   openModal(profileModalWindow);
 }
 /* ----------------------  */
-newplaceAddButton.addEventListener("click", openNewPlaceModal);
+newplaceAddButton.addEventListener("click", openNewplaceModal);
 
-function openNewPlaceModal() {
+function openNewplaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
 }
@@ -82,9 +82,9 @@ function submitProfile(evt) {
 }
 /* ----------- обработка формы новой карточки ------------- */
 
-newplaceFormElement.addEventListener("submit", submitNewPlace);
+newplaceFormElement.addEventListener("submit", submitNewplace);
 
-function submitNewPlace(evt) {
+function submitNewplace(evt) {
   evt.preventDefault();
 
   const newсardData = {
