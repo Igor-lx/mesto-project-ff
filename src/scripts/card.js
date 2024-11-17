@@ -1,5 +1,5 @@
 function createCard(
-  cardsArray,
+  cardItemData,
   deleteCallback,
   errorCallback,
   likeCallback,
@@ -11,9 +11,9 @@ function createCard(
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
 
-  cardItemTitle.textContent = cardsArray.name;
-  cardItemImage.src = cardsArray.link;
-  cardItemImage.alt = 'фотография: "' + cardsArray.name + '"';
+  cardItemTitle.textContent = cardItemData.name;
+  cardItemImage.src = cardItemData.link;
+  cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
   /* ------------------------------------------------------ */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
   cardDeleteButton.addEventListener("click", () => {
@@ -29,7 +29,7 @@ function createCard(
     if (cardItemImage.classList.contains("card__image__load_failure")) {
       return;
     }
-    fullscreenCallback(cardsArray);
+    fullscreenCallback(cardItemData);
   });
   /*---------- ++ обработчик ошибки загрузки img ---------- */
   const cardItemDescription = cardItem.querySelector(".card__description");

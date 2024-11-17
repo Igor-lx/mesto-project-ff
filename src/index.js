@@ -13,10 +13,10 @@ import { openModal, closeModal } from "./scripts/modal";
 
 const cardPlace = document.querySelector(".places__list");
 
-function renderCard(cardsData) {
+function renderCard(cardData) {
   cardPlace.prepend(
     createCard(
-      cardsData,
+      cardData,
       deleteCard,
       processImgDownldError,
       likeCard,
