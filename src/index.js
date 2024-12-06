@@ -35,13 +35,13 @@ const profileModalWindow = document.querySelector(".popup_type_edit");
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__description");
 const profileInputfieldName = document.querySelector('[name="person_name"]');
-const profileInputfieldJob = document.querySelector('[name="description"]');
+const profileInputfieldJob = document.querySelector('[name="person_description"]');
 
 const newplaceFormElement = document.querySelector('[name="new-place"]');
 const newplaceAddButton = document.querySelector(".profile__add-button");
 const newplaceModalWindow = document.querySelector(".popup_type_new-card");
-const newplaceInputfieldName = document.querySelector('[name="place-name"]');
-const newplaceInputfieldLink = document.querySelector('[name="link"]');
+const newplaceInputfieldName = document.querySelector('[name="newplace_name"]');
+const newplaceInputfieldLink = document.querySelector('[name="newplace_url"]');
 
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
