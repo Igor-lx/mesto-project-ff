@@ -8,21 +8,19 @@ import {
   processImgDownldError,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
-
 import { enableValidation } from "./scripts/validation";
 
 /* ------------------------------------------------------- */
 
 const validationConfig = {
   formSelector: ".popup__form",
-  inputSelector: ".popup__input",
+  inputfieldSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
   inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__input-error_active",
+  inputfieldErrorStyleClass: "popup__input_error",
+  textmessageErrorStyleClass: "popup__error-message_visible",
   errorClassPostfix: "-error",
 };
-
 /* ------------------------------------------------------- */
 
 const cardPlace = document.querySelector(".places__list");

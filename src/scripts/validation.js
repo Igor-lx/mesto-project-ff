@@ -1,53 +1,48 @@
-/*
+/* CONFIG TEMPLATE
+
 const validationConfig = {
-  formSelector: ".", 
-  inputSelector: ".", 
-  submitButtonSelector: ".", 
-  inactiveButtonClass: "", 
-  inputErrorClass: "", 
-  errorClass: "", 
-  errorClassPostfix: "-error", 
+  formSelector: ".",
+  inputfieldSelector: ".",
+  submitButtonSelector: ".",
+  inactiveButtonClass: "",
+  inputfieldErrorStyleClass: "",
+  textmessageErrorStyleClass: "",
+  errorClassPostfix: "-error",
 };
+
 */
-
-
 // Функция вывода ошибок
-function showInputError(
-  formElement,
-  inputElement,
-  errorMessage,
-  validateConfig
-) {
-  const errorElement = formElement.querySelector(
-    `.${inputElement.id}${validateConfig.errorClassPostfix}`
+function showInputError(formElement, inputElement, errorMessage, validationConfig) {
+  const errorSpanElement = formElement.querySelector(
+    `.${inputElement.id}${validationConfig.errorClassPostfix}`
   );
-  if (!errorElement) return; // Проверка на существование errorElement
+  if (!errorSpanElement) return; // Проверка на существование errorSpanElement
 
-  inputElement.classList.add(validateConfig.inputErrorClass);
-  errorElement.textContent = errorMessage;
-  errorElement.classList.add(validateConfig.errorClass);
+  inputElement.classList.add(validationConfig.inputfieldErrorStyleClass); // Применение красного бордера
+  errorSpanElement.textContent = errorMessage;
+  errorSpanElement.classList.add(validationConfig.textmessageErrorStyleClass); // Применение видимости ошибки
 }
 
 // Функция скрытия ошибок
-function hideInputError(formElement, inputElement, validateConfig) {
-  const errorElement = formElement.querySelector(
-    `.${inputElement.id}${validateConfig.errorClassPostfix}`
+function hideInputError(formElement, inputElement, validationConfig) {
+  const errorSpanElement = formElement.querySelector(
+    `.${inputElement.id}${validationConfig.errorClassPostfix}`
   );
-  if (!errorElement) return; // Проверка на существование errorElement
+  if (!errorSpanElement) return; // Проверка на существование errorSpanElement
 
-  inputElement.classList.remove(validateConfig.inputErrorClass);
-  errorElement.classList.remove(validateConfig.errorClass);
-  errorElement.textContent = "";
+  inputElement.classList.remove(validationConfig.inputfieldErrorStyleClass);
+  errorSpanElement.classList.remove(validationConfig.textmessageErrorStyleClass);
+  errorSpanElement.textContent = "";
 }
 
 // Проверка валидности инпута
-function isValid(formElement, inputElement, validateConfig) {
+function isValid(formElement, inputElement, validationConfig) {
   if (inputElement.validity.valueMissing) {
     showInputError(
       formElement,
       inputElement,
       "Поле не может быть пустым.",
-      validateConfig
+      validationConfig
     );
     return false;
   }
@@ -57,77 +52,77 @@ function isValid(formElement, inputElement, validateConfig) {
       formElement,
       inputElement,
       inputElement.dataset.errorMessage,
-      validateConfig
+      validationConfig
     );
     return false;
   }
 
-  hideInputError(formElement, inputElement, validateConfig);
+  hideInputError(formElement, inputElement, validationConfig);
   return true;
 }
 
 // Переключение состояния кнопки
-function toggleButtonState(inputList, buttonElement, validateConfig) {
+function toggleButtonState(inputList, buttonElement, validationConfig) {
   const hasInvalidInput = inputList.some(
     (inputElement) => !inputElement.validity.valid
   );
 
   if (hasInvalidInput) {
-    buttonElement.classList.add(validateConfig.inactiveButtonClass);
+    buttonElement.classList.add(validationConfig.inactiveButtonClass);
     buttonElement.disabled = true;
   } else {
-    buttonElement.classList.remove(validateConfig.inactiveButtonClass);
+    buttonElement.classList.remove(validationConfig.inactiveButtonClass);
     buttonElement.disabled = false;
   }
 }
 
 // Слушатели событий
-function setEventListeners(formElement, validateConfig) {
+function setEventListeners(formElement, validationConfig) {
   const inputList = Array.from(
-    formElement.querySelectorAll(validateConfig.inputSelector)
+    formElement.querySelectorAll(validationConfig.inputfieldSelector)
   );
   const buttonElement = formElement.querySelector(
-    validateConfig.submitButtonSelector
+    validationConfig.submitButtonSelector
   );
 
-  toggleButtonState(inputList, buttonElement, validateConfig);
+  toggleButtonState(inputList, buttonElement, validationConfig);
 
   inputList.forEach((inputElement) => {
     inputElement.addEventListener("input", () => {
-      isValid(formElement, inputElement, validateConfig);
-      toggleButtonState(inputList, buttonElement, validateConfig);
+      isValid(formElement, inputElement, validationConfig);
+      toggleButtonState(inputList, buttonElement, validationConfig);
     });
   });
 
   formElement.addEventListener("reset", () => {
-    clearValidation(formElement, validateConfig);
+    clearValidation(formElement, validationConfig);
   });
 }
 
 // Очистка валидации
-function clearValidation(formElement, validateConfig) {
+function clearValidation(formElement, validationConfig) {
   const inputList = Array.from(
-    formElement.querySelectorAll(validateConfig.inputSelector)
+    formElement.querySelectorAll(validationConfig.inputfieldSelector)
   );
   const submitButton = formElement.querySelector(
-    validateConfig.submitButtonSelector
+    validationConfig.submitButtonSelector
   );
 
   inputList.forEach((inputElement) =>
-    hideInputError(formElement, inputElement, validateConfig)
+    hideInputError(formElement, inputElement, validationConfig)
   );
-  toggleButtonState(inputList, submitButton, validateConfig);
+  toggleButtonState(inputList, submitButton, validationConfig);
 }
 
 // Включение валидации
-function enableValidation(validateConfig) {
+function enableValidation(validationConfig) {
   const forms = Array.from(
-    document.querySelectorAll(validateConfig.formSelector)
+    document.querySelectorAll(validationConfig.formSelector)
   );
 
   forms.forEach((formElement) => {
     formElement.addEventListener("submit", (evt) => evt.preventDefault());
-    setEventListeners(formElement, validateConfig);
+    setEventListeners(formElement, validationConfig);
   });
 }
 

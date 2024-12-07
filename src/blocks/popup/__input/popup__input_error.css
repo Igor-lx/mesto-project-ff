@@ -1,0 +1,8 @@
+.popup__input_error {
+  border-bottom: 2px solid red;
+}
+
+.popup__error-message_visible{
+
+  color: red;
+}
