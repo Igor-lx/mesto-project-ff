@@ -8,7 +8,7 @@ import {
   processImgDownldError,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
-import { enableValidation } from "./scripts/validation";
+import { enableValidation, clearValidation } from "./scripts/validation";
 
 /* ------------------------------------------------------- */
 
@@ -65,9 +65,11 @@ const popupImageModalWindow = document.querySelector(".popup_type_image");
 profileEditButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
+
   profileInputfieldName.value = profileName.textContent;
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
+  
 }
 /* ----------------------  */
 newplaceAddButton.addEventListener("click", openNewplaceModal);

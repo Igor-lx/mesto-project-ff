@@ -11,118 +11,98 @@ const validationConfig = {
 };
 
 */
-// Функция вывода ошибок
-function showInputError(formElement, inputElement, errorMessage, validationConfig) {
+// показ ошибок
+function showInputError(formElement, inputField, errorMessage, config) {
   const errorSpanElement = formElement.querySelector(
-    `.${inputElement.id}${validationConfig.errorClassPostfix}`
+    `#${inputField.id}${config.errorClassPostfix}`
   );
-  if (!errorSpanElement) return; // Проверка на существование errorSpanElement
 
-  inputElement.classList.add(validationConfig.inputfieldErrorStyleClass); // Применение красного бордера
+  inputField.classList.add(config.inputfieldErrorStyleClass);
+  errorSpanElement.classList.add(config.textmessageErrorStyleClass);
   errorSpanElement.textContent = errorMessage;
-  errorSpanElement.classList.add(validationConfig.textmessageErrorStyleClass); // Применение видимости ошибки
 }
 
-// Функция скрытия ошибок
-function hideInputError(formElement, inputElement, validationConfig) {
+// скрытие ошибок
+function hideInputError(formElement, inputField, config) {
   const errorSpanElement = formElement.querySelector(
-    `.${inputElement.id}${validationConfig.errorClassPostfix}`
+    `#${inputField.id}${config.errorClassPostfix}`
   );
-  if (!errorSpanElement) return; // Проверка на существование errorSpanElement
 
-  inputElement.classList.remove(validationConfig.inputfieldErrorStyleClass);
-  errorSpanElement.classList.remove(validationConfig.textmessageErrorStyleClass);
+  inputField.classList.remove(config.inputfieldErrorStyleClass);
+  errorSpanElement.classList.remove(config.textmessageErrorStyleClass);
   errorSpanElement.textContent = "";
 }
 
 // Проверка валидности инпута
-function isValid(formElement, inputElement, validationConfig) {
-  if (inputElement.validity.valueMissing) {
+function checkValidity(formElement, inputField, config) {
+  if (!inputField.validity.valid) {
     showInputError(
       formElement,
-      inputElement,
-      "Поле не может быть пустым.",
-      validationConfig
+      inputField,
+      inputField.validationMessage,
+      config
     );
-    return false;
+    return;
   }
-
-  if (inputElement.validity.patternMismatch) {
-    showInputError(
-      formElement,
-      inputElement,
-      inputElement.dataset.errorMessage,
-      validationConfig
-    );
-    return false;
-  }
-
-  hideInputError(formElement, inputElement, validationConfig);
-  return true;
+  hideInputError(formElement, inputField, config);
 }
 
 // Переключение состояния кнопки
-function toggleButtonState(inputList, buttonElement, validationConfig) {
+function toggleButtonState(inputList, buttonElement, config) {
   const hasInvalidInput = inputList.some(
-    (inputElement) => !inputElement.validity.valid
+    (inputField) => !inputField.validity.valid
   );
 
   if (hasInvalidInput) {
-    buttonElement.classList.add(validationConfig.inactiveButtonClass);
+    buttonElement.classList.add(config.inactiveButtonClass);
     buttonElement.disabled = true;
   } else {
-    buttonElement.classList.remove(validationConfig.inactiveButtonClass);
+    buttonElement.classList.remove(config.inactiveButtonClass);
     buttonElement.disabled = false;
   }
 }
 
 // Слушатели событий
-function setEventListeners(formElement, validationConfig) {
+function setEventListeners(formElement, config) {
   const inputList = Array.from(
-    formElement.querySelectorAll(validationConfig.inputfieldSelector)
+    formElement.querySelectorAll(config.inputfieldSelector)
   );
-  const buttonElement = formElement.querySelector(
-    validationConfig.submitButtonSelector
-  );
+  const buttonElement = formElement.querySelector(config.submitButtonSelector);
 
-  toggleButtonState(inputList, buttonElement, validationConfig);
+  toggleButtonState(inputList, buttonElement, config);
 
-  inputList.forEach((inputElement) => {
-    inputElement.addEventListener("input", () => {
-      isValid(formElement, inputElement, validationConfig);
-      toggleButtonState(inputList, buttonElement, validationConfig);
+  inputList.forEach((inputField) => {
+    inputField.addEventListener("input", () => {
+      checkValidity(formElement, inputField, config);
+      toggleButtonState(inputList, buttonElement, config);
     });
   });
 
   formElement.addEventListener("reset", () => {
-    clearValidation(formElement, validationConfig);
+    clearValidation(formElement, config);
   });
 }
 
 // Очистка валидации
-function clearValidation(formElement, validationConfig) {
+function clearValidation(formElement, config) {
   const inputList = Array.from(
-    formElement.querySelectorAll(validationConfig.inputfieldSelector)
+    formElement.querySelectorAll(config.inputfieldSelector)
   );
-  const submitButton = formElement.querySelector(
-    validationConfig.submitButtonSelector
-  );
+  const submitButton = formElement.querySelector(config.submitButtonSelector);
 
-  inputList.forEach((inputElement) =>
-    hideInputError(formElement, inputElement, validationConfig)
+  inputList.forEach((inputField) =>
+    hideInputError(formElement, inputField, config)
   );
-  toggleButtonState(inputList, submitButton, validationConfig);
+  toggleButtonState(inputList, submitButton, config);
 }
 
 // Включение валидации
-function enableValidation(validationConfig) {
-  const forms = Array.from(
-    document.querySelectorAll(validationConfig.formSelector)
-  );
+function enableValidation(config) {
+  const forms = Array.from(document.querySelectorAll(config.formSelector));
 
   forms.forEach((formElement) => {
     formElement.addEventListener("submit", (evt) => evt.preventDefault());
-    setEventListeners(formElement, validationConfig);
+    setEventListeners(formElement, config);
   });
 }
 

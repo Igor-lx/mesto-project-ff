@@ -2,7 +2,12 @@
   border-bottom: 2px solid red;
 }
 
-.popup__error-message_visible{
+.popup__error-message {
+  display: block;
+  height: 28px;
+}
 
+.popup__error-message_visible {
   color: red;
+  font-size: 13px;
 }
