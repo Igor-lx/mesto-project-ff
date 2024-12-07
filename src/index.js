@@ -9,6 +9,20 @@ import {
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
+import { enableValidation } from "./scripts/validation";
+
+/* ------------------------------------------------------- */
+
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__input-error_active",
+  errorClassPostfix: "-error",
+};
+
 /* ------------------------------------------------------- */
 
 const cardPlace = document.querySelector(".places__list");
@@ -35,7 +49,9 @@ const profileModalWindow = document.querySelector(".popup_type_edit");
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__description");
 const profileInputfieldName = document.querySelector('[name="person_name"]');
-const profileInputfieldJob = document.querySelector('[name="person_description"]');
+const profileInputfieldJob = document.querySelector(
+  '[name="person_description"]'
+);
 
 const newplaceFormElement = document.querySelector('[name="new-place"]');
 const newplaceAddButton = document.querySelector(".profile__add-button");
@@ -96,6 +112,8 @@ function submitNewplace(evt) {
   closeModal(newplaceModalWindow);
   newplaceFormElement.reset();
 }
+
+enableValidation(validationConfig);
 
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
