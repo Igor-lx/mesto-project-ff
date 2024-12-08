@@ -1,10 +1,12 @@
 /* CONFIG TEMPLATE
 const configApi = {
-  baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
+  baseUrl: "https://...",
   headers: {
-    authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
-    "Content-Type": "application/json",
+    authorization: "",
+    "Content-Type": "",
   },
+  userEndpoint: "/...",
+  cardsEndpoint: "/...",
 };
 */
 
@@ -14,28 +16,35 @@ function getResponse(responseObject) {
   }
   return Promise.reject(`Ошибка ${responseObject.status}`);
 }
+/* ---------------------------------------------------- */
+/* ---------------------------------------------------- */
 
 function getUserData(config) {
-  return fetch(`${config.baseUrl}/users/me`, {
+  return fetch(`${config.baseUrl}${config.userEndpoint}`, {
     headers: config.headers,
   }).then(getResponse);
 }
 
 function getInitialCards(config) {
-  return fetch(`${config.baseUrl}/cards`, {
+  return fetch(`${config.baseUrl}${config.cardsEndpoint}`, {
     headers: config.headers,
   }).then(getResponse);
 }
 
-function editUserData(userName, userJob, config) {
-  return fetch(`${config.baseUrl}/users/me`, {
+function editUserData(userDataArray, config) {
+  return fetch(`${config.baseUrl}${config.userEndpoint}`, {
     method: "PATCH",
     headers: config.headers,
-    body: JSON.stringify({
-      name: userName,
-      about: userJob,
-    }),
+    body: JSON.stringify(userDataArray),
   }).then(getResponse);
 }
 
-export { getUserData, getInitialCards, editUserData };
+function addNewplace(newplaceDataArray, config) {
+  return fetch(`${config.baseUrl}${config.cardsEndpoint}`, {
+    method: "POST",
+    headers: config.headers,
+    body: JSON.stringify(newplaceDataArray),
+  }).then(getResponse);
+}
+
+export { getUserData, getInitialCards, editUserData, addNewplace };

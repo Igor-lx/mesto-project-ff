@@ -21,7 +21,12 @@ const configValidation = {
 };
 
 /* ------------------------------------------------------- */
-import { getUserData, getInitialCards, editUserData } from "./scripts/api";
+import {
+  getUserData,
+  getInitialCards,
+  editUserData,
+  addNewplace,
+} from "./scripts/api";
 
 const configApi = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
@@ -29,8 +34,9 @@ const configApi = {
     authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
     "Content-Type": "application/json",
   },
+  userEndpoint: "/users/me",
+  cardsEndpoint: "/cards",
 };
-
 /* ------------------------------------------------------- */
 
 const cardPlace = document.querySelector(".places__list");
@@ -46,6 +52,19 @@ function renderCard(cardItemData) {
     )
   );
 }
+
+Promise.all([getUserData(configApi), getInitialCards(configApi)])
+  .then(([userData, initialCardsArray]) => {
+    userId = userData._id;
+    profileName.textContent = userData.name;
+    profileJob.textContent = userData.about;
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
+
+    initialCardsArray.reverse().forEach((card) => {
+      renderCard(card);
+    });
+  })
+  .catch((error) => console.log(error));
 
 /* ------------------------------------------------------- */
 
@@ -100,20 +119,20 @@ function openFullscreenImage(cardItemData) {
   openModal(popupImageModalWindow);
 }
 /* ------------------------------------------------------------------------------- сабмит формы профиля ----------------- */
-
 profileFormElement.addEventListener("submit", submitProfile);
 
 function submitProfile(evt) {
   evt.preventDefault();
 
-  editUserData(
-    profileInputfieldName.value,
-    profileInputfieldJob.value,
-    configApi
-  )
-    .then((userData) => {
-      profileName.textContent = userData.name;
-      profileJob.textContent = userData.about;
+  const newUserData = {
+    name: profileInputfieldName.value,
+    about: profileInputfieldJob.value,
+  };
+
+  editUserData(newUserData, configApi)
+    .then((updatedUserData) => {
+      profileName.textContent = updatedUserData.name;
+      profileJob.textContent = updatedUserData.about;
       closeModal(profileModalWindow);
     })
     .catch((err) => console.log(err));
@@ -126,32 +145,24 @@ newplaceFormElement.addEventListener("submit", submitNewplace);
 function submitNewplace(evt) {
   evt.preventDefault();
 
-  const newсardData = {
+  const newCardData = {
     name: newplaceInputfieldName.value,
     link: newplaceInputfieldLink.value,
   };
 
-  renderCard(newсardData);
-  closeModal(newplaceModalWindow);
-  newplaceFormElement.reset();
+  addNewplace(newCardData, configApi)
+    .then(() => {
+      renderCard(newCardData);
+      closeModal(newplaceModalWindow);
+      newplaceFormElement.reset();
+    })
+    .catch((err) => console.log(err));
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------- */
 
-Promise.all([getUserData(configApi), getInitialCards(configApi)])
-  .then(([userData, initialCardsArray]) => {
-    userId = userData._id;
-    profileName.textContent = userData.name;
-    profileJob.textContent = userData.about;
-    profileImage.style.backgroundImage = `url(${userData.avatar})`;
-
-    initialCardsArray.reverse().forEach((card) => {
-      renderCard(card);
-    });
-  })
-  .catch((error) => console.log(error));
 //
 //
 //
