@@ -57,6 +57,7 @@ const profileEditButton = document.querySelector(".profile__edit-button");
 const profileModalWindow = document.querySelector(".popup_type_edit");
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__description");
+const profileImage = document.querySelector(".profile__image");
 const profileInputfieldName = document.querySelector('[name="person_name"]');
 const profileInputfieldJob = document.querySelector(
   '[name="person_description"]'
@@ -72,7 +73,17 @@ const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
-/* ----------- обработка модальных окон ------------------ */
+/* ----------------------------------------------------------------------- обработка модальных окон ------------------ */
+
+/* ------------------------------------------------------- */
+getUserData()
+  .then((userData) => {
+    profileName.textContent = userData.name;
+    profileJob.textContent = userData.about;
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
+  })
+  .catch((error) => console.log(error));
+
 profileEditButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
@@ -125,8 +136,6 @@ function submitNewplace(evt) {
 }
 
 enableValidation(configValidation);
-
-getUserData();
 
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
