@@ -1,6 +1,4 @@
 import "./index.css";
-
-//import { initialCardsArray } from "./scripts/cards";
 import {
   createCard,
   deleteCard,
@@ -38,8 +36,6 @@ function renderCard(cardItemData) {
   );
 }
 
-//initialCardsArray.reverse().forEach(renderCard);
-
 /* ------------------------------------------------------- */
 
 const profileFormElement = document.querySelector('[name="edit-profile"]');
@@ -62,6 +58,8 @@ const newplaceInputfieldLink = document.querySelector('[name="newplace_url"]');
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
+
+let userId = undefined;
 
 /* ----------------------------------------------------------------------- обработка модальных окон ------------------ */
 
@@ -122,24 +120,18 @@ enableValidation(configValidation);
 
 /* ------------------------------------------------------- */
 
-// 4 ПРОМИС АЛЛ
-
-getUserData()
-  .then((userData) => {
+Promise.all([getUserData(), getInitialCards()])
+  .then(([userData, initialCardsArray]) => {
+    userId = userData._id
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
-  })
-  .catch((error) => console.log(error));
 
-getInitialCards()
-  .then((initialCards) => {
-    initialCards.reverse().forEach((card) => {
+    initialCardsArray.reverse().forEach((card) => {
       renderCard(card);
     });
   })
   .catch((error) => console.log(error));
-
 //
 //
 //
