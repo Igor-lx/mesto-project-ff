@@ -6,10 +6,10 @@ import {
   processImgDownldError,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
-import { enableValidation, clearValidation } from "./scripts/validation";
-import { getUserData, getInitialCards } from "./scripts/api";
 
 /* ------------------------------------------------------- */
+import { enableValidation, clearValidation } from "./scripts/validation";
+
 const configValidation = {
   formSelector: ".popup__form",
   inputfieldSelector: ".popup__input",
@@ -18,6 +18,17 @@ const configValidation = {
   inputfieldErrorStyleClass: "popup__input_error",
   textmessageErrorStyleClass: "popup__error-message_visible",
   errorClassPostfix: "-error",
+};
+
+/* ------------------------------------------------------- */
+import { getUserData, getInitialCards, editUserData } from "./scripts/api";
+
+const configApi = {
+  baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
+  headers: {
+    authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
+    "Content-Type": "application/json",
+  },
 };
 
 /* ------------------------------------------------------- */
@@ -61,10 +72,9 @@ const popupImageModalWindow = document.querySelector(".popup_type_image");
 
 let userId = undefined;
 
-/* ----------------------------------------------------------------------- обработка модальных окон ------------------ */
+/* ------------------------------------------------------------------------------- открытие модальных окон -------------- */
 
-/* ------------------------------------------------------- */
-
+/* ----------------------  */
 profileEditButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
@@ -89,17 +99,27 @@ function openFullscreenImage(cardItemData) {
   popupImageCaption.textContent = cardItemData.name;
   openModal(popupImageModalWindow);
 }
-/* -------------- обработка формы профиля ----------------- */
+/* ------------------------------------------------------------------------------- сабмит формы профиля ----------------- */
 
 profileFormElement.addEventListener("submit", submitProfile);
 
 function submitProfile(evt) {
   evt.preventDefault();
-  profileName.textContent = profileInputfieldName.value;
-  profileJob.textContent = profileInputfieldJob.value;
-  closeModal(profileModalWindow);
+
+  editUserData(
+    profileInputfieldName.value,
+    profileInputfieldJob.value,
+    configApi
+  )
+    .then((userData) => {
+      profileName.textContent = userData.name;
+      profileJob.textContent = userData.about;
+      closeModal(profileModalWindow);
+    })
+    .catch((err) => console.log(err));
 }
-/* ----------- обработка формы новой карточки ------------- */
+
+/* --------------------------------------------------------------------------- сабмит формы новой карточки ------------ */
 
 newplaceFormElement.addEventListener("submit", submitNewplace);
 
@@ -116,13 +136,13 @@ function submitNewplace(evt) {
   newplaceFormElement.reset();
 }
 
-enableValidation(configValidation);
+/* ------------------------------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------- */
 
-Promise.all([getUserData(), getInitialCards()])
+Promise.all([getUserData(configApi), getInitialCards(configApi)])
   .then(([userData, initialCardsArray]) => {
-    userId = userData._id
+    userId = userData._id;
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
@@ -139,6 +159,7 @@ Promise.all([getUserData(), getInitialCards()])
 //
 //
 //
+enableValidation(configValidation);
 
 /* ------------------------------------------------------- */
 //  test image
