@@ -1,9 +1,24 @@
+import { deleteNewplace } from "./api";
+
+const configAPI = {
+  baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
+  headers: {
+    authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
+    "Content-Type": "application/json",
+  },
+  userEndpoint: "/users/me",
+  cardsEndpoint: "/cards",
+  likesEndpoint: "/cards/likes/",
+};
+
 function createCard(
   cardItemData,
+  userId,
   deleteCallback,
   errorCallback,
   likeCallback,
-  fullscreenCallback
+  fullscreenCallback,
+  showDeleteButtonCallback
 ) {
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
@@ -15,10 +30,13 @@ function createCard(
   cardItemImage.src = cardItemData.link;
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
   /* ------------------------------------------------------ */
+
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
-  cardDeleteButton.addEventListener("click", () => {
-    deleteCallback(cardItem);
-  });
+  if (showDeleteButtonCallback(cardItemData, userId, cardDeleteButton)) {
+    cardDeleteButton.addEventListener("click", () => {
+      deleteCallback(cardItemData._id, cardItem);
+    });
+  }
   /* ------------------------------------------------------ */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
 
@@ -53,9 +71,24 @@ function createCard(
 
 /* --------------------------------------- Callback Functions ---------------------------------------------- */
 
-function deleteCard(cardItem) {
-  cardItem.remove();
+function deleteCard(cardId, cardElement) {
+  deleteNewplace(cardId, configAPI)
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
+
+function showDeleteButton(cardItemData, userId, deleteButton) {
+  if (cardItemData.owner._id !== userId) {
+    deleteButton.remove();
+    return false;
+  }
+  return true;
+}
+
 /* --------------------------------------------------------- */
 function likeCard(cardLikeButton) {
   cardLikeButton.classList.toggle("card__like-button_is-active");
@@ -80,5 +113,11 @@ function processImgDownldError(
 }
 
 /* ----------------------------- */
-export { createCard, deleteCard, likeCard, processImgDownldError };
+export {
+  createCard,
+  deleteCard,
+  likeCard,
+  processImgDownldError,
+  showDeleteButton,
+};
 /* ---------------------------- */

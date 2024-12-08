@@ -4,6 +4,7 @@ import {
   deleteCard,
   likeCard,
   processImgDownldError,
+  showDeleteButton,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
@@ -38,6 +39,7 @@ const configAPI = {
   cardsEndpoint: "/cards",
   likesEndpoint: "/cards/likes/",
 };
+
 /* ------------------------------------------------------- */
 
 const cardPlace = document.querySelector(".places__list");
@@ -46,17 +48,20 @@ function renderCard(cardItemData) {
   cardPlace.prepend(
     createCard(
       cardItemData,
+      userId,
       deleteCard,
       processImgDownldError,
       likeCard,
-      openFullscreenImage
+      openFullscreenImage,
+      showDeleteButton
     )
   );
 }
 
+let userId = "";
 Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   .then(([userData, initialCardsArray]) => {
-    // userId = userData._id;
+    userId = userData._id;
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
@@ -89,8 +94,6 @@ const newplaceInputfieldLink = document.querySelector('[name="newplace_url"]');
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
-
-//let userId = undefined;
 
 /* ------------------------------------------------------------------------------- открытие модальных окон -------------- */
 
@@ -150,11 +153,12 @@ function submitNewplace(evt) {
     name: newplaceInputfieldName.value,
     link: newplaceInputfieldLink.value,
     likes: [],
+    owner: { _id: userId }
   };
 
   addNewplace(newCardData, configAPI)
-    .then(() => {
-      renderCard(newCardData);
+    .then((addedCard) => { 
+      renderCard(addedCard);
       closeModal(newplaceModalWindow);
     })
     .catch((err) => console.log(err));

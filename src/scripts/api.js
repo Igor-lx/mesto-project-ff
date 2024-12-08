@@ -47,6 +47,14 @@ function addNewplace(newplaceDataArray, config) {
     body: JSON.stringify(newplaceDataArray),
   }).then(getResponse);
 }
+
+function deleteNewplace(cardId, config) {
+  return fetch(`${config.baseUrl}${config.cardsEndpoint}/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers,
+  }).then(getResponse);
+}
+
 /*
 function toggleLike(cardId, isLiked, config) {
   const APImethod = isLiked ? "DELETE" : "PUT";
@@ -57,4 +65,10 @@ function toggleLike(cardId, isLiked, config) {
 }
 */
 
-export { getUserData, getInitialCards, editUserData, addNewplace };
+export {
+  getUserData,
+  getInitialCards,
+  editUserData,
+  addNewplace,
+  deleteNewplace,
+};
