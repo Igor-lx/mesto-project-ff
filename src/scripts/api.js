@@ -7,6 +7,7 @@ const configApi = {
   },
   userEndpoint: "/...",
   cardsEndpoint: "/...",
+  likesEndpoint: "/.../"
 };
 */
 
@@ -46,7 +47,7 @@ function addNewplace(newplaceDataArray, config) {
     body: JSON.stringify(newplaceDataArray),
   }).then(getResponse);
 }
-
+/*
 function toggleLike(cardId, isLiked, config) {
   const APImethod = isLiked ? "DELETE" : "PUT";
   return fetch(`${config.baseUrl}${config.likesEndpoint}${cardId}`, {
@@ -54,5 +55,6 @@ function toggleLike(cardId, isLiked, config) {
     headers: config.headers,
   }).then(getResponse);
 }
+*/
 
-export { getUserData, getInitialCards, editUserData, addNewplace, toggleLike };
+export { getUserData, getInitialCards, editUserData, addNewplace };

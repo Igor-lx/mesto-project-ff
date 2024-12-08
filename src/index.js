@@ -28,7 +28,7 @@ import {
   addNewplace,
 } from "./scripts/api";
 
-const configApi = {
+const configAPI = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
   headers: {
     authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
@@ -36,6 +36,7 @@ const configApi = {
   },
   userEndpoint: "/users/me",
   cardsEndpoint: "/cards",
+  likesEndpoint: "/cards/likes/",
 };
 /* ------------------------------------------------------- */
 
@@ -53,9 +54,9 @@ function renderCard(cardItemData) {
   );
 }
 
-Promise.all([getUserData(configApi), getInitialCards(configApi)])
+Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   .then(([userData, initialCardsArray]) => {
-    userId = userData._id;
+    // userId = userData._id;
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
@@ -89,7 +90,7 @@ const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
-let userId = undefined;
+//let userId = undefined;
 
 /* ------------------------------------------------------------------------------- открытие модальных окон -------------- */
 
@@ -129,7 +130,7 @@ function submitProfile(evt) {
     about: profileInputfieldJob.value,
   };
 
-  editUserData(newUserData, configApi)
+  editUserData(newUserData, configAPI)
     .then((updatedUserData) => {
       profileName.textContent = updatedUserData.name;
       profileJob.textContent = updatedUserData.about;
@@ -148,13 +149,13 @@ function submitNewplace(evt) {
   const newCardData = {
     name: newplaceInputfieldName.value,
     link: newplaceInputfieldLink.value,
+    likes: [],
   };
 
-  addNewplace(newCardData, configApi)
+  addNewplace(newCardData, configAPI)
     .then(() => {
       renderCard(newCardData);
       closeModal(newplaceModalWindow);
-      newplaceFormElement.reset();
     })
     .catch((err) => console.log(err));
 }

@@ -1,5 +1,3 @@
-import { toggleLike } from "./api";
-
 function createCard(
   cardItemData,
   deleteCallback,
@@ -23,6 +21,10 @@ function createCard(
   });
   /* ------------------------------------------------------ */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
+
+  const cardLikeCounter = cardItem.querySelector(".likes_counter");
+  cardLikeCounter.textContent = cardItemData.likes.length;
+
   cardLikeButton.addEventListener("click", (evt) => {
     likeCallback(evt.target);
   });
