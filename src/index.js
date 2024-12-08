@@ -1,11 +1,6 @@
 import "./index.css";
-import {
-  createCard,
-  deleteCard,
-  likeCard,
-  processImgDownldError,
-  showDeleteButton,
-} from "./scripts/card";
+import { createCard } from "./scripts/card";
+import { callbackFunctionsSet } from "./scripts/callbacks";
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
@@ -29,7 +24,7 @@ import {
   addNewplace,
 } from "./scripts/api";
 
-const configAPI = {
+export const configAPI = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
   headers: {
     authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
@@ -39,38 +34,6 @@ const configAPI = {
   cardsEndpoint: "/cards",
   likesEndpoint: "/cards/likes/",
 };
-
-/* ------------------------------------------------------- */
-
-const cardPlace = document.querySelector(".places__list");
-
-function renderCard(cardItemData) {
-  cardPlace.prepend(
-    createCard(
-      cardItemData,
-      userId,
-      deleteCard,
-      processImgDownldError,
-      likeCard,
-      openFullscreenImage,
-      showDeleteButton
-    )
-  );
-}
-
-let userId = "";
-Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
-  .then(([userData, initialCardsArray]) => {
-    userId = userData._id;
-    profileName.textContent = userData.name;
-    profileJob.textContent = userData.about;
-    profileImage.style.backgroundImage = `url(${userData.avatar})`;
-
-    initialCardsArray.reverse().forEach((card) => {
-      renderCard(card);
-    });
-  })
-  .catch((error) => console.log(error));
 
 /* ------------------------------------------------------- */
 
@@ -95,7 +58,29 @@ const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
-/* ------------------------------------------------------------------------------- открытие модальных окон -------------- */
+/* -------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
+
+const cardPlace = document.querySelector(".places__list");
+
+function renderCard(cardItemData) {
+  cardPlace.prepend(createCard(cardItemData, userId, callbackFunctionsSet));
+}
+
+let userId;
+Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
+  .then(([userData, initialCardsArray]) => {
+    userId = userData._id;
+    profileName.textContent = userData.name;
+    profileJob.textContent = userData.about;
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
+
+    initialCardsArray.reverse().forEach((card) => {
+      renderCard(card);
+    });
+  })
+  .catch((error) => console.log(error));
+
+/* --------------------------------------------------------------------------------- открытие модальных окон ---------- */
 
 /* ----------------------  */
 profileEditButton.addEventListener("click", openProfileModal);
@@ -106,6 +91,7 @@ function openProfileModal() {
   openModal(profileModalWindow);
   clearValidation(profileFormElement, configValidation);
 }
+
 /* ----------------------  */
 newplaceAddButton.addEventListener("click", openNewplaceModal);
 
@@ -122,7 +108,8 @@ function openFullscreenImage(cardItemData) {
   popupImageCaption.textContent = cardItemData.name;
   openModal(popupImageModalWindow);
 }
-/* ------------------------------------------------------------------------------- сабмит формы профиля ----------------- */
+
+/* ---------------------------------------------------------------------------------- сабмит формы профиля ------------ */
 profileFormElement.addEventListener("submit", submitProfile);
 
 function submitProfile(evt) {
@@ -142,7 +129,7 @@ function submitProfile(evt) {
     .catch((err) => console.log(err));
 }
 
-/* --------------------------------------------------------------------------- сабмит формы новой карточки ------------ */
+/* ------------------------------------------------------------------------------- сабмит формы новой карточки -------- */
 
 newplaceFormElement.addEventListener("submit", submitNewplace);
 
@@ -153,29 +140,22 @@ function submitNewplace(evt) {
     name: newplaceInputfieldName.value,
     link: newplaceInputfieldLink.value,
     likes: [],
-    owner: { _id: userId }
+    owner: { _id: userId },
   };
 
   addNewplace(newCardData, configAPI)
-    .then((addedCard) => { 
+    .then((addedCard) => {
       renderCard(addedCard);
       closeModal(newplaceModalWindow);
     })
     .catch((err) => console.log(err));
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------- */
+
+enableValidation(configValidation);
 
 /* ------------------------------------------------------- */
-
-//
-//
-//
-//
-//
-//
-//
-enableValidation(configValidation);
 
 /* ------------------------------------------------------- */
 //  test image

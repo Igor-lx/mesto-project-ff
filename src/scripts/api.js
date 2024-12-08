@@ -50,12 +50,12 @@ function addNewplace(newplaceDataArray, config) {
 
 function deleteNewplace(cardId, config) {
   return fetch(`${config.baseUrl}${config.cardsEndpoint}/${cardId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: config.headers,
   }).then(getResponse);
 }
 
-/*
+
 function toggleLike(cardId, isLiked, config) {
   const APImethod = isLiked ? "DELETE" : "PUT";
   return fetch(`${config.baseUrl}${config.likesEndpoint}${cardId}`, {
@@ -63,7 +63,7 @@ function toggleLike(cardId, isLiked, config) {
     headers: config.headers,
   }).then(getResponse);
 }
-*/
+
 
 export {
   getUserData,
