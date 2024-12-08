@@ -8,10 +8,10 @@ import {
   processImgDownldError,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
+import { enableValidation, clearValidation } from "./scripts/validation";
+import { getUserData, getInitialCards } from "./scripts/api";
 
 /* ------------------------------------------------------- */
-import { enableValidation, clearValidation } from "./scripts/validation";
-
 const configValidation = {
   formSelector: ".popup__form",
   inputfieldSelector: ".popup__input",
@@ -23,19 +23,6 @@ const configValidation = {
 };
 
 /* ------------------------------------------------------- */
-import { getUserData, getInitialCards } from "./scripts/api";
-
-/*
-const configApi = {
-  baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
-  headers: {
-    authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
-    "Content-Type": "application/json",
-  },
-};*/
-
-/* ------------------------------------------------------- */
-
 
 const cardPlace = document.querySelector(".places__list");
 
@@ -50,13 +37,6 @@ function renderCard(cardItemData) {
     )
   );
 }
-getInitialCards()
-  .then((initialCards) => {
-    initialCards.reverse().forEach(card => {
-      renderCard(card);
-    });
-  })
-  .catch((error) => console.log(error));
 
 //initialCardsArray.reverse().forEach(renderCard);
 
@@ -86,13 +66,6 @@ const popupImageModalWindow = document.querySelector(".popup_type_image");
 /* ----------------------------------------------------------------------- обработка модальных окон ------------------ */
 
 /* ------------------------------------------------------- */
-getUserData()
-  .then((userData) => {
-    profileName.textContent = userData.name;
-    profileJob.textContent = userData.about;
-    profileImage.style.backgroundImage = `url(${userData.avatar})`;
-  })
-  .catch((error) => console.log(error));
 
 profileEditButton.addEventListener("click", openProfileModal);
 
@@ -147,7 +120,34 @@ function submitNewplace(evt) {
 
 enableValidation(configValidation);
 
+/* ------------------------------------------------------- */
 
+// 4 ПРОМИС АЛЛ
 
+getUserData()
+  .then((userData) => {
+    profileName.textContent = userData.name;
+    profileJob.textContent = userData.about;
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
+  })
+  .catch((error) => console.log(error));
+
+getInitialCards()
+  .then((initialCards) => {
+    initialCards.reverse().forEach((card) => {
+      renderCard(card);
+    });
+  })
+  .catch((error) => console.log(error));
+
+//
+//
+//
+//
+//
+//
+//
+
+/* ------------------------------------------------------- */
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
