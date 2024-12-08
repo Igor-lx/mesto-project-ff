@@ -21,6 +21,7 @@ const validationConfig = {
   textmessageErrorStyleClass: "popup__error-message_visible",
   errorClassPostfix: "-error",
 };
+
 /* ------------------------------------------------------- */
 
 const cardPlace = document.querySelector(".places__list");
@@ -76,6 +77,7 @@ newplaceAddButton.addEventListener("click", openNewplaceModal);
 function openNewplaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
+  clearValidation(newplaceFormElement, validationConfig);
 }
 
 /* ----------------------  */

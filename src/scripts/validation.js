@@ -11,7 +11,7 @@ const validationConfig = {
 };
 
 */
-// показ ошибок
+
 function showInputError(formElement, inputField, errorMessage, config) {
   const errorSpanElement = formElement.querySelector(
     `#${inputField.id}${config.errorClassPostfix}`
@@ -22,7 +22,6 @@ function showInputError(formElement, inputField, errorMessage, config) {
   errorSpanElement.textContent = errorMessage;
 }
 
-// скрытие ошибок
 function hideInputError(formElement, inputField, config) {
   const errorSpanElement = formElement.querySelector(
     `#${inputField.id}${config.errorClassPostfix}`
@@ -33,7 +32,6 @@ function hideInputError(formElement, inputField, config) {
   errorSpanElement.textContent = "";
 }
 
-// Проверка валидности
 function checkValidity(formElement, inputField, config) {
   if (inputField.validity.patternMismatch) {
     showInputError(
@@ -57,8 +55,7 @@ function checkValidity(formElement, inputField, config) {
   hideInputError(formElement, inputField, config);
 }
 
-// Переключение состояния кнопки
-function toggleButtonState(inputList, buttonElement, config) {
+function toggleSubmitButton(inputList, buttonElement, config) {
   const hasInvalidInput = inputList.some(
     (inputField) => !inputField.validity.valid
   );
@@ -72,28 +69,28 @@ function toggleButtonState(inputList, buttonElement, config) {
   }
 }
 
-// Слушатели событий
-function setEventListeners(formElement, config) {
-  const inputList = Array.from(
-    formElement.querySelectorAll(config.inputfieldSelector)
-  );
-  const buttonElement = formElement.querySelector(config.submitButtonSelector);
+function enableValidation(config) {
+  const formList = Array.from(document.querySelectorAll(config.formSelector));
 
-  toggleButtonState(inputList, buttonElement, config);
+  formList.forEach((formElement) => {
+    formElement.addEventListener("submit", (evt) => evt.preventDefault());
 
-  inputList.forEach((inputField) => {
-    inputField.addEventListener("input", () => {
-      checkValidity(formElement, inputField, config);
-      toggleButtonState(inputList, buttonElement, config);
+    const inputList = Array.from(
+      formElement.querySelectorAll(config.inputfieldSelector)
+    );
+    const submitButton = formElement.querySelector(config.submitButtonSelector);
+
+    toggleSubmitButton(inputList, submitButton, config);
+
+    inputList.forEach((inputField) => {
+      inputField.addEventListener("input", () => {
+        checkValidity(formElement, inputField, config);
+        toggleSubmitButton(inputList, submitButton, config);
+      });
     });
-  });
-
-  formElement.addEventListener("reset", () => {
-    clearValidation(formElement, config);
   });
 }
 
-// Очистка валидации
 function clearValidation(formElement, config) {
   const inputList = Array.from(
     formElement.querySelectorAll(config.inputfieldSelector)
@@ -103,17 +100,7 @@ function clearValidation(formElement, config) {
   inputList.forEach((inputField) =>
     hideInputError(formElement, inputField, config)
   );
-  toggleButtonState(inputList, submitButton, config);
-}
-
-// Включение валидации
-function enableValidation(config) {
-  const forms = Array.from(document.querySelectorAll(config.formSelector));
-
-  forms.forEach((formElement) => {
-    formElement.addEventListener("submit", (evt) => evt.preventDefault());
-    setEventListeners(formElement, config);
-  });
+  toggleSubmitButton(inputList, submitButton, config);
 }
 
 export { enableValidation, clearValidation };
