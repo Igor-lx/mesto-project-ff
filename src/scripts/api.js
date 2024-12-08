@@ -19,4 +19,10 @@ function getResponse(responseObject) {
 	}).then(getResponse);
 }
 
-export { getUserData };
+function getInitialCards() {
+  return fetch(`${configApi.baseUrl}/cards`, {
+    headers: configApi.headers,
+  }).then(getResponse);
+}
+
+export { getUserData, getInitialCards };

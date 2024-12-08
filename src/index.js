@@ -1,6 +1,6 @@
 import "./index.css";
 
-import { initialCardsArray } from "./scripts/cards";
+//import { initialCardsArray } from "./scripts/cards";
 import {
   createCard,
   deleteCard,
@@ -23,17 +23,20 @@ const configValidation = {
 };
 
 /* ------------------------------------------------------- */
-import { getUserData } from "./scripts/api";
+import { getUserData, getInitialCards } from "./scripts/api";
 
+/*
 const configApi = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
   headers: {
     authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
     "Content-Type": "application/json",
   },
-};
+};*/
 
 /* ------------------------------------------------------- */
+
+
 const cardPlace = document.querySelector(".places__list");
 
 function renderCard(cardItemData) {
@@ -47,8 +50,15 @@ function renderCard(cardItemData) {
     )
   );
 }
+getInitialCards()
+  .then((initialCards) => {
+    initialCards.reverse().forEach(card => {
+      renderCard(card);
+    });
+  })
+  .catch((error) => console.log(error));
 
-initialCardsArray.reverse().forEach(renderCard);
+//initialCardsArray.reverse().forEach(renderCard);
 
 /* ------------------------------------------------------- */
 
@@ -136,6 +146,8 @@ function submitNewplace(evt) {
 }
 
 enableValidation(configValidation);
+
+
 
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
