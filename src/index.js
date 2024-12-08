@@ -8,11 +8,11 @@ import {
   processImgDownldError,
 } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
-import { enableValidation, clearValidation } from "./scripts/validation";
 
 /* ------------------------------------------------------- */
+import { enableValidation, clearValidation } from "./scripts/validation";
 
-const validationConfig = {
+const configValidation = {
   formSelector: ".popup__form",
   inputfieldSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
@@ -23,7 +23,17 @@ const validationConfig = {
 };
 
 /* ------------------------------------------------------- */
+import { getUserData } from "./scripts/api";
 
+const configApi = {
+  baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
+  headers: {
+    authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
+    "Content-Type": "application/json",
+  },
+};
+
+/* ------------------------------------------------------- */
 const cardPlace = document.querySelector(".places__list");
 
 function renderCard(cardItemData) {
@@ -69,7 +79,7 @@ function openProfileModal() {
   profileInputfieldName.value = profileName.textContent;
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
-  clearValidation(profileFormElement, validationConfig);
+  clearValidation(profileFormElement, configValidation);
 }
 /* ----------------------  */
 newplaceAddButton.addEventListener("click", openNewplaceModal);
@@ -77,7 +87,7 @@ newplaceAddButton.addEventListener("click", openNewplaceModal);
 function openNewplaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
-  clearValidation(newplaceFormElement, validationConfig);
+  clearValidation(newplaceFormElement, configValidation);
 }
 
 /* ----------------------  */
@@ -114,7 +124,9 @@ function submitNewplace(evt) {
   newplaceFormElement.reset();
 }
 
-enableValidation(validationConfig);
+enableValidation(configValidation);
+
+getUserData();
 
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
