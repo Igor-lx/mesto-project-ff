@@ -1,6 +1,5 @@
 import "./index.css";
 import { createCard } from "./scripts/card";
-import { callbackFunctionsSet } from "./scripts/callbacks";
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
@@ -22,6 +21,7 @@ import {
   getInitialCards,
   editUserData,
   addNewplace,
+  deleteNewplace,
 } from "./scripts/api";
 
 export const configAPI = {
@@ -101,14 +101,6 @@ function openNewplaceModal() {
   clearValidation(newplaceFormElement, configValidation);
 }
 
-/* ----------------------  */
-function openFullscreenImage(cardItemData) {
-  popupImage.src = cardItemData.link;
-  popupImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupImageCaption.textContent = cardItemData.name;
-  openModal(popupImageModalWindow);
-}
-
 /* ---------------------------------------------------------------------------------- сабмит формы профиля ------------ */
 profileFormElement.addEventListener("submit", submitProfile);
 
@@ -151,7 +143,66 @@ function submitNewplace(evt) {
     .catch((err) => console.log(err));
 }
 
-/* ------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------- Callback Functions ---------- */
+
+const callbackFunctionsSet = {
+  deleteCard,
+  likeCard,
+  processImgDownldError,
+  showDeleteButton,
+  openFullscreenImage,
+};
+
+/* ----------------------------------------- */
+
+function showDeleteButton(cardItemData, userId, deleteButton) {
+  if (cardItemData.owner._id !== userId) {
+    deleteButton.remove();
+    return false;
+  }
+  return true;
+}
+
+function deleteCard(cardId, cardElement) {
+  deleteNewplace(cardId, configAPI)
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+function likeCard(cardLikeButton) {
+  cardLikeButton.classList.toggle("card__like-button_is-active");
+}
+
+function openFullscreenImage(cardItemData) {
+  popupImage.src = cardItemData.link;
+  popupImage.alt = 'фотография: "' + cardItemData.name + '"';
+  popupImageCaption.textContent = cardItemData.name;
+  openModal(popupImageModalWindow);
+}
+
+function processImgDownldError(
+  cardItemImage,
+  cardItemTitle,
+  cardItemDescription,
+  cardLikeSection
+) {
+  cardItemImage.classList.add(
+    "card__image__load_failure__textstile",
+    "card__image__load_failure"
+  );
+  cardItemTitle.classList.add("card__image__load_failure__textstile");
+  cardItemTitle.textContent =
+    "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
+  cardItemDescription.classList.add("card__image__load_failure__description");
+  cardLikeSection.style.display = "none";
+  cardItemImage.style.cursor = "not-allowed";
+}
+
+/* --------------------------------------------------------------------------------------------------------------------- */
 
 enableValidation(configValidation);
 

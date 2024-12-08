@@ -42,12 +42,13 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
 
   // Обработчик ошибки при загрузке изображения
   const cardItemDescription = cardItem.querySelector(".card__description");
+  const cardLikeSection = cardItem.querySelector(".likes_section")
   cardItemImage.onerror = () => {
     callbackFunctionsSet.processImgDownldError(
       cardItemImage,
       cardItemTitle,
       cardItemDescription,
-      cardLikeButton
+      cardLikeSection
     );
   };
 
