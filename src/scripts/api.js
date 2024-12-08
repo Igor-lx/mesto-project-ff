@@ -47,4 +47,12 @@ function addNewplace(newplaceDataArray, config) {
   }).then(getResponse);
 }
 
-export { getUserData, getInitialCards, editUserData, addNewplace };
+function toggleLike(cardId, isLiked, config) {
+  const APImethod = isLiked ? "DELETE" : "PUT";
+  return fetch(`${config.baseUrl}${config.likesEndpoint}${cardId}`, {
+    method: APImethod,
+    headers: config.headers,
+  }).then(getResponse);
+}
+
+export { getUserData, getInitialCards, editUserData, addNewplace, toggleLike };
