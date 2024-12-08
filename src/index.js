@@ -65,11 +65,10 @@ const popupImageModalWindow = document.querySelector(".popup_type_image");
 profileEditButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
-
   profileInputfieldName.value = profileName.textContent;
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
-  
+  clearValidation(profileFormElement, validationConfig);
 }
 /* ----------------------  */
 newplaceAddButton.addEventListener("click", openNewplaceModal);

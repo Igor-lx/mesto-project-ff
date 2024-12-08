@@ -75,9 +75,12 @@
               pattern="^[a-zA-Zа-яА-ЯёЁ\- ]+$"
               minlength="2"
               maxlength="40"
-              data-error_message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              data-error-message="поле может содержать только латинские и кириллические буквы, знаки дефиса и пробелы."
             />
-            <span class="popup__error-message" id="input_person_name-error"></span>
+            <span
+              class="popup__error-message"
+              id="input_person_name-error"
+            ></span>
             <input
               type="text"
               name="person_description"
@@ -88,9 +91,12 @@
               pattern="^[a-zA-Zа-яА-ЯёЁ\- ]+$"
               minlength="2"
               maxlength="200"
-              data-error_message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              data-error-message="поле может содержать только латинские и кириллические буквы, знаки дефиса и пробелы."
             />
-            <span class="popup__error-message" id="input_person_description-error"></span> 
+            <span
+              class="popup__error-message"
+              id="input_person_description-error"
+            ></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -112,9 +118,12 @@
               pattern="^[a-zA-Zа-яА-ЯёЁ\- ]+$"
               minlength="2"
               maxlength="30"
-              data-error_message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              data-error-message="поле может содержать только латинские и кириллические буквы, знаки дефиса и пробелы."
             />
-            <span class="popup__error-message" id="input_newplace_name-error"></span> 
+            <span
+              class="popup__error-message"
+              id="input_newplace_name-error"
+            ></span>
             <input
               type="url"
               name="newplace_url"
@@ -123,7 +132,10 @@
               required
               id="input_newplace_url"
             />
-            <span class="popup__error-message" id="input_newplace_url-error"></span>
+            <span
+              class="popup__error-message"
+              id="input_newplace_url-error"
+            ></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>

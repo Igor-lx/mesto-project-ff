@@ -33,8 +33,18 @@ function hideInputError(formElement, inputField, config) {
   errorSpanElement.textContent = "";
 }
 
-// Проверка валидности инпута
+// Проверка валидности
 function checkValidity(formElement, inputField, config) {
+  if (inputField.validity.patternMismatch) {
+    showInputError(
+      formElement,
+      inputField,
+      inputField.dataset.errorMessage,
+      config
+    );
+    return;
+  }
+
   if (!inputField.validity.valid) {
     showInputError(
       formElement,
