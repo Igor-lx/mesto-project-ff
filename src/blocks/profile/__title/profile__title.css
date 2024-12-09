@@ -6,7 +6,7 @@
   white-space: nowrap;
   overflow: hidden;
   grid-area: title;
-  margin: 0;
+  margin: 0 0 0 29px;
   user-select: none;
 }
 
