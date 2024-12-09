@@ -18,7 +18,6 @@ function getResponse(responseObject) {
   return Promise.reject(`Ошибка ${responseObject.status}`);
 }
 /* ---------------------------------------------------- */
-/* ---------------------------------------------------- */
 
 function getUserData(config) {
   return fetch(`${config.baseUrl}${config.userEndpoint}`, {
@@ -71,4 +70,5 @@ export {
   editUserData,
   addNewplace,
   deleteNewplace,
+  toggleLike
 };
