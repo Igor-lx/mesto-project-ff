@@ -129,13 +129,16 @@ function submitProfile(evt) {
     about: profileInputfieldJob.value,
   };
 
+  showSaving(true, profileFormElement);
+
   editUserData(newUserData, configAPI)
     .then((updatedUserData) => {
       profileName.textContent = updatedUserData.name;
       profileJob.textContent = updatedUserData.about;
       closeModal(profileModalWindow);
     })
-    .catch((error) => console.log(`Ошибка: ${error}`));
+    .catch((error) => console.log(`Ошибка: ${error}`))
+    .finally(() => showSaving(false, profileFormElement));
 }
 
 /* ------------------------------------------------------------------------------- сабмит формы новой карточки -------- */
@@ -152,12 +155,15 @@ function submitNewplace(evt) {
     owner: { _id: userId },
   };
 
+  showSaving(true, newplaceFormElement);
+
   addNewplace(newCardData, configAPI)
     .then((addedCard) => {
       renderCard(addedCard);
       closeModal(newplaceModalWindow);
     })
-    .catch((error) => console.log(`Ошибка: ${error}`));
+    .catch((error) => console.log(`Ошибка: ${error}`))
+    .finally(() => showSaving(false, newplaceFormElement));
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
@@ -168,12 +174,28 @@ function submitAvatar(event) {
 
   const avatarNewUrl = avtarInputfield.value;
 
+  showSaving(true, avtarFormElement);
+
   editAvatar(avatarNewUrl, configAPI)
-    .then((updatedUserData) => {
-      profileImage.style.backgroundImage = `url(${updatedUserData.avatar})`;
+    .then((updatedData) => {
+      profileImage.style.backgroundImage = `url(${updatedData.avatar})`;
       closeModal(avatarModalWindow);
     })
-    .catch((error) => console.error(`Ошибка: ${error}`));
+    .catch((error) => console.error(`Ошибка: ${error}`))
+    .finally(() => showSaving(false, avtarFormElement));
+}
+
+/* ------------------------------------------------------------------------------------------ showSaving ------------- */
+
+function showSaving(ifLoading, formElement) {
+  const submitButton = formElement.querySelector(".popup__button");
+
+  if (ifLoading) {
+    submitButton.dataset.buttonText = submitButton.textContent;
+    submitButton.textContent = "Сохранение...";
+  } else {
+    submitButton.textContent = submitButton.dataset.buttonText;
+  }
 }
 
 /* ------------------------------------------------------------------------------------- Callback Functions ---------- */
@@ -260,4 +282,5 @@ enableValidation(configValidation);
 /* ------------------------------------------------------- */
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
+
 // https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg

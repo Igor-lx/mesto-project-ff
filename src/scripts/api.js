@@ -16,7 +16,7 @@ function getResponse(responseObject) {
   if (responseObject.ok) {
     return responseObject.json();
   }
-  return Promise.reject(`Ошибка ${responseObject.status}`);
+  return Promise.reject(`Ошибка: ${responseObject.status}`);
 }
 /* ---------------------------------------------------- */
 
