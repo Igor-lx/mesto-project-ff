@@ -1,0 +1,13 @@
+.edit_avatar {
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-image: url("../../../images/edit-avatar.svg");
+  background-repeat: no-repeat;
+  background-size: 28px 28px;
+  transition: opacity 0.3s ease;
+}
+
+.edit_avatar:hover {
+  opacity: 1;
+  cursor: pointer;
+}
