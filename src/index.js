@@ -20,6 +20,7 @@ import {
   getUserData,
   getInitialCards,
   editUserData,
+  editAvatar,
   addNewplace,
   deleteNewplace,
   toggleLike,
@@ -27,13 +28,14 @@ import {
 
 const configAPI = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
+  userDataEndpoint: "/users/me",
+  userAvatarEndpoint: "/users/me/avatar",
+  cardsEndpoint: "/cards",
+  likesEndpoint: "/cards/likes/",
   headers: {
     authorization: "4539d8f5-d367-42ca-b41c-d2390bc8734d",
     "Content-Type": "application/json",
   },
-  userEndpoint: "/users/me",
-  cardsEndpoint: "/cards",
-  likesEndpoint: "/cards/likes/",
 };
 
 /* ------------------------------------------------------- */
@@ -58,6 +60,11 @@ const newplaceInputfieldLink = document.querySelector('[name="newplace_url"]');
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
+
+const avatarEditButton = document.querySelector(".edit_avatar");
+const avtarFormElement = document.querySelector('[name="edit_avatar"]');
+const avtarInputfield = document.querySelector('[name="avatar_url"]');
+const avatarModalWindow = document.querySelector(".popup_type_avatar");
 
 /* -------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
@@ -102,6 +109,15 @@ function openNewplaceModal() {
   clearValidation(newplaceFormElement, configValidation);
 }
 
+/* ----------------------  */
+avatarEditButton.addEventListener("click", openAvatarModal);
+
+function openAvatarModal() {
+  avtarFormElement.reset();
+  openModal(avatarModalWindow);
+  clearValidation(avtarFormElement, configValidation);
+}
+
 /* ---------------------------------------------------------------------------------- сабмит формы профиля ------------ */
 profileFormElement.addEventListener("submit", submitProfile);
 
@@ -142,6 +158,22 @@ function submitNewplace(evt) {
       closeModal(newplaceModalWindow);
     })
     .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
+/* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
+avtarFormElement.addEventListener("submit", submitAvatar);
+
+function submitAvatar(event) {
+  event.preventDefault();
+
+  const avatarNewUrl = avtarInputfield.value;
+
+  editAvatar(avatarNewUrl, configAPI)
+    .then((updatedUserData) => {
+      profileImage.style.backgroundImage = `url(${updatedUserData.avatar})`;
+      closeModal(avatarModalWindow);
+    })
+    .catch((error) => console.error(`Ошибка: ${error}`));
 }
 
 /* ------------------------------------------------------------------------------------- Callback Functions ---------- */
@@ -228,3 +260,4 @@ enableValidation(configValidation);
 /* ------------------------------------------------------- */
 //  test image
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
+// https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg

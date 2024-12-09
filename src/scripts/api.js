@@ -1,13 +1,14 @@
 /* CONFIG TEMPLATE
-const configApi = {
-  baseUrl: "https://...",
+const configAPI = {
+  baseUrl: "https://",
+  userDataEndpoint: "/...",
+  userAvatarEndpoint: "/...",
+  cardsEndpoint: "/...",
+  likesEndpoint: "/...",
   headers: {
     authorization: "",
     "Content-Type": "",
   },
-  userEndpoint: "/...",
-  cardsEndpoint: "/...",
-  likesEndpoint: "/.../"
 };
 */
 
@@ -20,7 +21,7 @@ function getResponse(responseObject) {
 /* ---------------------------------------------------- */
 
 function getUserData(config) {
-  return fetch(`${config.baseUrl}${config.userEndpoint}`, {
+  return fetch(`${config.baseUrl}${config.userDataEndpoint}`, {
     headers: config.headers,
   }).then(getResponse);
 }
@@ -32,7 +33,7 @@ function getInitialCards(config) {
 }
 
 function editUserData(userDataArray, config) {
-  return fetch(`${config.baseUrl}${config.userEndpoint}`, {
+  return fetch(`${config.baseUrl}${config.userDataEndpoint}`, {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify(userDataArray),
@@ -54,7 +55,6 @@ function deleteNewplace(cardId, config) {
   }).then(getResponse);
 }
 
-
 function toggleLike(cardId, isLiked, config) {
   const APImethod = isLiked ? "DELETE" : "PUT";
   return fetch(`${config.baseUrl}${config.likesEndpoint}${cardId}`, {
@@ -63,12 +63,20 @@ function toggleLike(cardId, isLiked, config) {
   }).then(getResponse);
 }
 
+function editAvatar(avatarUrl, config) {
+  return fetch(`${config.baseUrl}${config.userAvatarEndpoint}`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify({ avatar: avatarUrl }),
+  }).then(getResponse);
+}
 
 export {
   getUserData,
   getInitialCards,
   editUserData,
+  editAvatar,
   addNewplace,
   deleteNewplace,
-  toggleLike
+  toggleLike,
 };
