@@ -29,12 +29,22 @@ export function createCard(cardItemData, userId, callbackFunctionsSet) {
 
   /* ----------------------------------------------------------------------------------- лайк карточки ------------------- */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
-  const cardLikeCounter = cardItem.querySelector(".likes_counter");
+  const cardLikesCounter = cardItem.querySelector(".likes_counter");
 
-  cardLikeCounter.textContent = cardItemData.likes.length;
+  cardLikesCounter.textContent = cardItemData.likes.length;
 
-  cardLikeButton.addEventListener("click", (evt) => {
-    callbackFunctionsSet.likeCard(evt.target);
+  callbackFunctionsSet.IfAlreadyLiked(
+    cardItemData.likes,
+    userId,
+    cardLikeButton
+  );
+
+  cardLikeButton.addEventListener("click", () => {
+    callbackFunctionsSet.likeCard(
+      cardLikeButton,
+      cardItemData._id,
+      cardLikesCounter
+    );
   });
 
   /* --------------------------------------------------------------------------------- Открытие на фулскрин  ------------- */

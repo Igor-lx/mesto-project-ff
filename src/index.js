@@ -79,7 +79,7 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
       renderCard(card);
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => console.log(`Ошибка: ${error}`));
 
 /* --------------------------------------------------------------------------------- открытие модальных окон ---------- */
 
@@ -119,7 +119,7 @@ function submitProfile(evt) {
       profileJob.textContent = updatedUserData.about;
       closeModal(profileModalWindow);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
 /* ------------------------------------------------------------------------------- сабмит формы новой карточки -------- */
@@ -141,7 +141,7 @@ function submitNewplace(evt) {
       renderCard(addedCard);
       closeModal(newplaceModalWindow);
     })
-    .catch((err) => console.log(err));
+    .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
 /* ------------------------------------------------------------------------------------- Callback Functions ---------- */
@@ -152,10 +152,10 @@ const callbackFunctionsSet = {
   processImgDownldError,
   showDeleteButton,
   openFullscreenImage,
+  IfAlreadyLiked,
 };
 
 /* ----------------------------------------- */
-
 function showDeleteButton(cardItemData, userId, deleteButton) {
   if (cardItemData.owner._id !== userId) {
     deleteButton.remove();
@@ -169,15 +169,30 @@ function deleteCard(cardId, cardElement) {
     .then(() => {
       cardElement.remove();
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-function likeCard(cardLikeButton) {
-  cardLikeButton.classList.toggle("card__like-button_is-active");
+/* ----------------------------------------- */
+function IfAlreadyLiked(likes, userId, likeButton) {
+  const alreadyLiked = likes.some((like) => like._id === userId);
+  if (alreadyLiked) {
+    likeButton.classList.add("card__like-button_is-active");
+  }
 }
 
+function likeCard(cardLikeButton, cardId, cardLikesCounter) {
+  const isLiked = cardLikeButton.classList.contains(
+    "card__like-button_is-active"
+  );
+  toggleLike(cardId, isLiked, configAPI)
+    .then((likedCardData) => {
+      cardLikeButton.classList.toggle("card__like-button_is-active");
+      cardLikesCounter.textContent = likedCardData.likes.length;
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
+/* ----------------------------------------- */
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -185,6 +200,7 @@ function openFullscreenImage(cardItemData) {
   openModal(popupImageModalWindow);
 }
 
+/* ----------------------------------------- */
 function processImgDownldError(
   cardItemImage,
   cardItemTitle,
