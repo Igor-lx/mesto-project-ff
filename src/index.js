@@ -69,7 +69,18 @@ const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
 const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
-let userId;
+export const confirmDeleteModal = document.querySelector(
+  ".popup_type_delete-confirm"
+);
+
+let userId = null;
+
+/* -------------------------------------------------------- */
+const confirmDeleteButton = confirmDeleteModal.querySelector(".popup__button");
+export const currentDeleteElement = {
+  currentCardId: null,
+  currentCardElement: null,
+};
 
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
@@ -219,6 +230,22 @@ function showDeleteButton(cardItemData, userId, deleteButton) {
   }
   return true;
 }
+
+confirmDeleteButton.addEventListener("click", () => {
+  if (
+    currentDeleteElement.currentCardId &&
+    currentDeleteElement.currentCardElement
+  ) {
+    callbackFunctionsSet.deleteCard(
+      currentDeleteElement.currentCardId,
+      currentDeleteElement.currentCardElement
+    );
+    closeModal(confirmDeleteModal);
+
+    currentDeleteElement.currentCardId = null;
+    currentDeleteElement.currentCardElement = null;
+  }
+});
 
 function deleteCard(cardId, cardElement) {
   deleteNewplace(cardId, configAPI)
