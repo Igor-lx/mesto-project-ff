@@ -364,3 +364,9 @@ enableValidation(configValidation);
 
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 // https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
+
+
+// import {logLikedCards, logLikedSettings} from "./scripts/log_liked_cards";
+// logLikedCards (configAPI, logLikedSettings)
+
+
