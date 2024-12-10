@@ -1,4 +1,7 @@
+//
+
 import "./index.css";
+
 import { createCard } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
@@ -43,13 +46,13 @@ const configAPI = {
 const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileModalWindow = document.querySelector(".popup_type_edit");
-const profileName = document.querySelector(".profile__title");
-const profileJob = document.querySelector(".profile__description");
-const profileImage = document.querySelector(".profile__image");
 const profileInputfieldName = document.querySelector('[name="person_name"]');
 const profileInputfieldJob = document.querySelector(
   '[name="person_description"]'
 );
+const profileName = document.querySelector(".profile__title");
+const profileJob = document.querySelector(".profile__description");
+const profileAvatar = document.querySelector(".profile__image");
 
 const newplaceFormElement = document.querySelector('[name="new-place"]');
 const newplaceAddButton = document.querySelector(".profile__add-button");
@@ -61,12 +64,14 @@ const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
-const avatarEditButton = document.querySelector(".edit_avatar");
 const avtarFormElement = document.querySelector('[name="edit_avatar"]');
-const avtarInputfield = document.querySelector('[name="avatar_url"]');
+const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
+const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
-/* -------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
+let userId;
+
+/* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
 const cardPlace = document.querySelector(".places__list");
 
@@ -74,13 +79,12 @@ function renderCard(cardItemData) {
   cardPlace.prepend(createCard(cardItemData, userId, callbackFunctionsSet));
 }
 
-let userId;
 Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   .then(([userData, initialCardsArray]) => {
     userId = userData._id;
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
-    profileImage.style.backgroundImage = `url(${userData.avatar})`;
+    profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
 
     initialCardsArray.reverse().forEach((card) => {
       renderCard(card);
@@ -88,9 +92,9 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   })
   .catch((error) => console.log(`Ошибка: ${error}`));
 
-/* --------------------------------------------------------------------------------- открытие модальных окон ---------- */
+/* ----------------------------------------------------------------------------------- открытие модальных окон ---------- */
 
-/* ----------------------  */
+/* --------------------------------------------------------------- профайл*/
 profileEditButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
@@ -100,7 +104,7 @@ function openProfileModal() {
   clearValidation(profileFormElement, configValidation);
 }
 
-/* ----------------------  */
+/* ------------------------------------------------------------ новое место*/
 newplaceAddButton.addEventListener("click", openNewplaceModal);
 
 function openNewplaceModal() {
@@ -109,7 +113,7 @@ function openNewplaceModal() {
   clearValidation(newplaceFormElement, configValidation);
 }
 
-/* ----------------------  */
+/* ---------------------------------------------------------------- аватар*/
 avatarEditButton.addEventListener("click", openAvatarModal);
 
 function openAvatarModal() {
@@ -118,7 +122,7 @@ function openAvatarModal() {
   clearValidation(avtarFormElement, configValidation);
 }
 
-/* ---------------------------------------------------------------------------------- сабмит формы профиля ------------ */
+/* ----------------------------------------------------------------------------------- сабмит формы профиля ------------ */
 profileFormElement.addEventListener("submit", submitProfile);
 
 function submitProfile(evt) {
@@ -151,8 +155,6 @@ function submitNewplace(evt) {
   const newCardData = {
     name: newplaceInputfieldName.value,
     link: newplaceInputfieldLink.value,
-    likes: [],
-    owner: { _id: userId },
   };
 
   showSaving(true, newplaceFormElement);
@@ -178,7 +180,7 @@ function submitAvatar(event) {
 
   editAvatar(avatarNewUrl, configAPI)
     .then((updatedData) => {
-      profileImage.style.backgroundImage = `url(${updatedData.avatar})`;
+      profileAvatar.style.backgroundImage = `url(${updatedData.avatar})`;
       closeModal(avatarModalWindow);
     })
     .catch((error) => console.error(`Ошибка: ${error}`))
@@ -209,7 +211,7 @@ const callbackFunctionsSet = {
   IfAlreadyLiked,
 };
 
-/* ----------------------------------------- */
+/* --------------------------------------------------------------------- */
 function showDeleteButton(cardItemData, userId, deleteButton) {
   if (cardItemData.owner._id !== userId) {
     deleteButton.remove();
@@ -226,7 +228,7 @@ function deleteCard(cardId, cardElement) {
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* ----------------------------------------- */
+/* --------------------------------------------------------------------- */
 function IfAlreadyLiked(likes, userId, likeButton) {
   const alreadyLiked = likes.some((like) => like._id === userId);
   if (alreadyLiked) {
@@ -246,7 +248,7 @@ function likeCard(cardLikeButton, cardId, cardLikesCounter) {
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* ----------------------------------------- */
+/* --------------------------------------------------------------------- */
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -254,7 +256,7 @@ function openFullscreenImage(cardItemData) {
   openModal(popupImageModalWindow);
 }
 
-/* ----------------------------------------- */
+/* --------------------------------------------------------------------- */
 function processImgDownldError(
   cardItemImage,
   cardItemTitle,
@@ -277,10 +279,10 @@ function processImgDownldError(
 
 enableValidation(configValidation);
 
-/* ------------------------------------------------------- */
+/* ===================================================================================================================== */
+/* ===================================================================================================================== */
 
-/* ------------------------------------------------------- */
-//  test image
+//  test images
+
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
-
 // https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg

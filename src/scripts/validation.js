@@ -32,6 +32,7 @@ function hideInputError(formElement, inputField, config) {
   errorSpanElement.textContent = "";
 }
 
+/* ---------------------- */
 function checkValidity(formElement, inputField, config) {
   if (inputField.validity.patternMismatch) {
     showInputError(
@@ -55,6 +56,7 @@ function checkValidity(formElement, inputField, config) {
   hideInputError(formElement, inputField, config);
 }
 
+/* ---------------------- */
 function toggleSubmitButton(inputList, buttonElement, config) {
   const hasInvalidInput = inputList.some(
     (inputField) => !inputField.validity.valid
@@ -69,6 +71,7 @@ function toggleSubmitButton(inputList, buttonElement, config) {
   }
 }
 
+/* ---------------------- */
 function enableValidation(config) {
   const formList = Array.from(document.querySelectorAll(config.formSelector));
 
@@ -91,6 +94,7 @@ function enableValidation(config) {
   });
 }
 
+/* ---------------------- */
 function clearValidation(formElement, config) {
   const inputList = Array.from(
     formElement.querySelectorAll(config.inputfieldSelector)
@@ -103,4 +107,5 @@ function clearValidation(formElement, config) {
   toggleSubmitButton(inputList, submitButton, config);
 }
 
+/* --------------------------------------------------------------- */
 export { enableValidation, clearValidation };

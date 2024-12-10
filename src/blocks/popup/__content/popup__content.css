@@ -9,6 +9,13 @@
   padding: 34px 36px;
 }
 
+/* ADDITIONAL - TO SEPERATED BRANCH
+
+.popup__content_confirm_delete {
+  min-height: 180px;
+}
+  */
+
 @media screen and (max-width: 568px) {
   .popup__content {
     width: 100%;

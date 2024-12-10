@@ -14,7 +14,7 @@
     <div class="page__content">
       <header class="header page__section">
         <img
-          src="<%=require('./images/logo.svg')%>"
+          src="<%=require('./images/logoCG.svg')%>"
           alt="Логотип проекта место"
           class="logo header__logo"
         />
@@ -22,8 +22,12 @@
       <main class="content">
         <section class="profile page__section">
           <!-- ------------------------------------------------- -->
+
           <div class="profile__image">
-            <div class="profile__image edit_avatar"></div>
+            <div
+              class="profile__image edit_avatar"
+              aria-label="сменить аватар"
+            ></div>
           </div>
 
           <!-- ------------------------------------------------- -->
@@ -56,7 +60,11 @@
 
       <div class="popup popup_type_edit popup_is-animated">
         <div class="popup__content">
-          <button type="button" class="popup__close"></button>
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="закрыть окно"
+          ></button>
 
           <h3 class="popup__title">Редактировать профиль</h3>
           <form
@@ -105,7 +113,11 @@
       </div>
       <div class="popup popup_type_new-card popup_is-animated">
         <div class="popup__content">
-          <button type="button" class="popup__close"></button>
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="закрыть окно"
+          ></button>
           <h3 class="popup__title">Новое место</h3>
           <form class="popup__form" name="new-place" novalidate>
             <input
@@ -127,7 +139,7 @@
             <input
               type="url"
               name="newplace_url"
-              class="popup__input popup__input_type_url"
+              class="popup__input"
               placeholder="Ссылка на картинку"
               required
               id="input_newplace_url"
@@ -144,21 +156,30 @@
       </div>
       <div class="popup popup_type_image popup_is-animated">
         <div class="popup__content popup__content_content_image">
-          <button type="button" class="popup__close"></button>
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="закрыть окно"
+          ></button>
           <img src="" alt="" class="popup__image" />
           <p class="popup__caption"></p>
         </div>
       </div>
       <!-- ------------------------------------------------------------------------ -->
+
       <div class="popup popup_type_avatar popup_is-animated">
         <div class="popup__content">
-          <button type="button" class="popup__close"></button>
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="закрыть окно"
+          ></button>
           <h3 class="popup__title">Обновить аватар</h3>
           <form class="popup__form" name="edit_avatar" novalidate>
             <input
               type="url"
               name="avatar_url"
-              class="popup__input popup__input_type_url"
+              class="popup__input"
               placeholder="Ссылка на картинку"
               required
               id="input_avatar"
@@ -170,6 +191,7 @@
           </form>
         </div>
       </div>
+
       <!-- ------------------------------------------------------------------------- -->
     </div>
 

@@ -1,3 +1,5 @@
+//
+
 function openModal(modalWindowElement) {
   modalWindowElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", closeModalByKey);
@@ -24,6 +26,6 @@ function closeModalByKey(evt) {
     closeModal(document.querySelector(".popup_is-opened"));
   }
 }
-/* ----------------------------- */
+
+/* --------------------------------------------------------------- */
 export { openModal, closeModal };
-/* ----------------------------- */

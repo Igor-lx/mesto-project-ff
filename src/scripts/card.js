@@ -1,18 +1,20 @@
-export function createCard(cardItemData, userId, callbackFunctionsSet) {
-  /* ------------------------------------------------------------------------ */
+//
+
+function createCard(cardItemData, userId, callbackFunctionsSet) {
+  /* ----------------------------------------------------------------- */
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------------------------------------------- */
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------------------------------------------- */
   cardItemTitle.textContent = cardItemData.name;
   cardItemImage.src = cardItemData.link;
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
 
-  /* --------------------------------------------------------------------------------  удаление карточки ------------------ */
+  /* ----------------------------------------------------------------------------------  удаление карточки ------------------ */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
 
   if (
@@ -27,7 +29,7 @@ export function createCard(cardItemData, userId, callbackFunctionsSet) {
     });
   }
 
-  /* ----------------------------------------------------------------------------------- лайк карточки ------------------- */
+  /* ------------------------------------------------------------------------------------- лайк карточки ------------------- */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
   const cardLikesCounter = cardItem.querySelector(".likes_counter");
 
@@ -47,7 +49,7 @@ export function createCard(cardItemData, userId, callbackFunctionsSet) {
     );
   });
 
-  /* --------------------------------------------------------------------------------- Открытие на фулскрин  ------------- */
+  /* ---------------------------------------------------------------------------------- Открытие на фулскрин  ------------- */
   cardItemImage.addEventListener("click", () => {
     if (cardItemImage.classList.contains("card__image__load_failure")) {
       return;
@@ -55,7 +57,7 @@ export function createCard(cardItemData, userId, callbackFunctionsSet) {
     callbackFunctionsSet.openFullscreenImage(cardItemData);
   });
 
-  /* ----------------------------------------------------------------------- Обработчик ошибки при загрузке изображения -- */
+  /* ------------------------------------------------------------------------ Обработчик ошибки при загрузке изображения -- */
   const cardItemDescription = cardItem.querySelector(".card__description");
   const cardLikeSection = cardItem.querySelector(".likes_section");
 
@@ -67,7 +69,10 @@ export function createCard(cardItemData, userId, callbackFunctionsSet) {
       cardLikeSection
     );
   };
-  /* ------------------------------------------------------------------------ */
+
+  /* ---------------- */
   return cardItem;
-  /* ------------------------------------------------------------------------ */
 }
+
+/* ------------------------------------------------------------------------ */
+export { createCard };

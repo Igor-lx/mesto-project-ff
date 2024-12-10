@@ -18,7 +18,7 @@ function getResponse(responseObject) {
   }
   return Promise.reject(`Ошибка: ${responseObject.status}`);
 }
-/* ---------------------------------------------------- */
+/* --------------------------------------------------------------- */
 
 function getUserData(config) {
   return fetch(`${config.baseUrl}${config.userDataEndpoint}`, {
@@ -37,6 +37,14 @@ function editUserData(userDataArray, config) {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify(userDataArray),
+  }).then(getResponse);
+}
+
+function editAvatar(avatarUrl, config) {
+  return fetch(`${config.baseUrl}${config.userAvatarEndpoint}`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify({ avatar: avatarUrl }),
   }).then(getResponse);
 }
 
@@ -63,14 +71,7 @@ function toggleLike(cardId, isLiked, config) {
   }).then(getResponse);
 }
 
-function editAvatar(avatarUrl, config) {
-  return fetch(`${config.baseUrl}${config.userAvatarEndpoint}`, {
-    method: "PATCH",
-    headers: config.headers,
-    body: JSON.stringify({ avatar: avatarUrl }),
-  }).then(getResponse);
-}
-
+/* --------------------------------------------------------------- */
 export {
   getUserData,
   getInitialCards,
