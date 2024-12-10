@@ -1,4 +1,6 @@
 //
+import { openModal } from "./modal";
+import { confirmDeleteModal, currentDeleteElement } from "../index";
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------- */
@@ -15,6 +17,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
 
   /* ----------------------------------------------------------------------------------  удаление карточки ------------------ */
+
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
 
   if (
@@ -25,10 +28,11 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     )
   ) {
     cardDeleteButton.addEventListener("click", () => {
-      callbackFunctionsSet.deleteCard(cardItemData._id, cardItem);
+      currentDeleteElement.currentCardId = cardItemData._id;
+      currentDeleteElement.currentCardElement = cardItem;
+      openModal(confirmDeleteModal);
     });
   }
-
   /* ------------------------------------------------------------------------------------- лайк карточки ------------------- */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
   const cardLikesCounter = cardItem.querySelector(".likes_counter");
