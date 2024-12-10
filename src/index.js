@@ -41,7 +41,7 @@ const configAPI = {
   },
 };
 
-/* ------------------------------------------------------- */
+/* -------------------------------------------------------- */
 
 const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
