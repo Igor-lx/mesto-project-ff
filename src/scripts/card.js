@@ -1,6 +1,12 @@
 //
 import { openModal } from "./modal";
-import { confirmDeleteModal, currentDeleteElement } from "../index";
+import {
+  confirmDeleteModalWindow,
+  confirmDeleteFormElement,
+  currentDeleteElement,
+  showButtonText,
+  buttonTexts,
+} from "../index";
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------- */
@@ -30,7 +36,14 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     cardDeleteButton.addEventListener("click", () => {
       currentDeleteElement.currentCardId = cardItemData._id;
       currentDeleteElement.currentCardElement = cardItem;
-      openModal(confirmDeleteModal);
+      showButtonText(
+        true,
+        false,
+        false,
+        confirmDeleteFormElement,
+        buttonTexts.delete
+      );
+      openModal(confirmDeleteModalWindow);
     });
   }
   /* ------------------------------------------------------------------------------------- лайк карточки ------------------- */

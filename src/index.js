@@ -69,17 +69,34 @@ const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
 const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
-export const confirmDeleteModal = document.querySelector(
-  ".popup_type_delete-confirm"
-);
-
 let userId = null;
 
 /* -------------------------------------------------------- */
-const confirmDeleteButton = confirmDeleteModal.querySelector(".popup__button");
+
+export const confirmDeleteFormElement = document.querySelector(
+  '[name="confirm-delete"]'
+);
+export const confirmDeleteModalWindow = document.querySelector(
+  ".popup_type_delete-confirm"
+);
+const confirmDeleteButton = document.querySelector(
+  ".popup__button_confirm-delete"
+);
+
 export const currentDeleteElement = {
   currentCardId: null,
   currentCardElement: null,
+};
+
+export const buttonTexts = {
+  save: {
+    loadingText: "Сохранение...",
+    completedText: "Сохранено",
+  },
+  delete: {
+    loadingText: "Удаление...",
+    completedText: "Удалено",
+  },
 };
 
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
@@ -109,6 +126,7 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
 profileEditButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
+  showButtonText(true, false, false, profileFormElement, buttonTexts.save);
   profileInputfieldName.value = profileName.textContent;
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
@@ -119,6 +137,7 @@ function openProfileModal() {
 newplaceAddButton.addEventListener("click", openNewplaceModal);
 
 function openNewplaceModal() {
+  showButtonText(true, false, false, newplaceFormElement, buttonTexts.save);
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
   clearValidation(newplaceFormElement, configValidation);
@@ -128,6 +147,7 @@ function openNewplaceModal() {
 avatarEditButton.addEventListener("click", openAvatarModal);
 
 function openAvatarModal() {
+  showButtonText(true, false, false, avtarFormElement, buttonTexts.save);
   avtarFormElement.reset();
   openModal(avatarModalWindow);
   clearValidation(avtarFormElement, configValidation);
@@ -144,7 +164,7 @@ function submitProfile(evt) {
     about: profileInputfieldJob.value,
   };
 
-  showSaving(true, profileFormElement);
+  showButtonText(false, true, false, profileFormElement, buttonTexts.save);
 
   editUserData(newUserData, configAPI)
     .then((updatedUserData) => {
@@ -153,7 +173,9 @@ function submitProfile(evt) {
       closeModal(profileModalWindow);
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() => showSaving(false, profileFormElement));
+    .finally(() =>
+      showButtonText(false, false, true, profileFormElement, buttonTexts.save)
+    );
 }
 
 /* ------------------------------------------------------------------------------- сабмит формы новой карточки -------- */
@@ -168,7 +190,7 @@ function submitNewplace(evt) {
     link: newplaceInputfieldLink.value,
   };
 
-  showSaving(true, newplaceFormElement);
+  showButtonText(false, true, false, newplaceFormElement, buttonTexts.save);
 
   addNewplace(newCardData, configAPI)
     .then((addedCard) => {
@@ -176,7 +198,9 @@ function submitNewplace(evt) {
       closeModal(newplaceModalWindow);
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() => showSaving(false, newplaceFormElement));
+    .finally(() =>
+      showButtonText(false, false, true, newplaceFormElement, buttonTexts.save)
+    );
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
@@ -187,7 +211,7 @@ function submitAvatar(event) {
 
   const avatarNewUrl = avtarInputfield.value;
 
-  showSaving(true, avtarFormElement);
+  showButtonText(false, true, false, avtarFormElement, buttonTexts.save);
 
   editAvatar(avatarNewUrl, configAPI)
     .then((updatedData) => {
@@ -195,19 +219,32 @@ function submitAvatar(event) {
       closeModal(avatarModalWindow);
     })
     .catch((error) => console.error(`Ошибка: ${error}`))
-    .finally(() => showSaving(false, avtarFormElement));
+    .finally(() =>
+      showButtonText(false, false, true, avtarFormElement, buttonTexts.save)
+    );
 }
 
-/* ------------------------------------------------------------------------------------------ showSaving ------------- */
+/* ------------------------------------------------------------------------------------------ showButtonText ------------- */
 
-function showSaving(ifLoading, formElement) {
+export function showButtonText(
+  ifOpened,
+  ifLoading,
+  ifCompleted,
+  formElement,
+  buttonText
+) {
   const submitButton = formElement.querySelector(".popup__button");
 
-  if (ifLoading) {
-    submitButton.dataset.buttonText = submitButton.textContent;
-    submitButton.textContent = "Сохранение...";
-  } else {
-    submitButton.textContent = submitButton.dataset.buttonText;
+  if (!submitButton.dataset.originalText) {
+    submitButton.dataset.originalText = submitButton.textContent;
+  }
+
+  if (ifOpened) {
+    submitButton.textContent = submitButton.dataset.originalText;
+  } else if (ifLoading) {
+    submitButton.textContent = buttonText.loadingText;
+  } else if (ifCompleted) {
+    submitButton.textContent = buttonText.completedText;
   }
 }
 
@@ -240,19 +277,33 @@ confirmDeleteButton.addEventListener("click", () => {
       currentDeleteElement.currentCardId,
       currentDeleteElement.currentCardElement
     );
-    closeModal(confirmDeleteModal);
-
-    currentDeleteElement.currentCardId = null;
-    currentDeleteElement.currentCardElement = null;
   }
 });
 
 function deleteCard(cardId, cardElement) {
+  showButtonText(
+    false,
+    true,
+    false,
+    confirmDeleteFormElement,
+    buttonTexts.delete
+  );
+
   deleteNewplace(cardId, configAPI)
     .then(() => {
       cardElement.remove();
+      closeModal(confirmDeleteModalWindow);
     })
-    .catch((error) => console.log(`Ошибка: ${error}`));
+    .catch((error) => console.log(`Ошибка: ${error}`))
+    .finally(() =>
+      showButtonText(
+        false,
+        false,
+        true,
+        confirmDeleteFormElement,
+        buttonTexts.delete
+      )
+    );
 }
 
 /* --------------------------------------------------------------------- */
