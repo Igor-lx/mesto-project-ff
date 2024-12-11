@@ -248,7 +248,7 @@ function likeCard(cardLikeButton, cardId, cardLikesCounter) {
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* --------------------------------------------------------------------- */
+/* -------------------------------------------------------------------- */
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -256,7 +256,7 @@ function openFullscreenImage(cardItemData) {
   openModal(popupImageModalWindow);
 }
 
-/* --------------------------------------------------------------------- */
+/* -------------------------------------------------------------------- */
 function processImgDownldError(
   cardItemImage,
   cardItemTitle,
