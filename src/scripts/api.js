@@ -71,7 +71,7 @@ function toggleLike(cardId, isLiked, config) {
   }).then(getResponse);
 }
 
-/* --------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 export {
   getUserData,
   getInitialCards,
