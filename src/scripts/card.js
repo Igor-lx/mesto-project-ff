@@ -6,12 +6,14 @@ import {
   currentDeleteElement,
   showButtonText,
   buttonTexts,
-  likesModalWindow
+  likesModalWindow,
 } from "../index";
 
-  export const popupTitleHeader = document.querySelector('.popup__title_likes-header');
-  export const popupTitleLikes = document.querySelector('.popup__title_likes');
-  export const likersNameSpan = document.querySelector('.likers-name');
+export const likesModalHeader = document.querySelector(
+  ".popup__title_likes-header"
+);
+export const likesModalTitle = document.querySelector(".popup__title_likes");
+export const likersNameList = document.querySelector(".likers-name");
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------- */
@@ -92,19 +94,17 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     );
   };
 
-  /* ---------------- */
-  /* ---------------- */
-  
+  /* -----------------------------------------------------------------------------  модалка с теми кто  лайкнул ---------- */
+
   cardLikesCounter.addEventListener("click", () => {
     callbackFunctionsSet.showLikedUsers(cardItemData._id);
-    popupTitleHeader.textContent = ""
-    popupTitleLikes.textContent = ""
-    likersNameSpan.textContent = ""
-    openModal(likesModalWindow)
+    likesModalHeader.textContent = "";
+    likesModalTitle.textContent = "";
+    likersNameList.textContent = "";
+    openModal(likesModalWindow);
   });
-  /* ---------------- */
-  /* ---------------- */
 
+  /* ---------------- */
   return cardItem;
 }
 

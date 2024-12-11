@@ -2,10 +2,15 @@
 
 import "./index.css";
 
-import { createCard, popupTitleHeader, popupTitleLikes, likersNameSpan } from "./scripts/card";
+import {
+  createCard,
+  likesModalHeader,
+  likesModalTitle,
+  likersNameList,
+} from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
-/* ------------------------------------------------------- */
+/* --------------------------------------------------------------------------- */
 import { enableValidation, clearValidation } from "./scripts/validation";
 
 const configValidation = {
@@ -18,7 +23,7 @@ const configValidation = {
   errorClassPostfix: "-error",
 };
 
-/* ------------------------------------------------------- */
+/* --------------------------------------------------------------------------- */
 import {
   getUserData,
   getInitialCards,
@@ -41,7 +46,7 @@ const configAPI = {
   },
 };
 
-/* -------------------------------------------------------- */
+/* --------------------------------------------------------------------------- */
 
 const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
@@ -71,7 +76,7 @@ const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
 let userId = null;
 
-/* -------------------------------------------------------- */
+/* --------------------------------------------------------------------------- */
 
 export const confirmDeleteFormElement = document.querySelector(
   '[name="confirm-delete"]'
@@ -98,6 +103,10 @@ export const buttonTexts = {
     completedText: "Удалено",
   },
 };
+
+/* --------------------------------------------------------------------------- */
+
+export const likesModalWindow = document.querySelector(".popup_type_likes");
 
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
@@ -251,7 +260,19 @@ export function showButtonText(
   }
 }
 
-/* ------------------------------------------------------------------------------------- Callback Functions ---------- */
+/* --------------------------------------------------------------------------------------- refresh InputFields----------- */
+
+function refreshInputFields(formElement) {
+  const clearFormButon = formElement
+    .closest(".popup__content")
+    .querySelector(".clear_form");
+  clearFormButon.addEventListener("click", () => {
+    formElement.reset();
+    clearValidation(formElement, configValidation);
+  });
+}
+
+/* ---------------------------------------------------------------------------------------- Callback Functions ---------- */
 
 const callbackFunctionsSet = {
   deleteCard,
@@ -260,7 +281,7 @@ const callbackFunctionsSet = {
   showDeleteButton,
   openFullscreenImage,
   IfAlreadyLiked,
-  showLikedUsers
+  showLikedUsers,
 };
 
 /* --------------------------------------------------------------------- */
@@ -357,6 +378,33 @@ function processImgDownldError(
   cardItemImage.style.cursor = "not-allowed";
 }
 
+/* --------------------------------------------------------------------- */
+
+function showLikedUsers(cardId) {
+  getInitialCards(configAPI)
+    .then((cards) => {
+      const card = cards.find((card) => card._id === cardId);
+
+      if (card) {
+        likesModalHeader.textContent = `${card.name}. Автор: ${card.owner.name}`;
+
+        if (card.likes.length > 0) {
+          const likersNames = card.likes.map((liker) => liker.name).join(", ");
+          likesModalTitle.textContent = "Это фото понравилось:";
+          likersNameList.textContent = likersNames;
+        } else {
+          likesModalTitle.textContent = "У этой карточки нет лайков";
+          likersNameList.textContent = "";
+        }
+      } else {
+        likesModalHeader.textContent = "Карточка не найдена";
+        likesModalTitle.textContent = "";
+        likersNameList.textContent = "";
+      }
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 enableValidation(configValidation);
@@ -364,57 +412,7 @@ enableValidation(configValidation);
 /* ===================================================================================================================== */
 /* ===================================================================================================================== */
 
-function refreshInputFields(formElement) {
-  const clearFormButon = formElement
-    .closest(".popup__content")
-    .querySelector(".clear_form");
-  clearFormButon.addEventListener("click", () => {
-    formElement.reset();
-    clearValidation(formElement, configValidation);
-  });
-}
-
 //  test images
 
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 // https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
-
-// import {logLikedCards, logLikedSettings} from "./scripts/log_liked_cards";
-// logLikedCards (configAPI, logLikedSettings)
-
-
-function showLikedUsers(cardId) {
-  // Запрашиваем все карточки
-  getInitialCards(configAPI)
-    .then(cards => {
-      // Находим карточку по её ID
-      const card = cards.find(card => card._id === cardId);
-
-   
-      if (card) {
-        // Обновляем заголовок с автором карточки
-        popupTitleHeader.textContent = `${card.name}. Автор: ${card.owner.name}`;
-
-        if (card.likes.length > 0) {
-          // Если у карточки есть лайки
-          const likersNames = card.likes.map(liker => liker.name).join(", ");
-          popupTitleLikes.textContent = "Это фото понравилось:";
-          likersNameSpan.textContent = likersNames;
-        } else {
-          // Если лайков нет
-          popupTitleLikes.textContent = "У этой карточки нет лайков";
-          likersNameSpan.textContent = ''; // Очищаем span, так как лайков нет
-        }
-      } else {
-        // Если карточка не найдена
-        popupTitleHeader.textContent = "Карточка не найдена";
-        popupTitleLikes.textContent = '';
-        likersNameSpan.textContent = ''; // Очищаем span
-      }
-    })
-    .catch(error => console.error("Ошибка при получении карточек:", error));
-}
-
-
-export const likesModalWindow = document.querySelector(".popup_type_likes")
-
