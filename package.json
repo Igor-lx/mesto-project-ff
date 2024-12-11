@@ -1,5 +1,6 @@
 {
   "name": "mesto-project-ff",
+  "homepage": "https://Igor-lx.github.io/mesto-project-ff",
   "version": "1.0.0",
   "main": "babel.config.js",
   "scripts": {
