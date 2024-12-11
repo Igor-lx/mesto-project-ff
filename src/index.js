@@ -9,6 +9,7 @@ import {
   showDeleteButton,
   deleteCard,
 } from "./scripts/card";
+
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
@@ -31,8 +32,6 @@ import {
   editUserData,
   editAvatar,
   addNewplace,
-  deleteNewplace,
-  toggleLike,
 } from "./scripts/api";
 
 export const configAPI = {
@@ -76,6 +75,7 @@ const avatarModalWindow = document.querySelector(".popup_type_avatar");
 const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
 let userId;
+
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
 const cardPlace = document.querySelector(".places__list");
@@ -138,7 +138,7 @@ function submitProfile(evt) {
     about: profileInputfieldJob.value,
   };
 
-  showSaving(true, profileFormElement);
+  setButtonText(true, profileFormElement, submitButtonText.saving);
 
   editUserData(newUserData, configAPI)
     .then((updatedUserData) => {
@@ -147,7 +147,9 @@ function submitProfile(evt) {
       closeModal(profileModalWindow);
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() => showSaving(false, profileFormElement));
+    .finally(() =>
+      setButtonText(false, profileFormElement, submitButtonText.saving)
+    );
 }
 
 /* ------------------------------------------------------------------------------- сабмит формы новой карточки -------- */
@@ -162,7 +164,7 @@ function submitNewplace(evt) {
     link: newplaceInputfieldLink.value,
   };
 
-  showSaving(true, newplaceFormElement);
+  setButtonText(true, newplaceFormElement, submitButtonText.saving);
 
   addNewplace(newCardData, configAPI)
     .then((addedCard) => {
@@ -170,7 +172,9 @@ function submitNewplace(evt) {
       closeModal(newplaceModalWindow);
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() => showSaving(false, newplaceFormElement));
+    .finally(() =>
+      setButtonText(false, newplaceFormElement, submitButtonText.saving)
+    );
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
@@ -181,7 +185,7 @@ function submitAvatar(event) {
 
   const avatarNewUrl = avtarInputfield.value;
 
-  showSaving(true, avtarFormElement);
+  setButtonText(true, avtarFormElement, submitButtonText.saving);
 
   editAvatar(avatarNewUrl, configAPI)
     .then((updatedData) => {
@@ -189,17 +193,22 @@ function submitAvatar(event) {
       closeModal(avatarModalWindow);
     })
     .catch((error) => console.error(`Ошибка: ${error}`))
-    .finally(() => showSaving(false, avtarFormElement));
+    .finally(() =>
+      setButtonText(false, avtarFormElement, submitButtonText.saving)
+    );
 }
 
-/* ------------------------------------------------------------------------------------------ showSaving ------------- */
-
-function showSaving(ifLoading, formElement) {
+/* ------------------------------------------------------------------------------------------ setButtonText ------------- */
+export const submitButtonText = {
+  saving: "Coхранение...",
+  deleting: "Удаление...",
+};
+export function setButtonText(inProgress, formElement, text) {
   const submitButton = formElement.querySelector(".popup__button");
 
-  if (ifLoading) {
+  if (inProgress) {
     submitButton.dataset.buttonText = submitButton.textContent;
-    submitButton.textContent = "Сохранение...";
+    submitButton.textContent = text;
   } else {
     submitButton.textContent = submitButton.dataset.buttonText;
   }
@@ -215,10 +224,6 @@ export const callbackFunctionsSet = {
   openFullscreenImage,
   IfAlreadyLiked,
 };
-
-/* --------------------------------------------------------------------- */
-
-/* --------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------- */
 function openFullscreenImage(cardItemData) {

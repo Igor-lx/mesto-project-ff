@@ -1,7 +1,14 @@
 //
 import { openModal, closeModal } from "./modal";
-import {toggleLike, deleteNewplace} from "./api"
-import {callbackFunctionsSet, configAPI} from "../index"
+import { toggleLike, deleteNewplace } from "./api";
+import {
+  callbackFunctionsSet,
+  configAPI,
+  setButtonText,
+  submitButtonText,
+} from "../index";
+
+/* -------------------------------------------------------------------------------------------------------------------------- */
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------- */
@@ -12,7 +19,6 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
 
-  /* ----------------------------------------------------------------- */
   cardItemTitle.textContent = cardItemData.name;
   cardItemImage.src = cardItemData.link;
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -75,12 +81,12 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     );
   };
 
-  /* ---------------- */
+  /* --------------------------- */
+
   return cardItem;
 }
 
-
-/* ================================================================================================================ */
+/* ====================================================================================== Callback Functions ============= */
 
 function IfAlreadyLiked(likes, userId, likeButton) {
   const alreadyLiked = likes.some((like) => like._id === userId);
@@ -102,16 +108,13 @@ function likeCard(cardLikeButton, cardId, cardLikesCounter) {
 }
 
 /* --------------------------------------------------------------------------------------- */
-const confirmDeleteModal = document.querySelector(
-  ".popup_type_delete-confirm"
-);
+const confirmDeleteModal = document.querySelector(".popup_type_delete-confirm");
 
 const confirmDeleteButton = confirmDeleteModal.querySelector(".popup__button");
 const currentDeleteElement = {
   currentCardId: null,
   currentCardElement: null,
 };
-
 
 function showDeleteButton(cardItemData, userId, deleteButton) {
   if (cardItemData.owner._id !== userId) {
@@ -136,14 +139,16 @@ confirmDeleteButton.addEventListener("click", () => {
 });
 
 function deleteCard(cardId, cardElement) {
+  setButtonText(true, confirmDeleteModal, submitButtonText.deleting);
   deleteNewplace(cardId, configAPI)
     .then(() => {
       cardElement.remove();
+      setButtonText(false, confirmDeleteModal, submitButtonText.deleting);
       closeModal(confirmDeleteModal);
     })
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* --------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 export { createCard, IfAlreadyLiked, likeCard, showDeleteButton, deleteCard };
