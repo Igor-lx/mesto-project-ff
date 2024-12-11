@@ -1,6 +1,7 @@
 //
-import { openModal } from "./modal";
-import { confirmDeleteModal, currentDeleteElement } from "../index";
+import { openModal, closeModal } from "./modal";
+import {toggleLike, deleteNewplace} from "./api"
+import {callbackFunctionsSet, configAPI} from "../index"
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------- */
@@ -78,5 +79,71 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   return cardItem;
 }
 
-/* ------------------------------------------------------------------------ */
-export { createCard };
+
+/* ================================================================================================================ */
+
+function IfAlreadyLiked(likes, userId, likeButton) {
+  const alreadyLiked = likes.some((like) => like._id === userId);
+  if (alreadyLiked) {
+    likeButton.classList.add("card__like-button_is-active");
+  }
+}
+
+function likeCard(cardLikeButton, cardId, cardLikesCounter) {
+  const isLiked = cardLikeButton.classList.contains(
+    "card__like-button_is-active"
+  );
+  toggleLike(cardId, isLiked, configAPI)
+    .then((likedCardData) => {
+      cardLikeButton.classList.toggle("card__like-button_is-active");
+      cardLikesCounter.textContent = likedCardData.likes.length;
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
+/* --------------------------------------------------------------------------------------- */
+const confirmDeleteModal = document.querySelector(
+  ".popup_type_delete-confirm"
+);
+
+const confirmDeleteButton = confirmDeleteModal.querySelector(".popup__button");
+const currentDeleteElement = {
+  currentCardId: null,
+  currentCardElement: null,
+};
+
+
+function showDeleteButton(cardItemData, userId, deleteButton) {
+  if (cardItemData.owner._id !== userId) {
+    deleteButton.remove();
+    return false;
+  }
+  return true;
+}
+
+confirmDeleteButton.addEventListener("click", () => {
+  if (
+    currentDeleteElement.currentCardId &&
+    currentDeleteElement.currentCardElement
+  ) {
+    callbackFunctionsSet.deleteCard(
+      currentDeleteElement.currentCardId,
+      currentDeleteElement.currentCardElement
+    );
+    currentDeleteElement.currentCardId = null;
+    currentDeleteElement.currentCardElement = null;
+  }
+});
+
+function deleteCard(cardId, cardElement) {
+  deleteNewplace(cardId, configAPI)
+    .then(() => {
+      cardElement.remove();
+      closeModal(confirmDeleteModal);
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
+/* --------------------------------------------------------------------------------------- */
+
+export { createCard, IfAlreadyLiked, likeCard, showDeleteButton, deleteCard };

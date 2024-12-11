@@ -2,7 +2,13 @@
 
 import "./index.css";
 
-import { createCard } from "./scripts/card";
+import {
+  createCard,
+  IfAlreadyLiked,
+  likeCard,
+  showDeleteButton,
+  deleteCard,
+} from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
@@ -29,7 +35,7 @@ import {
   toggleLike,
 } from "./scripts/api";
 
-const configAPI = {
+export const configAPI = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
   userDataEndpoint: "/users/me",
   userAvatarEndpoint: "/users/me/avatar",
@@ -69,19 +75,7 @@ const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
 const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
-export const confirmDeleteModal = document.querySelector(
-  ".popup_type_delete-confirm"
-);
-
-let userId = null;
-
-/* -------------------------------------------------------- */
-const confirmDeleteButton = confirmDeleteModal.querySelector(".popup__button");
-export const currentDeleteElement = {
-  currentCardId: null,
-  currentCardElement: null,
-};
-
+let userId;
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
 const cardPlace = document.querySelector(".places__list");
@@ -213,7 +207,7 @@ function showSaving(ifLoading, formElement) {
 
 /* ------------------------------------------------------------------------------------- Callback Functions ---------- */
 
-const callbackFunctionsSet = {
+export const callbackFunctionsSet = {
   deleteCard,
   likeCard,
   processImgDownldError,
@@ -223,57 +217,8 @@ const callbackFunctionsSet = {
 };
 
 /* --------------------------------------------------------------------- */
-function showDeleteButton(cardItemData, userId, deleteButton) {
-  if (cardItemData.owner._id !== userId) {
-    deleteButton.remove();
-    return false;
-  }
-  return true;
-}
-
-confirmDeleteButton.addEventListener("click", () => {
-  if (
-    currentDeleteElement.currentCardId &&
-    currentDeleteElement.currentCardElement
-  ) {
-    callbackFunctionsSet.deleteCard(
-      currentDeleteElement.currentCardId,
-      currentDeleteElement.currentCardElement
-    );
-    closeModal(confirmDeleteModal);
-
-    currentDeleteElement.currentCardId = null;
-    currentDeleteElement.currentCardElement = null;
-  }
-});
-
-function deleteCard(cardId, cardElement) {
-  deleteNewplace(cardId, configAPI)
-    .then(() => {
-      cardElement.remove();
-    })
-    .catch((error) => console.log(`Ошибка: ${error}`));
-}
 
 /* --------------------------------------------------------------------- */
-function IfAlreadyLiked(likes, userId, likeButton) {
-  const alreadyLiked = likes.some((like) => like._id === userId);
-  if (alreadyLiked) {
-    likeButton.classList.add("card__like-button_is-active");
-  }
-}
-
-function likeCard(cardLikeButton, cardId, cardLikesCounter) {
-  const isLiked = cardLikeButton.classList.contains(
-    "card__like-button_is-active"
-  );
-  toggleLike(cardId, isLiked, configAPI)
-    .then((likedCardData) => {
-      cardLikeButton.classList.toggle("card__like-button_is-active");
-      cardLikesCounter.textContent = likedCardData.likes.length;
-    })
-    .catch((error) => console.log(`Ошибка: ${error}`));
-}
 
 /* --------------------------------------------------------------------- */
 function openFullscreenImage(cardItemData) {
