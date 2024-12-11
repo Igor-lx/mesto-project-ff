@@ -1,4 +1,11 @@
 .likes_counter {
   font-size: 13px;
   color: #000;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.likes_counter:hover {
+  transform: scale(1.4);
+  opacity: 0.6;
 }

@@ -2,7 +2,7 @@
 
 import "./index.css";
 
-import { createCard } from "./scripts/card";
+import { createCard, popupTitleHeader, popupTitleLikes, likersNameSpan } from "./scripts/card";
 import { openModal, closeModal } from "./scripts/modal";
 
 /* ------------------------------------------------------- */
@@ -131,6 +131,7 @@ function openProfileModal() {
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
   clearValidation(profileFormElement, configValidation);
+  refreshInputFields(profileFormElement);
 }
 
 /* ------------------------------------------------------------ новое место*/
@@ -141,6 +142,7 @@ function openNewplaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
   clearValidation(newplaceFormElement, configValidation);
+  refreshInputFields(newplaceFormElement);
 }
 
 /* ---------------------------------------------------------------- аватар*/
@@ -151,6 +153,7 @@ function openAvatarModal() {
   avtarFormElement.reset();
   openModal(avatarModalWindow);
   clearValidation(avtarFormElement, configValidation);
+  refreshInputFields(avtarFormElement);
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы профиля ------------ */
@@ -257,6 +260,7 @@ const callbackFunctionsSet = {
   showDeleteButton,
   openFullscreenImage,
   IfAlreadyLiked,
+  showLikedUsers
 };
 
 /* --------------------------------------------------------------------- */
@@ -360,13 +364,57 @@ enableValidation(configValidation);
 /* ===================================================================================================================== */
 /* ===================================================================================================================== */
 
+function refreshInputFields(formElement) {
+  const clearFormButon = formElement
+    .closest(".popup__content")
+    .querySelector(".clear_form");
+  clearFormButon.addEventListener("click", () => {
+    formElement.reset();
+    clearValidation(formElement, configValidation);
+  });
+}
+
 //  test images
 
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 // https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
 
-
 // import {logLikedCards, logLikedSettings} from "./scripts/log_liked_cards";
 // logLikedCards (configAPI, logLikedSettings)
 
+
+function showLikedUsers(cardId) {
+  // Запрашиваем все карточки
+  getInitialCards(configAPI)
+    .then(cards => {
+      // Находим карточку по её ID
+      const card = cards.find(card => card._id === cardId);
+
+   
+      if (card) {
+        // Обновляем заголовок с автором карточки
+        popupTitleHeader.textContent = `${card.name}. Автор: ${card.owner.name}`;
+
+        if (card.likes.length > 0) {
+          // Если у карточки есть лайки
+          const likersNames = card.likes.map(liker => liker.name).join(", ");
+          popupTitleLikes.textContent = "Это фото понравилось:";
+          likersNameSpan.textContent = likersNames;
+        } else {
+          // Если лайков нет
+          popupTitleLikes.textContent = "У этой карточки нет лайков";
+          likersNameSpan.textContent = ''; // Очищаем span, так как лайков нет
+        }
+      } else {
+        // Если карточка не найдена
+        popupTitleHeader.textContent = "Карточка не найдена";
+        popupTitleLikes.textContent = '';
+        likersNameSpan.textContent = ''; // Очищаем span
+      }
+    })
+    .catch(error => console.error("Ошибка при получении карточек:", error));
+}
+
+
+export const likesModalWindow = document.querySelector(".popup_type_likes")
 

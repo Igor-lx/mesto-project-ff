@@ -1,0 +1,10 @@
+.clear_form {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  background: transparent url("../../../images/clear-form.svg") center no-repeat;
+  cursor: pointer;
+  background-size: 18px 18px;
+}

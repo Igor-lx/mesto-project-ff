@@ -10,3 +10,15 @@
     line-height: 22px;
   }
 }
+
+
+.popup__title_likes-header {
+  margin-bottom: 3px;
+
+}
+
+.popup__title_likes{
+  margin-bottom: 10px;
+  font-size: 20px;
+
+}

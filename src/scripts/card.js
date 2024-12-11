@@ -6,7 +6,12 @@ import {
   currentDeleteElement,
   showButtonText,
   buttonTexts,
+  likesModalWindow
 } from "../index";
+
+  export const popupTitleHeader = document.querySelector('.popup__title_likes-header');
+  export const popupTitleLikes = document.querySelector('.popup__title_likes');
+  export const likersNameSpan = document.querySelector('.likers-name');
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------- */
@@ -88,6 +93,18 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   };
 
   /* ---------------- */
+  /* ---------------- */
+  
+  cardLikesCounter.addEventListener("click", () => {
+    callbackFunctionsSet.showLikedUsers(cardItemData._id);
+    popupTitleHeader.textContent = ""
+    popupTitleLikes.textContent = ""
+    likersNameSpan.textContent = ""
+    openModal(likesModalWindow)
+  });
+  /* ---------------- */
+  /* ---------------- */
+
   return cardItem;
 }
 
