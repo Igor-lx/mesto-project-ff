@@ -47,7 +47,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
         true,
         false,
         false,
-        confirmDeleteFormElement,
+        confirmDeleteModalWindow,
         buttonTexts.delete
       );
       openModal(confirmDeleteModalWindow);
@@ -62,7 +62,8 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   callbackFunctionsSet.IfAlreadyLiked(
     cardItemData.likes,
     userId,
-    cardLikeButton
+    cardLikeButton,
+    cardLikesCounter
   );
 
   cardLikeButton.addEventListener("click", () => {

@@ -3,9 +3,14 @@
   color: #000;
   cursor: pointer;
   transition: transform 0.3s ease;
+  opacity: 0.6;
 }
 
 .likes_counter:hover {
-  transform: scale(1.4);
+  transform: scale(1.3);
   opacity: 0.6;
+}
+
+.my_like_is-active {
+  opacity: 1;
 }

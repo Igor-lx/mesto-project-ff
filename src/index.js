@@ -78,9 +78,6 @@ let userId = null;
 
 /* --------------------------------------------------------------------------- */
 
-export const confirmDeleteFormElement = document.querySelector(
-  '[name="confirm-delete"]'
-);
 export const confirmDeleteModalWindow = document.querySelector(
   ".popup_type_delete-confirm"
 );
@@ -122,7 +119,6 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
     profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
-
     initialCardsArray.reverse().forEach((card) => {
       renderCard(card);
     });
@@ -140,7 +136,7 @@ function openProfileModal() {
   profileInputfieldJob.value = profileJob.textContent;
   openModal(profileModalWindow);
   clearValidation(profileFormElement, configValidation);
-  refreshInputFields(profileFormElement);
+  refreshInputProfile(profileFormElement);
 }
 
 /* ------------------------------------------------------------ новое место*/
@@ -272,6 +268,17 @@ function refreshInputFields(formElement) {
   });
 }
 
+function refreshInputProfile(formElement) {
+  const clearFormButon = formElement
+    .closest(".popup__content")
+    .querySelector(".clear_form");
+  clearFormButon.addEventListener("click", () => {
+    clearValidation(formElement, configValidation);
+    profileInputfieldName.value = profileName.textContent;
+    profileInputfieldJob.value = profileJob.textContent;
+  });
+}
+
 /* ---------------------------------------------------------------------------------------- Callback Functions ---------- */
 
 const callbackFunctionsSet = {
@@ -282,6 +289,7 @@ const callbackFunctionsSet = {
   openFullscreenImage,
   IfAlreadyLiked,
   showLikedUsers,
+  deleteNewplace,
 };
 
 /* --------------------------------------------------------------------- */
@@ -310,7 +318,7 @@ function deleteCard(cardId, cardElement) {
     false,
     true,
     false,
-    confirmDeleteFormElement,
+    confirmDeleteModalWindow,
     buttonTexts.delete
   );
 
@@ -325,17 +333,20 @@ function deleteCard(cardId, cardElement) {
         false,
         false,
         true,
-        confirmDeleteFormElement,
+        confirmDeleteModalWindow,
         buttonTexts.delete
       )
     );
 }
 
 /* --------------------------------------------------------------------- */
-function IfAlreadyLiked(likes, userId, likeButton) {
+
+function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
   const alreadyLiked = likes.some((like) => like._id === userId);
   if (alreadyLiked) {
     likeButton.classList.add("card__like-button_is-active");
+    console.log(likesCounter);
+    likesCounter.classList.add("my_like_is-active");
   }
 }
 
@@ -346,8 +357,10 @@ function likeCard(cardLikeButton, cardId, cardLikesCounter) {
   toggleLike(cardId, isLiked, configAPI)
     .then((likedCardData) => {
       cardLikeButton.classList.toggle("card__like-button_is-active");
+      cardLikesCounter.classList.toggle("my_like_is-active");
       cardLikesCounter.textContent = likedCardData.likes.length;
     })
+
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
@@ -355,7 +368,7 @@ function likeCard(cardLikeButton, cardId, cardLikesCounter) {
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupImageCaption.textContent = cardItemData.name;
+  popupImageCaption.textContent = cardItemData.name + '.';
   openModal(popupImageModalWindow);
 }
 
