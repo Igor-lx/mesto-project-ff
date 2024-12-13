@@ -19,12 +19,36 @@
   transition: 0.3s;
 }
 
-.card__delete-button:hover {
+.card__delete-button:hover,
+.image__editname-button:hover {
   opacity: 0.6;
 }
 
 .card__delete-button:focus,
-.card__delete-button:focus-visible {
+.card__delete-button:focus-visible,
+.image__editname-button:focus,
+.image__editname-button:focus-visible {
   outline: none;
   border: none;
+}
+
+.image__editname-button {
+  width: 20px;
+  height: 20px;
+  background: transparent url("../../../images/edit-image_name.svg") center
+    no-repeat;
+
+  background-size: 20px 20px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 17px;
+  right: 40px;
+  padding: 0;
+  margin: 0;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
 }

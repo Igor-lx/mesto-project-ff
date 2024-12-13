@@ -32,14 +32,16 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ----------------------------------------------------------------------------------  удаление карточки ------------------ */
 
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
+  const imagenameEditButton = cardItem.querySelector(".image__editname-button");
 
-  if (
-    callbackFunctionsSet.showDeleteButton(
-      cardItemData,
-      userId,
-      cardDeleteButton
-    )
-  ) {
+  callbackFunctionsSet.showImageButtons(
+    cardItemData,
+    userId,
+    cardDeleteButton,
+    imagenameEditButton
+  );
+
+  if (cardDeleteButton) {
     cardDeleteButton.addEventListener("click", () => {
       currentDeleteElement.currentCardId = cardItemData._id;
       currentDeleteElement.currentCardElement = cardItem;

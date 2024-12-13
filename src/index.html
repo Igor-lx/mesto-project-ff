@@ -85,7 +85,7 @@
               id="input_person_name"
               pattern="^[a-zA-Zа-яА-ЯёЁ0-9\- ]+$"
               minlength="2"
-              maxlength="40"
+              maxlength="20"
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
             <span
@@ -101,7 +101,7 @@
               id="input_person_description"
               pattern="^[a-zA-Zа-яА-ЯёЁ0-9\- ]+$"
               minlength="2"
-              maxlength="200"
+              maxlength="30"
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
             <span
@@ -133,7 +133,7 @@
               placeholder="Название"
               required
               id="input_newplace_name"
-              pattern="^[a-zA-Zа-яА-ЯёЁ\- ]+$"
+              pattern="^[a-zA-Zа-яА-ЯёЁ?\- ]+$"
               minlength="2"
               maxlength="30"
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
@@ -244,11 +244,12 @@
       <li class="places__item card">
         <img class="card__image" src="" alt="" />
         <button type="button" class="card__delete-button"></button>
+        <button type="button" class="image__editname-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
           <div class="likes_section">
-            <button type="button" class="card__like-button"></button>
             <span class="likes_counter"></span>
+            <button type="button" class="card__like-button"></button>
           </div>
         </div>
       </li>

@@ -3,20 +3,21 @@
   grid-template-areas:
     "title button"
     "description nothing";
-  grid-template-columns: minmax(auto, 325px) auto;
-  grid-gap: 9px 17px;
+  grid-template-columns: minmax(auto, auto) auto;
+  grid-gap: 9px 35px;
+  padding-right: 50px;
 }
 
 @media screen and (max-width: 740px) {
   .profile__info {
-    grid-template-columns: minmax(auto, 228px) auto;
+    grid-template-columns: minmax(auto, auto) auto;
     grid-gap: 9px 5px;
   }
 }
 
 @media screen and (max-width: 568px) {
   .profile__info {
-    grid-template-columns: minmax(auto, 195px) auto;
+    grid-template-columns: minmax(auto, auto) auto;
   }
 }
 

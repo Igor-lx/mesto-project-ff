@@ -1,7 +1,8 @@
 .profile__edit-button {
+  margin-top: 7px;
   width: 24px;
   height: 24px;
-  background: transparent url('../../../images/edit-icon.svg') center no-repeat;
+  background: transparent url("../../../images/edit-icon.svg") center no-repeat;
   background-size: 10px 10px;
   border: 1px solid #fff;
   grid-area: button;
@@ -13,7 +14,6 @@
   -o-transition: 0.3s;
   transition: 0.3s;
   padding: 0;
-  margin: 0;
 }
 
 .profile__edit-button:hover {

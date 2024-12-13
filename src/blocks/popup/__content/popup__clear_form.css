@@ -8,10 +8,10 @@
     no-repeat;
   cursor: pointer;
   background-size: 22px 22px;
-  opacity: 0.4;
+  opacity: 0.6;
   transition: opacity 0.3s ease;
 }
 
 .clear_form:hover {
-  opacity: 0.6;
+  opacity: 0.4;
 }

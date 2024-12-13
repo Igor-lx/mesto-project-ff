@@ -285,7 +285,7 @@ const callbackFunctionsSet = {
   deleteCard,
   likeCard,
   processImgDownldError,
-  showDeleteButton,
+  showImageButtons,
   openFullscreenImage,
   IfAlreadyLiked,
   showLikedUsers,
@@ -293,12 +293,11 @@ const callbackFunctionsSet = {
 };
 
 /* --------------------------------------------------------------------- */
-function showDeleteButton(cardItemData, userId, deleteButton) {
+function showImageButtons(cardItemData, userId, deleteButton, imageNameButton) {
   if (cardItemData.owner._id !== userId) {
     deleteButton.remove();
-    return false;
+    imageNameButton.remove();
   }
-  return true;
 }
 
 confirmDeleteButton.addEventListener("click", () => {
@@ -345,7 +344,6 @@ function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
   const alreadyLiked = likes.some((like) => like._id === userId);
   if (alreadyLiked) {
     likeButton.classList.add("card__like-button_is-active");
-    console.log(likesCounter);
     likesCounter.classList.add("my_like_is-active");
   }
 }
@@ -368,7 +366,7 @@ function likeCard(cardLikeButton, cardId, cardLikesCounter) {
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupImageCaption.textContent = cardItemData.name + '.';
+  popupImageCaption.textContent = cardItemData.name + ".";
   openModal(popupImageModalWindow);
 }
 

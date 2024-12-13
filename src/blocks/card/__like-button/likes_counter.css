@@ -1,16 +1,15 @@
 .likes_counter {
-  font-size: 13px;
+  font-size: 17px;
   color: #000;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  opacity: 1;
 }
 
 .likes_counter:hover {
-  transform: scale(1.3);
   opacity: 0.6;
 }
 
 .my_like_is-active {
-  opacity: 1;
+  color: brown;
 }
