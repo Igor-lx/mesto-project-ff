@@ -1,13 +1,6 @@
 //
-import { openModal } from "./modal";
-import {
-  confirmDeleteModalWindow,
-  confirmDeleteFormElement,
-  currentDeleteElement,
-  showButtonText,
-  buttonTexts,
-  likesModalWindow,
-} from "../index";
+
+import { likesModalWindow } from "../index";
 
 export const likesModalHeader = document.querySelector(
   ".popup__title_likes-header"
@@ -16,45 +9,57 @@ export const likesModalTitle = document.querySelector(".popup__title_likes");
 export const likersNameList = document.querySelector(".likers-name");
 
 function createCard(cardItemData, userId, callbackFunctionsSet) {
-  /* ----------------------------------------------------------------- */
+  /* ------------------------------------------------------------------------ */
   const nodeTemplate = document.querySelector("#card-template").content;
   const cardItem = nodeTemplate.querySelector(".card").cloneNode(true);
 
-  /* ----------------------------------------------------------------- */
+  /* ------------------------------------------------------------------------ */
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
 
-  /* ----------------------------------------------------------------- */
   cardItemTitle.textContent = cardItemData.name;
   cardItemImage.src = cardItemData.link;
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
 
-  /* ----------------------------------------------------------------------------------  удаление карточки ------------------ */
-
+  /* ------------------------------------------------------------------------ */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
-  const imagenameEditButton = cardItem.querySelector(".image__editname-button");
+  const cardNamechangeButton = cardItem.querySelector(
+    ".image__editname-button"
+  );
 
-  callbackFunctionsSet.showImageButtons(
+  /* ---------------------------------------------------------------------- удаление кнопок если userID !== ownerID --------- */
+  callbackFunctionsSet.showButtonsOnCard(
     cardItemData,
     userId,
     cardDeleteButton,
-    imagenameEditButton
+    cardNamechangeButton
   );
+
+  /* -------------------------------------------------------------------------  слушатель кнопки удаления ------------------ */
 
   if (cardDeleteButton) {
     cardDeleteButton.addEventListener("click", () => {
-      currentDeleteElement.currentCardId = cardItemData._id;
-      currentDeleteElement.currentCardElement = cardItem;
+      callbackFunctionsSet.openConfirmDeleteModal(cardItemData, cardItem);
+    });
+  }
+
+  /* --------------------------------------------------------------------------  слушатель кнопки изменение имени  ---------- */
+
+  /*
+  if (cardNamechangeButton) {
+    cardNamechangeButton.addEventListener("click", () => {
       showButtonText(
         true,
         false,
         false,
-        confirmDeleteModalWindow,
-        buttonTexts.delete
+        changeCardNameModalWindow,
+        buttonTexts.save
       );
-      openModal(confirmDeleteModalWindow);
+      callbackFunctionsSet.openChangeCardNameModal(cardItemData, cardItem);
     });
   }
+    */
+
   /* ------------------------------------------------------------------------------------- лайк карточки ------------------- */
   const cardLikeButton = cardItem.querySelector(".card__like-button");
   const cardLikesCounter = cardItem.querySelector(".likes_counter");
@@ -112,4 +117,10 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
 }
 
 /* ------------------------------------------------------------------------ */
-export { createCard };
+export { createCard, deleteCard };
+
+/* ===================================================================== create-related Callback Functions ============= */
+
+function deleteCard(cardElement) {
+  cardElement.remove();
+}

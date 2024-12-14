@@ -85,7 +85,7 @@
               id="input_person_name"
               pattern="^[a-zA-Zа-яА-ЯёЁ0-9\- ]+$"
               minlength="2"
-              maxlength="20"
+              maxlength="15"
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
             <span
@@ -101,7 +101,7 @@
               id="input_person_description"
               pattern="^[a-zA-Zа-яА-ЯёЁ0-9\- ]+$"
               minlength="2"
-              maxlength="30"
+              maxlength="25"
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
             <span
@@ -133,7 +133,7 @@
               placeholder="Название"
               required
               id="input_newplace_name"
-              pattern="^[a-zA-Zа-яА-ЯёЁ?\- ]+$"
+              pattern="^[a-zA-Zа-яА-ЯёЁ0-9\- ]+$"
               minlength="2"
               maxlength="30"
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
@@ -213,7 +213,7 @@
           <h3 class="popup__title">Вы уверены?</h3>
           <button
             type="button"
-            class="popup__button popup__button_confirm-delete"
+            class="popup__button"
             aria-label="удалить карточку"
           >
             Да
@@ -248,7 +248,7 @@
         <div class="card__description">
           <h2 class="card__title"></h2>
           <div class="likes_section">
-            <span class="likes_counter"></span>
+            <span class="likes_counter">0</span>
             <button type="button" class="card__like-button"></button>
           </div>
         </div>

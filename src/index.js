@@ -4,6 +4,7 @@ import "./index.css";
 
 import {
   createCard,
+  deleteCard,
   likesModalHeader,
   likesModalTitle,
   likersNameList,
@@ -47,6 +48,7 @@ const configAPI = {
 };
 
 /* --------------------------------------------------------------------------- */
+let userId = null;
 
 const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
@@ -74,21 +76,18 @@ const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
 const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
-let userId = null;
-
-/* --------------------------------------------------------------------------- */
-
-export const confirmDeleteModalWindow = document.querySelector(
+const confirmDeleteModalWindow = document.querySelector(
   ".popup_type_delete-confirm"
 );
-const confirmDeleteButton = document.querySelector(
-  ".popup__button_confirm-delete"
-);
+const confirmDeleteButton =
+  confirmDeleteModalWindow.querySelector(".popup__button");
 
-export const currentDeleteElement = {
+const currentDeleteElement = {
   currentCardId: null,
   currentCardElement: null,
 };
+
+/* --------------------------------------------------------------------------- */
 
 export const buttonTexts = {
   save: {
@@ -119,13 +118,14 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
     profileName.textContent = userData.name;
     profileJob.textContent = userData.about;
     profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+
     initialCardsArray.reverse().forEach((card) => {
       renderCard(card);
     });
   })
   .catch((error) => console.log(`Ошибка: ${error}`));
 
-/* ----------------------------------------------------------------------------------- открытие модальных окон ---------- */
+/* ------------------------------------------------------------------------ ------ открытие модальных окон страницы ---------- */
 
 /* --------------------------------------------------------------- профайл*/
 profileEditButton.addEventListener("click", openProfileModal);
@@ -282,37 +282,52 @@ function refreshInputProfile(formElement) {
 /* ---------------------------------------------------------------------------------------- Callback Functions ---------- */
 
 const callbackFunctionsSet = {
-  deleteCard,
   likeCard,
   processImgDownldError,
-  showImageButtons,
+  showButtonsOnCard,
   openFullscreenImage,
   IfAlreadyLiked,
   showLikedUsers,
   deleteNewplace,
+  openConfirmDeleteModal,
 };
 
 /* --------------------------------------------------------------------- */
-function showImageButtons(cardItemData, userId, deleteButton, imageNameButton) {
+function showButtonsOnCard(
+  cardItemData,
+  userId,
+  cardDeleteButton,
+  cardNamechangeButton
+) {
   if (cardItemData.owner._id !== userId) {
-    deleteButton.remove();
-    imageNameButton.remove();
+    cardDeleteButton.remove();
+    cardNamechangeButton.remove();
   }
 }
 
-confirmDeleteButton.addEventListener("click", () => {
-  if (
-    currentDeleteElement.currentCardId &&
-    currentDeleteElement.currentCardElement
-  ) {
-    callbackFunctionsSet.deleteCard(
-      currentDeleteElement.currentCardId,
-      currentDeleteElement.currentCardElement
-    );
-  }
-});
+/* ---------------------------------------------------------- открытие модальных окон карточки (листнеры в карточке) ---------- */
 
-function deleteCard(cardId, cardElement) {
+/* ---------------------------------------------------------------- удаление*/
+
+function openConfirmDeleteModal(cardItemData, cardItem) {
+  showButtonText(
+    true,
+    false,
+    false,
+    confirmDeleteModalWindow,
+    buttonTexts.delete
+  );
+
+  currentDeleteElement.currentCardId = cardItemData._id;
+  currentDeleteElement.currentCardElement = cardItem;
+  openModal(confirmDeleteModalWindow);
+}
+
+/* ---------------------------------------------------------------------------------------- handle Delete Card ----------- */
+
+confirmDeleteButton.addEventListener("click", handleDeleteCard);
+
+function handleDeleteCard() {
   showButtonText(
     false,
     true,
@@ -321,21 +336,25 @@ function deleteCard(cardId, cardElement) {
     buttonTexts.delete
   );
 
-  deleteNewplace(cardId, configAPI)
+  deleteNewplace(currentDeleteElement.currentCardId, configAPI)
     .then(() => {
-      cardElement.remove();
+      deleteCard(currentDeleteElement.currentCardElement);
+      currentDeleteElement.currentCardId = null;
+      currentDeleteElement.currentCardElement = null;
       closeModal(confirmDeleteModalWindow);
     })
-    .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() =>
+    .catch((error) => {
+      console.log(`Ошибка: ${error}`);
+    })
+    .finally(() => {
       showButtonText(
         false,
         false,
         true,
         confirmDeleteModalWindow,
         buttonTexts.delete
-      )
-    );
+      );
+    });
 }
 
 /* --------------------------------------------------------------------- */
@@ -425,5 +444,6 @@ enableValidation(configValidation);
 
 //  test images
 
+//  https://cdn.culture.ru/images/eb564802-73d5-5013-a8c3-2b9ca85a2d8f
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
-// https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
+//  https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
