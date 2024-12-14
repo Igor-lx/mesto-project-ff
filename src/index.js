@@ -49,6 +49,7 @@ const configAPI = {
 
 /* --------------------------------------------------------------------------- */
 let userId = null;
+
 /* ---------------- */
 const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
@@ -99,6 +100,18 @@ const likesModalTitle = document.querySelector(".popup__title_likes");
 const likersNameList = document.querySelector(".likers-name");
 
 /* --------------------------------------------------------------------------- */
+const changeCardNameModalWindow = document.querySelector(
+  ".popup_type_card_name_change"
+);
+const changeCardNameFormElement = document.querySelector(
+  '[name="edit_cardname"]'
+);
+const changeCardNameInputfield = document.querySelector(
+  '[name="edit_cardname_input"]'
+);
+
+/* --------------------------------------------------------------------------- */
+
 const buttonTexts = {
   save: {
     loadingText: "Сохранение...",
@@ -153,7 +166,7 @@ function openNewplaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
   clearValidation(newplaceFormElement, configValidation);
-  refreshInputFields(newplaceFormElement);
+  clearInputFields(newplaceFormElement);
 }
 
 /* ---------------------------------------------------------------- аватар*/
@@ -164,7 +177,7 @@ function openAvatarModal() {
   avtarFormElement.reset();
   openModal(avatarModalWindow);
   clearValidation(avtarFormElement, configValidation);
-  refreshInputFields(avtarFormElement);
+  clearInputFields(avtarFormElement);
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы профиля ------------ */
@@ -262,9 +275,9 @@ function showButtonText(
   }
 }
 
-/* --------------------------------------------------------------------------------------- refresh InputFields----------- */
+/* ---------------------------------------------------------------------------------- clear/refresh InputFields----------- */
 
-function refreshInputFields(formElement) {
+function clearInputFields(formElement) {
   const clearFormButon = formElement
     .closest(".popup__content")
     .querySelector(".clear_form");
@@ -282,6 +295,16 @@ function refreshInputProfile(formElement) {
     clearValidation(formElement, configValidation);
     profileInputfieldName.value = profileName.textContent;
     profileInputfieldJob.value = profileJob.textContent;
+  });
+}
+
+function refreshInputChangeName(formElement, currentCardName) {
+  const clearFormButon = formElement
+    .closest(".popup__content")
+    .querySelector(".clear_form");
+  clearFormButon.addEventListener("click", () => {
+    clearValidation(formElement, configValidation);
+    changeCardNameInputfield.value = currentCardName;
   });
 }
 
@@ -312,10 +335,9 @@ function showButtonsOnCard(
   }
 }
 
-/* ------------ открытие модальных окон карточки (листнеры в карточке) ---- */
+/* -------------------- открытие модальных окон карточки (листнеры в карточке) ---- */
 
-/* -------------------------------------------------------------- удаление */
-
+/* ----------------------------------------------------------------------- удаление */
 function openConfirmDeleteModal(cardItemData, cardItem) {
   showButtonText(
     true,
@@ -329,14 +351,22 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   openModal(confirmDeleteModalWindow);
 }
 
-/* --------------------------------------------------------------- изменение имени */
+/* ---------------------------------------------------------------- изменение имени */
 
-function openChangeCardNameModal(cardItemData, cardItem) {
-  showButtonText(true, false, false, ...ModalWindow, buttonTexts.save);
-  openModal(...ModalWindow);
+function openChangeCardNameModal(cardItemData) {
+  showButtonText(
+    true,
+    false,
+    false,
+    changeCardNameModalWindow,
+    buttonTexts.save
+  );
+  changeCardNameInputfield.value = cardItemData.name;
+  openModal(changeCardNameModalWindow);
+  refreshInputChangeName(changeCardNameFormElement, cardItemData.name);
 }
 
-/* --------------------------------------------------------- открытие на фулскрин */
+/* ----------------------------------------------------------- открытие на фулскрин */
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -344,7 +374,7 @@ function openFullscreenImage(cardItemData) {
   openModal(popupImageModalWindow);
 }
 
-/* -------------------------------------------------- открытие модалки лайкнувших */
+/* ------------------------------------------------------------ модалка лайкнувших */
 function openLikersModal() {
   likesModalHeader.textContent = "";
   likesModalTitle.textContent = "";

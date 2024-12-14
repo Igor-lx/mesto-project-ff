@@ -200,6 +200,47 @@
           </form>
         </div>
       </div>
+
+      <div class="popup popup_type_card_name_change popup_is-animated">
+        <div class="popup__content">
+          <!------------------------------------------->
+          <div class="clear_form"></div>
+          <!------------------------------------------->
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="закрыть окно"
+          ></button>
+          <h3 class="popup__title">Обновить название</h3>
+          <form
+            class="popup__form"
+            name="edit_cardname"
+            novalidate
+            autocomplete="off"
+          >
+            <input
+              type="text"
+              name="edit_cardname_input"
+              class="popup__input"
+              placeholder="новое название"
+              required
+              id="input_changename"
+              pattern="^[a-zA-Zа-яА-ЯёЁ0-9\- ]+$"
+              minlength="2"
+              maxlength="30"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+            />
+            <span
+              class="popup__error-message"
+              id="input_changename-error"
+            ></span>
+            <button type="submit" class="button popup__button">
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </div>
+
       <!-- ----------------------------------------------------------------------- -->
 
       <div class="popup popup_type_delete-confirm popup_is-animated">
