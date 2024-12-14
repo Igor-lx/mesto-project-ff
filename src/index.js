@@ -295,6 +295,7 @@ const callbackFunctionsSet = {
   handleLikeCard,
   openFullscreenImage,
   processImgDownldError,
+  openLikersModal,
   showLikedUsers,
 };
 
@@ -328,14 +329,14 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   openModal(confirmDeleteModalWindow);
 }
 
-/* -------------------------------------------------------- изменение имени */
+/* --------------------------------------------------------------- изменение имени */
 
 function openChangeCardNameModal(cardItemData, cardItem) {
   showButtonText(true, false, false, ...ModalWindow, buttonTexts.save);
   openModal(...ModalWindow);
 }
 
-/* --------------------------------------------------- открытие на фулскрин */
+/* --------------------------------------------------------- открытие на фулскрин */
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -343,9 +344,15 @@ function openFullscreenImage(cardItemData) {
   openModal(popupImageModalWindow);
 }
 
-/* --------------------------------------------------- открытие модалки лайкнувших */
+/* -------------------------------------------------- открытие модалки лайкнувших */
+function openLikersModal() {
+  likesModalHeader.textContent = "";
+  likesModalTitle.textContent = "";
+  likersNameList.textContent = "";
+  openModal(likesModalWindow);
+}
 
-/* --- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card --- */
+/* -- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card -- */
 
 confirmDeleteButton.addEventListener("click", handleDeleteCard);
 
@@ -428,10 +435,6 @@ function showLikedUsers(cardId) {
       const card = cards.find((card) => card._id === cardId);
 
       if (card) {
-        likesModalHeader.textContent = "";
-        likesModalTitle.textContent = "";
-        likersNameList.textContent = "";
-        openModal(likesModalWindow);
         likesModalHeader.textContent = `${card.name}. Автор: ${card.owner.name}`;
 
         if (card.likes.length > 0) {

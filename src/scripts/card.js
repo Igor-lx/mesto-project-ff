@@ -69,6 +69,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
 
   /* -------------------------------------------------------------------------  слушатель открытия модалки лайкнувших ----- */
   cardLikesCounter.addEventListener("click", () => {
+    callbackFunctionsSet.openLikersModal();
     callbackFunctionsSet.showLikedUsers(cardItemData._id);
   });
 
