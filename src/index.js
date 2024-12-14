@@ -5,10 +5,10 @@ import "./index.css";
 import {
   createCard,
   deleteCard,
-  likesModalHeader,
-  likesModalTitle,
-  likersNameList,
+  likeCard,
+  changeLikesCounter,
 } from "./scripts/card";
+
 import { openModal, closeModal } from "./scripts/modal";
 
 /* --------------------------------------------------------------------------- */
@@ -49,7 +49,7 @@ const configAPI = {
 
 /* --------------------------------------------------------------------------- */
 let userId = null;
-
+/* ---------------- */
 const profileFormElement = document.querySelector('[name="edit-profile"]');
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileModalWindow = document.querySelector(".popup_type_edit");
@@ -57,25 +57,30 @@ const profileInputfieldName = document.querySelector('[name="person_name"]');
 const profileInputfieldJob = document.querySelector(
   '[name="person_description"]'
 );
+/* ---------------- */
 const profileName = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__description");
 const profileAvatar = document.querySelector(".profile__image");
 
+/* ---------------- */
 const newplaceFormElement = document.querySelector('[name="new-place"]');
 const newplaceAddButton = document.querySelector(".profile__add-button");
 const newplaceModalWindow = document.querySelector(".popup_type_new-card");
 const newplaceInputfieldName = document.querySelector('[name="newplace_name"]');
 const newplaceInputfieldLink = document.querySelector('[name="newplace_url"]');
 
+/* ---------------- */
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
+/* ---------------- */
 const avtarFormElement = document.querySelector('[name="edit_avatar"]');
 const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
 const avtarInputfield = document.querySelector('[name="avatar_url"]');
 
+/* ---------------- */
 const confirmDeleteModalWindow = document.querySelector(
   ".popup_type_delete-confirm"
 );
@@ -87,9 +92,14 @@ const currentDeleteElement = {
   currentCardElement: null,
 };
 
-/* --------------------------------------------------------------------------- */
+/* ---------------- */
+const likesModalWindow = document.querySelector(".popup_type_likes");
+const likesModalHeader = document.querySelector(".popup__title_likes-header");
+const likesModalTitle = document.querySelector(".popup__title_likes");
+const likersNameList = document.querySelector(".likers-name");
 
-export const buttonTexts = {
+/* --------------------------------------------------------------------------- */
+const buttonTexts = {
   save: {
     loadingText: "Сохранение...",
     completedText: "Сохранено",
@@ -99,10 +109,6 @@ export const buttonTexts = {
     completedText: "Удалено",
   },
 };
-
-/* --------------------------------------------------------------------------- */
-
-export const likesModalWindow = document.querySelector(".popup_type_likes");
 
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
 
@@ -234,7 +240,7 @@ function submitAvatar(event) {
 
 /* ------------------------------------------------------------------------------------------ showButtonText ------------- */
 
-export function showButtonText(
+function showButtonText(
   ifOpened,
   ifLoading,
   ifCompleted,
@@ -282,14 +288,14 @@ function refreshInputProfile(formElement) {
 /* ---------------------------------------------------------------------------------------- Callback Functions ---------- */
 
 const callbackFunctionsSet = {
-  likeCard,
-  processImgDownldError,
   showButtonsOnCard,
-  openFullscreenImage,
-  IfAlreadyLiked,
-  showLikedUsers,
-  deleteNewplace,
   openConfirmDeleteModal,
+  openChangeCardNameModal,
+  IfAlreadyLiked,
+  handleLikeCard,
+  openFullscreenImage,
+  processImgDownldError,
+  showLikedUsers,
 };
 
 /* --------------------------------------------------------------------- */
@@ -305,9 +311,9 @@ function showButtonsOnCard(
   }
 }
 
-/* ---------------------------------------------------------- открытие модальных окон карточки (листнеры в карточке) ---------- */
+/* ------------ открытие модальных окон карточки (листнеры в карточке) ---- */
 
-/* ---------------------------------------------------------------- удаление*/
+/* -------------------------------------------------------------- удаление */
 
 function openConfirmDeleteModal(cardItemData, cardItem) {
   showButtonText(
@@ -317,13 +323,29 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
     confirmDeleteModalWindow,
     buttonTexts.delete
   );
-
   currentDeleteElement.currentCardId = cardItemData._id;
   currentDeleteElement.currentCardElement = cardItem;
   openModal(confirmDeleteModalWindow);
 }
 
-/* ---------------------------------------------------------------------------------------- handle Delete Card ----------- */
+/* -------------------------------------------------------- изменение имени */
+
+function openChangeCardNameModal(cardItemData, cardItem) {
+  showButtonText(true, false, false, ...ModalWindow, buttonTexts.save);
+  openModal(...ModalWindow);
+}
+
+/* --------------------------------------------------- открытие на фулскрин */
+function openFullscreenImage(cardItemData) {
+  popupImage.src = cardItemData.link;
+  popupImage.alt = 'фотография: "' + cardItemData.name + '"';
+  popupImageCaption.textContent = cardItemData.name + ".";
+  openModal(popupImageModalWindow);
+}
+
+/* --------------------------------------------------- открытие модалки лайкнувших */
+
+/* --- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card --- */
 
 confirmDeleteButton.addEventListener("click", handleDeleteCard);
 
@@ -335,7 +357,6 @@ function handleDeleteCard() {
     confirmDeleteModalWindow,
     buttonTexts.delete
   );
-
   deleteNewplace(currentDeleteElement.currentCardId, configAPI)
     .then(() => {
       deleteCard(currentDeleteElement.currentCardElement);
@@ -367,26 +388,17 @@ function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
   }
 }
 
-function likeCard(cardLikeButton, cardId, cardLikesCounter) {
+function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
   const isLiked = cardLikeButton.classList.contains(
     "card__like-button_is-active"
   );
   toggleLike(cardId, isLiked, configAPI)
     .then((likedCardData) => {
-      cardLikeButton.classList.toggle("card__like-button_is-active");
-      cardLikesCounter.classList.toggle("my_like_is-active");
-      cardLikesCounter.textContent = likedCardData.likes.length;
+      likeCard(cardLikeButton);
+      changeLikesCounter(cardLikesCounter, likedCardData);
     })
 
     .catch((error) => console.log(`Ошибка: ${error}`));
-}
-
-/* --------------------------------------------------------------------- */
-function openFullscreenImage(cardItemData) {
-  popupImage.src = cardItemData.link;
-  popupImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupImageCaption.textContent = cardItemData.name + ".";
-  openModal(popupImageModalWindow);
 }
 
 /* --------------------------------------------------------------------- */
@@ -416,6 +428,10 @@ function showLikedUsers(cardId) {
       const card = cards.find((card) => card._id === cardId);
 
       if (card) {
+        likesModalHeader.textContent = "";
+        likesModalTitle.textContent = "";
+        likersNameList.textContent = "";
+        openModal(likesModalWindow);
         likesModalHeader.textContent = `${card.name}. Автор: ${card.owner.name}`;
 
         if (card.likes.length > 0) {
