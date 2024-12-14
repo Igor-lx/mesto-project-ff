@@ -18,6 +18,7 @@ function getResponse(responseObject) {
   }
   return Promise.reject(`Ошибка: ${responseObject.status}`);
 }
+
 /* --------------------------------------------------------------- */
 
 function getUserData(config) {
@@ -39,6 +40,26 @@ function editUserData(userDataArray, config) {
     body: JSON.stringify(userDataArray),
   }).then(getResponse);
 }
+
+/* ------------------------------------------------------------------------------------------------------------ */
+function editCardName(cardId, config) {
+  return fetch(`${config.baseUrl}${config.cardsEndpoint}/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+    // body: JSON.stringify(newCardName),
+  }).then(getResponse);
+}
+
+/*
+function editCardName(currentCardId, newCardName, config) {
+  return fetch(`${config.baseUrl}${config.cardsEndpoint}/${currentCardId}`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify(newCardName),
+  }).then(getResponse);
+}
+  */
+/* ------------------------------------------------------------------------------------------------------------ */
 
 function editAvatar(avatarUrl, config) {
   return fetch(`${config.baseUrl}${config.userAvatarEndpoint}`, {
@@ -80,4 +101,5 @@ export {
   addNewplace,
   deleteNewplace,
   toggleLike,
+  editCardName,
 };

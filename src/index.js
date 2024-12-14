@@ -33,6 +33,7 @@ import {
   addNewplace,
   deleteNewplace,
   toggleLike,
+  editCardName,
 } from "./scripts/api";
 
 const configAPI = {
@@ -88,11 +89,6 @@ const confirmDeleteModalWindow = document.querySelector(
 const confirmDeleteButton =
   confirmDeleteModalWindow.querySelector(".popup__button");
 
-const currentDeleteElement = {
-  currentCardId: null,
-  currentCardElement: null,
-};
-
 /* ---------------- */
 const likesModalWindow = document.querySelector(".popup_type_likes");
 const likesModalHeader = document.querySelector(".popup__title_likes-header");
@@ -121,6 +117,24 @@ const buttonTexts = {
     loadingText: "Удаление...",
     completedText: "Удалено",
   },
+};
+
+/* --------------------------------------------------------------------------- */
+const currentCardData = {
+  name: null,
+  currentCardId: null,
+  currentCardElement: null,
+  link: null,
+};
+
+const newCardData = {
+  name: null,
+  link: null,
+};
+
+const newUserData = {
+  name: null,
+  about: null,
 };
 
 /* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
@@ -186,10 +200,21 @@ profileFormElement.addEventListener("submit", submitProfile);
 function submitProfile(evt) {
   evt.preventDefault();
 
-  const newUserData = {
-    name: profileInputfieldName.value,
-    about: profileInputfieldJob.value,
-  };
+  newUserData.name = profileInputfieldName.value;
+  newUserData.about = profileInputfieldJob.value;
+
+  const isProfileNameChanged = newUserData.name !== profileName.textContent;
+  const isProfileJobChanged = newUserData.about !== profileJob.textContent;
+
+  if (!isProfileNameChanged && !isProfileJobChanged) {
+    console.log(
+      "Данные не изменились, запрос на сервер не был отправлен за ненадобностью."
+    );
+    closeModal(profileModalWindow);
+    newUserData.name = null;
+    newUserData.about = null;
+    return;
+  }
 
   showButtonText(false, true, false, profileFormElement, buttonTexts.save);
 
@@ -198,6 +223,8 @@ function submitProfile(evt) {
       profileName.textContent = updatedUserData.name;
       profileJob.textContent = updatedUserData.about;
       closeModal(profileModalWindow);
+      newUserData.name = null;
+      newUserData.about = null;
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
     .finally(() =>
@@ -212,10 +239,8 @@ newplaceFormElement.addEventListener("submit", submitNewplace);
 function submitNewplace(evt) {
   evt.preventDefault();
 
-  const newCardData = {
-    name: newplaceInputfieldName.value,
-    link: newplaceInputfieldLink.value,
-  };
+  newCardData.name = newplaceInputfieldName.value;
+  newCardData.link = newplaceInputfieldLink.value;
 
   showButtonText(false, true, false, newplaceFormElement, buttonTexts.save);
 
@@ -223,6 +248,8 @@ function submitNewplace(evt) {
     .then((addedCard) => {
       renderCard(addedCard);
       closeModal(newplaceModalWindow);
+      newCardData.name = null;
+      newCardData.link = null;
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
     .finally(() =>
@@ -346,14 +373,14 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
     confirmDeleteModalWindow,
     buttonTexts.delete
   );
-  currentDeleteElement.currentCardId = cardItemData._id;
-  currentDeleteElement.currentCardElement = cardItem;
+  currentCardData.currentCardId = cardItemData._id;
+  currentCardData.currentCardElement = cardItem;
   openModal(confirmDeleteModalWindow);
 }
 
 /* ---------------------------------------------------------------- изменение имени */
 
-function openChangeCardNameModal(cardItemData) {
+function openChangeCardNameModal(cardItemData, cardItem) {
   showButtonText(
     true,
     false,
@@ -361,9 +388,76 @@ function openChangeCardNameModal(cardItemData) {
     changeCardNameModalWindow,
     buttonTexts.save
   );
-  changeCardNameInputfield.value = cardItemData.name;
+
+  currentCardData.currentCardId = cardItemData._id;
+  currentCardData.currentCardElement = cardItem;
+  currentCardData.link = cardItemData.link;
+  currentCardData.name = cardItemData.name;
+
+  changeCardNameInputfield.value = currentCardData.name;
+
   openModal(changeCardNameModalWindow);
+  clearValidation(changeCardNameFormElement, configValidation);
   refreshInputChangeName(changeCardNameFormElement, cardItemData.name);
+}
+
+/* ---------------------------------------------------------- */
+
+changeCardNameFormElement.addEventListener("submit", changeCardName);
+
+function changeCardName(evt) {
+  evt.preventDefault();
+
+  newCardData.name = changeCardNameInputfield.value;
+  newCardData.link = currentCardData.link;
+
+  const isNewCardName = newCardData.name === currentCardData.name;
+
+  if (isNewCardName) {
+    console.log(
+      "Данные не изменились, запрос на сервер не был отправлен за ненадобностью."
+    );
+    closeModal(changeCardNameModalWindow);
+    currentCardData.currentCardId = null;
+    currentCardData.currentCardElement = null;
+    currentCardData.link = null;
+    return;
+  }
+
+  showButtonText(
+    false,
+    true,
+    false,
+    changeCardNameModalWindow,
+    buttonTexts.save
+  );
+
+  Promise.all([
+    deleteNewplace(currentCardData.currentCardId, configAPI),
+    addNewplace(newCardData, configAPI),
+  ])
+    .then(([deleteResult, addedCard]) => {
+      deleteCard(currentCardData.currentCardElement);
+      renderCard(addedCard);
+      closeModal(changeCardNameModalWindow);
+      currentCardData.currentCardId = null;
+      currentCardData.currentCardElement = null;
+      currentCardData.link = null;
+      newCardData.name = null;
+      newCardData.link = null;
+    })
+    .catch((error) => {
+      console.log(`Ошибка: ${error}`);
+    })
+    .finally(() => {
+      showButtonText(
+        false,
+        false,
+        true,
+        changeCardNameModalWindow,
+        buttonTexts.save
+      );
+    });
 }
 
 /* ----------------------------------------------------------- открытие на фулскрин */
@@ -394,12 +488,12 @@ function handleDeleteCard() {
     confirmDeleteModalWindow,
     buttonTexts.delete
   );
-  deleteNewplace(currentDeleteElement.currentCardId, configAPI)
+  deleteNewplace(currentCardData.currentCardId, configAPI)
     .then(() => {
-      deleteCard(currentDeleteElement.currentCardElement);
-      currentDeleteElement.currentCardId = null;
-      currentDeleteElement.currentCardElement = null;
+      deleteCard(currentCardData.currentCardElement);
       closeModal(confirmDeleteModalWindow);
+      currentCardData.currentCardId = null;
+      currentCardData.currentCardElement = null;
     })
     .catch((error) => {
       console.log(`Ошибка: ${error}`);
