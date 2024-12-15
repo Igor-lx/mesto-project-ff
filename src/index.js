@@ -33,7 +33,6 @@ import {
   addNewplace,
   deleteNewplace,
   toggleLike,
-  editCardName,
 } from "./scripts/api";
 
 const configAPI = {
@@ -112,6 +111,17 @@ const changeCardNameModalButton =
   changeCardNameModalWindow.querySelector(".popup__button");
 /* --------------------------------------------------------------------------- */
 
+const confrimUpdateModalWindow = document.querySelector(
+  ".popup_type_update-confirm"
+);
+
+const confrimUpdateButton =
+  confrimUpdateModalWindow.querySelector(".popup__button");
+
+/* --------------------------------------------------------------------------- */
+const refreshPageButton = document.querySelector(".refresh-card_button");
+
+/* --------------------------------------------------------------------------- */
 const buttonTexts = {
   save: {
     loadingText: "Сохранение...",
@@ -146,7 +156,7 @@ const newUserData = {
   about: null,
 };
 
-/* --------------------------------------------------------------------------------- получение с сервера и  рендер ------ */
+/* ----------------------------------------------------------------------------- INITIAL получение с сервера и  рендер ------ */
 
 const cardPlace = document.querySelector(".places__list");
 
@@ -166,6 +176,47 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
     });
   })
   .catch((error) => console.log(`Ошибка: ${error}`));
+
+/* ------------------------------------------------------------------------------------------  обновление страницы ---------- */
+refreshPageButton.addEventListener("click", refreshPage);
+
+function refreshPage() {
+  const allCardNodes = document.querySelectorAll(".places__item");
+
+  Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
+    .then(([userData, initialCardsArray]) => {
+      allCardNodes.forEach((card) => {
+        deleteCard(card);
+      });
+      userId = userData._id;
+      profileName.textContent = userData.name;
+      profileJob.textContent = userData.about;
+      profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+
+      initialCardsArray.reverse().forEach((cardItemData) => {
+        renderCard(cardItemData);
+      });
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
+/*
+function startRefreshing() {
+  if (!refreshIntervalId) {
+    refreshIntervalId = setInterval(() => {
+      refreshPage();
+    }, 5000);
+  }
+}
+
+function stopRefreshing() {
+  if (refreshIntervalId) {
+    clearInterval(refreshIntervalId);
+    refreshIntervalId = null;
+  }
+}
+*/
+//startRefreshing();
 
 /* ------------------------------------------------------------------------ ------ открытие модальных окон страницы ---------- */
 
@@ -236,9 +287,9 @@ function submitProfile(evt) {
       newUserData.about = null;
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() =>
-      showButtonText(false, false, true, profileFormElement, buttonTexts.save)
-    );
+    .finally(() => {
+      showButtonText(false, false, true, profileFormElement, buttonTexts.save);
+    });
 }
 
 /* ------------------------------------------------------------------------------- сабмит формы новой карточки -------- */
@@ -257,13 +308,14 @@ function submitNewplace(evt) {
     .then((addedCard) => {
       renderCard(addedCard);
       closeModal(newplaceModalWindow);
+
       newCardData.name = null;
       newCardData.link = null;
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() =>
-      showButtonText(false, false, true, newplaceFormElement, buttonTexts.save)
-    );
+    .finally(() => {
+      showButtonText(false, false, true, newplaceFormElement, buttonTexts.save);
+    });
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
@@ -282,9 +334,9 @@ function submitAvatar(event) {
       closeModal(avatarModalWindow);
     })
     .catch((error) => console.error(`Ошибка: ${error}`))
-    .finally(() =>
-      showButtonText(false, false, true, avtarFormElement, buttonTexts.save)
-    );
+    .finally(() => {
+      showButtonText(false, false, true, avtarFormElement, buttonTexts.save);
+    });
 }
 
 /* ------------------------------------------------------------------------------------------ showButtonText ------------- */
@@ -356,6 +408,7 @@ const callbackFunctionsSet = {
   processImgDownldError,
   openLikersModal,
   showLikedUsers,
+  processOnLoad,
 };
 
 /* --------------------------------------------------------------------- */
@@ -385,17 +438,11 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   );
   currentCardData.currentCardId = cardItemData._id;
   currentCardData.currentCardElement = cardItem;
+
   openModal(confirmDeleteModalWindow);
 }
 
 /* ---------------------------------------------------------------- обновление карточки */
-
-const confrimUpdateModalWindow = document.querySelector(
-  ".popup_type_update-confirm"
-);
-
-const confrimUpdateButton =
-  confrimUpdateModalWindow.querySelector(".popup__button");
 
 function openChangeCardNameModal(cardItemData, cardItem) {
   currentCardData.currentCardId = cardItemData._id;
@@ -560,8 +607,23 @@ function processImgDownldError(
     "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
   cardItemDescription.classList.add("card__image__load_failure__description");
   cardLikeSection.style.display = "none";
-  cardEditButton.style.display = "none";
+  if (cardEditButton) {
+    cardEditButton.style.display = "none";
+  }
   cardItemImage.style.cursor = "not-allowed";
+}
+
+function processOnLoad(
+  cardItemTitle,
+  cardEditButton,
+  cardLikeSection,
+  cardItemData
+) {
+  cardItemTitle.textContent = cardItemData.name;
+  if (cardEditButton) {
+    cardEditButton.style.display = "block";
+  }
+  cardLikeSection.style.display = "block";
 }
 
 /* --------------------------------------------------------------------- */
@@ -606,3 +668,5 @@ enableValidation(configValidation);
 //  https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 //  https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
+
+// ERROR   https://static1.tildacdn.com/tild3766-3933-4234-b161-623339353265/1.jpg

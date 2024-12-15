@@ -4,13 +4,13 @@
   align-items: center;
   background: #fff;
   padding: 25px 14px;
+  height: 30px;
 }
 
 /* ------------------------------------------------------------------------------- */
 /* в случае ошибки загрузки img */
 
 .card__image__load_failure__description {
-  max-height: 29px;
   border-top: 5px solid black;
 }
 /* ------------------------------------------------------------------------------- */

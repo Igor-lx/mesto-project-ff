@@ -41,26 +41,6 @@ function editUserData(userDataArray, config) {
   }).then(getResponse);
 }
 
-/* ------------------------------------------------------------------------------------------------------------ */
-function editCardName(cardId, config) {
-  return fetch(`${config.baseUrl}${config.cardsEndpoint}/${cardId}`, {
-    method: "DELETE",
-    headers: config.headers,
-    // body: JSON.stringify(newCardName),
-  }).then(getResponse);
-}
-
-/*
-function editCardName(currentCardId, newCardName, config) {
-  return fetch(`${config.baseUrl}${config.cardsEndpoint}/${currentCardId}`, {
-    method: "PATCH",
-    headers: config.headers,
-    body: JSON.stringify(newCardName),
-  }).then(getResponse);
-}
-  */
-/* ------------------------------------------------------------------------------------------------------------ */
-
 function editAvatar(avatarUrl, config) {
   return fetch(`${config.baseUrl}${config.userAvatarEndpoint}`, {
     method: "PATCH",
@@ -101,5 +81,4 @@ export {
   addNewplace,
   deleteNewplace,
   toggleLike,
-  editCardName,
 };

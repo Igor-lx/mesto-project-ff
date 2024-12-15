@@ -10,6 +10,7 @@ function closeModal(modalWindowElement) {
   modalWindowElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", closeModalByKey);
   modalWindowElement.removeEventListener("mousedown", closeModalByClick);
+  return new Promise((resolve) => { resolve()});
 }
 
 function closeModalByClick(evt) {

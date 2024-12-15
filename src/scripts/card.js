@@ -8,11 +8,28 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ------------------------------------------------------------------------ */
   const cardItemTitle = cardItem.querySelector(".card__title");
   const cardItemImage = cardItem.querySelector(".card__image");
-
   cardItemTitle.textContent = cardItemData.name;
+
+  const cardItemDescription = cardItem.querySelector(".card__description");
+  const cardLikeSection = cardItem.querySelector(".likes_section");
+  const cardEditButton = cardItem.querySelector(".image__editname-button");
+
+  cardLikeSection.style.display = "none";
+  if (cardEditButton) {
+    cardEditButton.style.display = "none";
+  }
+
   cardItemImage.src = cardItemData.link;
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
 
+  cardItemImage.onload = () => {
+    callbackFunctionsSet.processOnLoad(
+      cardItemTitle,
+      cardEditButton,
+      cardLikeSection,
+      cardItemData
+    );
+  };
   /* ------------------------------------------------------------------------ */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
 
@@ -85,9 +102,6 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   });
 
   /* ------------------------------------------------------------------------ Обработчик ошибки при загрузке изображения -- */
-  const cardItemDescription = cardItem.querySelector(".card__description");
-  const cardLikeSection = cardItem.querySelector(".likes_section");
-  const cardEditButton = cardItem.querySelector(".image__editname-button");
 
   cardItemImage.onerror = () => {
     callbackFunctionsSet.processImgDownldError(
