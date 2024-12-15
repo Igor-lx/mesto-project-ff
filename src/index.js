@@ -398,7 +398,7 @@ function openChangeCardNameModal(cardItemData, cardItem) {
   currentCardData.link = cardItemData.link;
   currentCardData.name = cardItemData.name;
 
-  changeCardNameInputfield.value = currentCardData.name;
+  changeCardNameInputfield.value = cardItemData.name;
 
   openModal(changeCardNameModalWindow);
   clearValidation(changeCardNameFormElement, configValidation);
@@ -415,6 +415,7 @@ function changeCardName(evt) {
   newCardData.name = changeCardNameInputfield.value;
   newCardData.link = currentCardData.link;
 
+  /*
   const isNewCardName = newCardData.name === currentCardData.name;
 
   if (isNewCardName) {
@@ -435,6 +436,7 @@ function changeCardName(evt) {
     changeCardNameModalWindow,
     buttonTexts.save
   );
+  */
 
   Promise.all([
     deleteNewplace(currentCardData.currentCardId, configAPI),
