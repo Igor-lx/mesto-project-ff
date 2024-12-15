@@ -50,7 +50,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     });
   }
 
-  /* ----------------------------------------------------------------------------  слушатель кнопки изменение имени  ------- */
+  /* ------------------------------------------------------------------------------  слушатель кнопки обновления   --------- */
 
   if (cardNamechangeButton) {
     cardNamechangeButton.addEventListener("click", () => {

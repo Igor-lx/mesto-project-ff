@@ -33,17 +33,17 @@
 }
 
 .image__editname-button {
-  width: 20px;
-  height: 20px;
-  background: transparent url("../../../images/edit-image_name.svg") center
+  width: 18px;
+  height:18px;
+  background: transparent url("../../../images/repost_card.svg") center
     no-repeat;
 
-  background-size: 20px 20px;
+  background-size: 18px 18px;
   border: none;
   cursor: pointer;
   position: absolute;
-  top: 17px;
-  right: 40px;
+  top: 18px;
+  right: 39px;
   padding: 0;
   margin: 0;
   -webkit-transition: 0.3s;

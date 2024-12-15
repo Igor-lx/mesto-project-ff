@@ -108,6 +108,8 @@ const changeCardNameInputfield = document.querySelector(
   '[name="edit_cardname_input"]'
 );
 
+const changeCardNameModalButton =
+  changeCardNameModalWindow.querySelector(".popup__button");
 /* --------------------------------------------------------------------------- */
 
 const buttonTexts = {
@@ -118,6 +120,10 @@ const buttonTexts = {
   delete: {
     loadingText: "Удаление...",
     completedText: "Удалено",
+  },
+  update: {
+    loadingText: "Обновление...",
+    completedText: "Обновлено",
   },
 };
 
@@ -382,17 +388,16 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   openModal(confirmDeleteModalWindow);
 }
 
-/* ---------------------------------------------------------------- изменение имени */
+/* ---------------------------------------------------------------- обновление карточки */
+
+const confrimUpdateModalWindow = document.querySelector(
+  ".popup_type_update-confirm"
+);
+
+const confrimUpdateButton =
+  confrimUpdateModalWindow.querySelector(".popup__button");
 
 function openChangeCardNameModal(cardItemData, cardItem) {
-  showButtonText(
-    true,
-    false,
-    false,
-    changeCardNameModalWindow,
-    buttonTexts.save
-  );
-
   currentCardData.currentCardId = cardItemData._id;
   currentCardData.currentCardElement = cardItem;
   currentCardData.link = cardItemData.link;
@@ -407,36 +412,33 @@ function openChangeCardNameModal(cardItemData, cardItem) {
 
 /* ---------------------------------------------------------- */
 
-changeCardNameFormElement.addEventListener("submit", changeCardName);
+changeCardNameModalButton.addEventListener("click", openConfrimUpdateModal);
 
-function changeCardName(evt) {
-  evt.preventDefault();
+function openConfrimUpdateModal() {
+  closeModal(changeCardNameModalWindow);
+  openModal(confrimUpdateModalWindow);
+  showButtonText(
+    true,
+    false,
+    false,
+    confrimUpdateModalWindow,
+    buttonTexts.update
+  );
+}
 
+confrimUpdateButton.addEventListener("click", changeCardName);
+
+function changeCardName() {
   newCardData.name = changeCardNameInputfield.value;
   newCardData.link = currentCardData.link;
-
-  /*
-  const isNewCardName = newCardData.name === currentCardData.name;
-
-  if (isNewCardName) {
-    console.log(
-      "Данные не изменились, запрос на сервер не был отправлен за ненадобностью."
-    );
-    closeModal(changeCardNameModalWindow);
-    currentCardData.currentCardId = null;
-    currentCardData.currentCardElement = null;
-    currentCardData.link = null;
-    return;
-  }
 
   showButtonText(
     false,
     true,
     false,
-    changeCardNameModalWindow,
-    buttonTexts.save
+    confrimUpdateModalWindow,
+    buttonTexts.update
   );
-  */
 
   Promise.all([
     deleteNewplace(currentCardData.currentCardId, configAPI),
@@ -445,7 +447,7 @@ function changeCardName(evt) {
     .then(([deleteResult, addedCard]) => {
       deleteCard(currentCardData.currentCardElement);
       renderCard(addedCard);
-      closeModal(changeCardNameModalWindow);
+      closeModal(confrimUpdateModalWindow);
       currentCardData.currentCardId = null;
       currentCardData.currentCardElement = null;
       currentCardData.link = null;
@@ -460,8 +462,8 @@ function changeCardName(evt) {
         false,
         false,
         true,
-        changeCardNameModalWindow,
-        buttonTexts.save
+        confrimUpdateModalWindow,
+        buttonTexts.update
       );
     });
 }
@@ -601,6 +603,6 @@ enableValidation(configValidation);
 //  test images
 
 //  https://cdn.culture.ru/images/eb564802-73d5-5013-a8c3-2b9ca85a2d8f
-// https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
+//  https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 //  https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg

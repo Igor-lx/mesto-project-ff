@@ -160,6 +160,7 @@
           </form>
         </div>
       </div>
+      <!-- ------------------------------------------------------------------------------------ МОДАЛКА фУЛСКРИН ИМИДЖА ------->
       <div class="popup popup_type_image popup_is-animated">
         <div class="popup__content popup__content_content_image">
           <button
@@ -169,12 +170,12 @@
           ></button>
           <img src="" alt="" class="popup__image" />
           <div class="popup__section">
-            <!-- ******************************************************************
+            <!-- *************************************************
             <div class="likes_section">
               <span class="likes_counter">0</span>
               <button type="button" class="card__like-button"></button>
             </div>
-              ******************************************************************-->
+              *************************************************-->
             <h1 class="popup__caption"></h1>
             <p class="popup__autor"></p>
           </div>
@@ -250,7 +251,7 @@
         </div>
       </div>
 
-      <!-- ----------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------- МОДАЛКА ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ ----- -->
 
       <div class="popup popup_type_delete-confirm popup_is-animated">
         <div class="popup__content popup__content_confirm_delete">
@@ -270,8 +271,31 @@
           </button>
         </div>
       </div>
+      <!-- ------------------------------------------------------------------------- МОДАЛКА ПОДТВЕРЖДЕНИЯ АПДЭЙТА ----- -->
+      <div class="popup popup_type_update-confirm popup_is-animated">
+        <div class="popup__content popup__content_confirm_delete">
+          <button
+            type="button"
+            class="popup__close"
+            id="profile-popup-close"
+            aria-label="закрыть окно"
+          ></button>
+          <span class="popup__title update_confirm_warning_header">Внимание!</span>
+          <span class="update_confirm_warning"
+            >Обновление карточки сбросит все полученные лайки.</span
+          >
+          <span class="update_confirm_warning_footer">Вы уверены?</span>
+          <button
+            type="button"
+            class="popup__button"
+            aria-label="обновить карточку"
+          >
+            Да
+          </button>
+        </div>
+      </div>
 
-      <!-- ------------------------------------------------------------------------- -->
+      <!-- ---------------------------------------------------------------------------- МОДАЛКА ЛАЙКНУВШИХ ----- -->
 
       <div class="popup popup_type_likes popup_is-animated">
         <div class="popup__content popup__content_likes">
@@ -289,7 +313,7 @@
           </div>
         </div>
       </div>
-      <!-- ------------------------------------------------------------------------- -->
+      <!-- ------------------------------------------------------------------------------------------------------- -->
     </div>
 
     <!-- ============================  -->
