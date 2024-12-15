@@ -3,4 +3,16 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
+  margin-left: 15px;
+}
+
+.likes_fullscreen_block {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+  bottom:50%;
+  transform: translateY(50%);
 }

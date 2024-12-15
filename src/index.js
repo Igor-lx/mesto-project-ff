@@ -177,7 +177,7 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   })
   .catch((error) => console.log(`Ошибка: ${error}`));
 
-/* ------------------------------------------------------------------------------------------  обновление страницы ---------- */
+/* ----------------------------------------------------------------------------------------  обновление страницы ----------- */
 refreshPageButton.addEventListener("click", refreshPage);
 
 function refreshPage() {
@@ -200,25 +200,7 @@ function refreshPage() {
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/*
-function startRefreshing() {
-  if (!refreshIntervalId) {
-    refreshIntervalId = setInterval(() => {
-      refreshPage();
-    }, 5000);
-  }
-}
-
-function stopRefreshing() {
-  if (refreshIntervalId) {
-    clearInterval(refreshIntervalId);
-    refreshIntervalId = null;
-  }
-}
-*/
-//startRefreshing();
-
-/* ------------------------------------------------------------------------ ------ открытие модальных окон страницы ---------- */
+/* ------------------------------------------------------------------------------ открытие модальных окон страницы ---------- */
 
 /* --------------------------------------------------------------- профайл*/
 profileEditButton.addEventListener("click", openProfileModal);
@@ -438,7 +420,6 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   );
   currentCardData.currentCardId = cardItemData._id;
   currentCardData.currentCardElement = cardItem;
-
   openModal(confirmDeleteModalWindow);
 }
 
@@ -449,15 +430,13 @@ function openChangeCardNameModal(cardItemData, cardItem) {
   currentCardData.currentCardElement = cardItem;
   currentCardData.link = cardItemData.link;
   currentCardData.name = cardItemData.name;
-
   changeCardNameInputfield.value = cardItemData.name;
-
   openModal(changeCardNameModalWindow);
   clearValidation(changeCardNameFormElement, configValidation);
   refreshInputChangeName(changeCardNameFormElement, cardItemData.name);
 }
 
-/* ---------------------------------------------------------- */
+/* ---------------------------------------------------------- подтвержждение обновления */
 
 changeCardNameModalButton.addEventListener("click", openConfrimUpdateModal);
 
@@ -623,7 +602,7 @@ function processOnLoad(
   if (cardEditButton) {
     cardEditButton.style.display = "block";
   }
-  cardLikeSection.style.display = "block";
+  cardLikeSection.style.display = "flex";
 }
 
 /* --------------------------------------------------------------------- */

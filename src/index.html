@@ -47,15 +47,14 @@
             type="button"
             aria-label="добавить новое место"
           ></button>
-
         </section>
         <!-- ============================  -->
         <section class="places page__section">
           <button
-          class="refresh-card_button"
-          type="button"
-          aria-label="обновить все карточки"
-        ></button>
+            class="refresh-card_button"
+            type="button"
+            aria-label="обновить все карточки"
+          ></button>
           <ul class="places__list"></ul>
         </section>
         <!-- ============================  -->
@@ -176,14 +175,17 @@
           ></button>
           <img src="" alt="" class="popup__image" />
           <div class="popup__section">
-            <!-- *************************************************
-            <div class="likes_section">
-              <span class="likes_counter">0</span>
-              <button type="button" class="card__like-button"></button>
-            </div>
-              *************************************************-->
             <h1 class="popup__caption"></h1>
             <p class="popup__autor"></p>
+            <!-- ******************************************************************************** -->
+            <div class="likes_fullscreen_block">
+              <button
+                type="button"
+                class="card__like-button_fullscreen"
+              ></button>
+              <span class="likes_counter_fullscreen">0</span>
+            </div>
+            <!-- ********************************************************************************-->
           </div>
         </div>
       </div>
@@ -286,7 +288,9 @@
             id="profile-popup-close"
             aria-label="закрыть окно"
           ></button>
-          <span class="popup__title update_confirm_warning_header">Внимание!</span>
+          <span class="popup__title update_confirm_warning_header"
+            >Внимание!</span
+          >
           <span class="update_confirm_warning"
             >Обновление карточки сбросит все полученные лайки.</span
           >

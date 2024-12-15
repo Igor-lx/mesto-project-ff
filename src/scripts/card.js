@@ -22,14 +22,19 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   cardItemImage.src = cardItemData.link;
   cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
 
-  cardItemImage.onload = () => {
-    callbackFunctionsSet.processOnLoad(
-      cardItemTitle,
-      cardEditButton,
-      cardLikeSection,
-      cardItemData
-    );
-  };
+  cardItemImage.addEventListener(
+    "load",
+    () => {
+      callbackFunctionsSet.processOnLoad(
+        cardItemTitle,
+        cardEditButton,
+        cardLikeSection,
+        cardItemData
+      );
+    },
+    { once: true }
+  );
+
   /* ------------------------------------------------------------------------ */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
 
@@ -103,6 +108,21 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
 
   /* ------------------------------------------------------------------------ Обработчик ошибки при загрузке изображения -- */
 
+  cardItemImage.addEventListener(
+    "error",
+    () => {
+      callbackFunctionsSet.processImgDownldError(
+        cardItemImage,
+        cardItemTitle,
+        cardItemDescription,
+        cardLikeSection,
+        cardEditButton
+      );
+    },
+    { once: true }
+  );
+
+  /*
   cardItemImage.onerror = () => {
     callbackFunctionsSet.processImgDownldError(
       cardItemImage,
@@ -112,6 +132,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
       cardEditButton
     );
   };
+  */
 
   /* ---------------- */
   return cardItem;
