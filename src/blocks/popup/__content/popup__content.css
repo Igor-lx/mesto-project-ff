@@ -10,12 +10,17 @@
 }
 
 .popup__content_confirm_delete {
-  min-height: 180px;
+  min-height: 100px;
 }
 
-.popup__content_likes{
-  min-height: 180px;
+.popup__content_likes {
+  min-height: 100px;
+}
 
+.popup__content_no_likes {
+  text-align: center;
+  opacity: 1 !important;
+  margin-top: 35px !important;
 }
 
 @media screen and (max-width: 568px) {

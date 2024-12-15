@@ -74,6 +74,7 @@ const newplaceInputfieldLink = document.querySelector('[name="newplace_url"]');
 /* ---------------- */
 const popupImage = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
+const popupImageAutor = document.querySelector(".popup__autor");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
 /* ---------------- */
@@ -91,9 +92,10 @@ const confirmDeleteButton =
 
 /* ---------------- */
 const likesModalWindow = document.querySelector(".popup_type_likes");
-const likesModalHeader = document.querySelector(".popup__title_likes-header");
-const likesModalTitle = document.querySelector(".popup__title_likes");
-const likersNameList = document.querySelector(".likers-name");
+const likesModalName = document.querySelector(".popup_likes_image_name");
+const likesModalAutor = document.querySelector(".popup_likes_image_autor");
+const likesModalLikersTitle = document.querySelector(".popup__title_likes");
+const likersNameList = document.querySelector(".likers-names");
 
 /* --------------------------------------------------------------------------- */
 const changeCardNameModalWindow = document.querySelector(
@@ -120,6 +122,7 @@ const buttonTexts = {
 };
 
 /* --------------------------------------------------------------------------- */
+
 const currentCardData = {
   name: null,
   currentCardId: null,
@@ -152,8 +155,8 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
     profileJob.textContent = userData.about;
     profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
 
-    initialCardsArray.reverse().forEach((card) => {
-      renderCard(card);
+    initialCardsArray.reverse().forEach((cardItemData) => {
+      renderCard(cardItemData);
     });
   })
   .catch((error) => console.log(`Ошибка: ${error}`));
@@ -365,6 +368,7 @@ function showButtonsOnCard(
 /* -------------------- открытие модальных окон карточки (листнеры в карточке) ---- */
 
 /* ----------------------------------------------------------------------- удаление */
+
 function openConfirmDeleteModal(cardItemData, cardItem) {
   showButtonText(
     true,
@@ -464,15 +468,18 @@ function changeCardName(evt) {
 function openFullscreenImage(cardItemData) {
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
-  popupImageCaption.textContent = cardItemData.name + ".";
+  popupImageCaption.textContent = cardItemData.name;
+  popupImageAutor.textContent = "Автор: " + cardItemData.owner.name;
   openModal(popupImageModalWindow);
 }
 
 /* ------------------------------------------------------------ модалка лайкнувших */
 function openLikersModal() {
-  likesModalHeader.textContent = "";
-  likesModalTitle.textContent = "";
+  likesModalName.textContent = "";
+  likesModalAutor.textContent = "";
+  likesModalLikersTitle.textContent = "";
   likersNameList.textContent = "";
+
   openModal(likesModalWindow);
 }
 
@@ -559,20 +566,22 @@ function showLikedUsers(cardId) {
       const card = cards.find((card) => card._id === cardId);
 
       if (card) {
-        likesModalHeader.textContent = `${card.name}. Автор: ${card.owner.name}`;
+        likesModalName.textContent = `${card.name}`;
+        likesModalAutor.textContent = `Автор: ${card.owner.name}`;
+        likesModalName.classList.remove("popup__content_no_likes");
 
         if (card.likes.length > 0) {
           const likersNames = card.likes.map((liker) => liker.name).join(", ");
-          likesModalTitle.textContent = "Это фото понравилось:";
+
+          likesModalLikersTitle.textContent = "Это фото понравилось:";
           likersNameList.textContent = likersNames;
         } else {
-          likesModalTitle.textContent = "У этой карточки нет лайков";
-          likersNameList.textContent = "";
+          likesModalName.textContent = "У этой карточки нет лайков";
+          likesModalName.classList.add("popup__content_no_likes");
+          likesModalAutor.textContent = "";
         }
       } else {
-        likesModalHeader.textContent = "Карточка не найдена";
-        likesModalTitle.textContent = "";
-        likersNameList.textContent = "";
+        likesModalName.textContent = "Карточка не найдена";
       }
     })
     .catch((error) => console.log(`Ошибка: ${error}`));
