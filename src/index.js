@@ -546,7 +546,8 @@ function processImgDownldError(
   cardItemImage,
   cardItemTitle,
   cardItemDescription,
-  cardLikeSection
+  cardLikeSection,
+  cardEditButton
 ) {
   cardItemImage.classList.add(
     "card__image__load_failure__textstile",
@@ -557,6 +558,7 @@ function processImgDownldError(
     "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
   cardItemDescription.classList.add("card__image__load_failure__description");
   cardLikeSection.style.display = "none";
+  cardEditButton.style.display = "none";
   cardItemImage.style.cursor = "not-allowed";
 }
 
@@ -599,5 +601,6 @@ enableValidation(configValidation);
 //  test images
 
 //  https://cdn.culture.ru/images/eb564802-73d5-5013-a8c3-2b9ca85a2d8f
+// https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 //  https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg

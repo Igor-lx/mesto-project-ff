@@ -12,13 +12,11 @@
 /* чтобы в случае ошибки загрузки img - окно не схлопывалось и текст alt был виден */
 
 .card__image__load_failure {
-  display: flex;
+  display: block;
   background-color: #e9e9e9;
   padding: 20px 0 0 25px;
   height: 262px;
 }
 
-.card__image__load_failure:hover {
-  cursor: default;
-}
+
 /* ------------------------------------------------------------------------------- */

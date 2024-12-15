@@ -69,7 +69,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
 
   /* -------------------------------------------------------------------------  слушатель открытия модалки лайкнувших ----- */
   cardLikesCounter.addEventListener("click", () => {
-    callbackFunctionsSet.openLikersModal()
+    callbackFunctionsSet.openLikersModal();
     callbackFunctionsSet.showLikedUsers(cardItemData._id);
   });
 
@@ -84,13 +84,15 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* ------------------------------------------------------------------------ Обработчик ошибки при загрузке изображения -- */
   const cardItemDescription = cardItem.querySelector(".card__description");
   const cardLikeSection = cardItem.querySelector(".likes_section");
+  const cardEditButton = cardItem.querySelector(".image__editname-button");
 
   cardItemImage.onerror = () => {
     callbackFunctionsSet.processImgDownldError(
       cardItemImage,
       cardItemTitle,
       cardItemDescription,
-      cardLikeSection
+      cardLikeSection,
+      cardEditButton
     );
   };
 

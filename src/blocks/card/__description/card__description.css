@@ -10,7 +10,7 @@
 /* в случае ошибки загрузки img */
 
 .card__image__load_failure__description {
-  max-height: 38px;
-  border-top: 4px solid black;
+  max-height: 29px;
+  border-top: 5px solid black;
 }
 /* ------------------------------------------------------------------------------- */
