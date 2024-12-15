@@ -9,10 +9,9 @@
 .likes_fullscreen_block {
   display: flex;
   justify-content: center;
-  gap: 9px;
   align-items: center;
   position: absolute;
   right: 20px;
-  bottom:50%;
+  bottom: 50%;
   transform: translateY(50%);
 }

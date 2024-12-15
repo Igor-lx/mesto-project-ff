@@ -48,7 +48,6 @@ const configAPI = {
 };
 
 /* --------------------------------------------------------------------------- */
-let userId = null;
 
 /* ---------------- */
 const profileFormElement = document.querySelector('[name="edit-profile"]');
@@ -122,6 +121,18 @@ const confrimUpdateButton =
 const refreshPageButton = document.querySelector(".refresh-card_button");
 
 /* --------------------------------------------------------------------------- */
+const likeButtonFullscreen = document.querySelector(
+  ".card__like-button_fullscreen"
+);
+
+const likeCounterFullscreen = document.querySelector(
+  ".likes_counter_fullscreen"
+);
+
+/* --------------------------------------------------------------------------- */
+let userId = null;
+/* --------------------------------------------------------------------------- */
+
 const buttonTexts = {
   save: {
     loadingText: "Сохранение...",
@@ -144,6 +155,8 @@ const currentCardData = {
   currentCardId: null,
   currentCardElement: null,
   link: null,
+  userId: null,
+  likes: null,
 };
 
 const newCardData = {
@@ -496,11 +509,31 @@ function changeCardName() {
 
 /* ----------------------------------------------------------- открытие на фулскрин */
 function openFullscreenImage(cardItemData) {
+  currentCardData.currentCardId = cardItemData._id;
+
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
   popupImageCaption.textContent = cardItemData.name;
   popupImageAutor.textContent = "Автор: " + cardItemData.owner.name;
-  openModal(popupImageModalWindow);
+
+  Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
+    .then(([userData, initialCardsArray]) => {
+      //console.log(currentCardData.currentCardId);
+      //console.log(userData._id,);
+      const matchedCard = initialCardsArray.find(
+        (card) => card._id === currentCardData.currentCardId
+      );
+      const likes = matchedCard ? matchedCard.likes : [];
+      IfAlreadyLiked(
+        likes,
+        userData._id,
+        likeButtonFullscreen,
+        likeCounterFullscreen
+      );
+      likeCounterFullscreen.textContent = likes.length;
+      openModal(popupImageModalWindow);
+    })
+    .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
 /* ------------------------------------------------------------ модалка лайкнувших */
@@ -553,8 +586,13 @@ function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
   if (alreadyLiked) {
     likeButton.classList.add("card__like-button_is-active");
     likesCounter.classList.add("my_like_is-active");
+  } else {
+    likeButton.classList.remove("card__like-button_is-active");
+    likesCounter.classList.remove("my_like_is-active");
   }
 }
+
+
 
 function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
   const isLiked = cardLikeButton.classList.contains(
