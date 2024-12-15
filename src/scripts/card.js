@@ -59,20 +59,23 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   }
 
   /* --------------------------------------------------------------------------------- слушатель кнопки лайка -------------- */
-  cardLikeButton.addEventListener("click", () => {
-    callbackFunctionsSet.handleLikeCard(
-      cardItemData._id,
-      cardLikeButton,
-      cardLikesCounter
-    );
-  });
+  if (cardLikeButton) {
+    cardLikeButton.addEventListener("click", () => {
+      callbackFunctionsSet.handleLikeCard(
+        cardItemData._id,
+        cardLikeButton,
+        cardLikesCounter
+      );
+    });
+  }
 
   /* -------------------------------------------------------------------------  слушатель открытия модалки лайкнувших ----- */
-  cardLikesCounter.addEventListener("click", () => {
-    callbackFunctionsSet.openLikersModal();
-    callbackFunctionsSet.showLikedUsers(cardItemData._id);
-  });
-
+  if (cardLikesCounter) {
+    cardLikesCounter.addEventListener("click", () => {
+      callbackFunctionsSet.openLikersModal();
+      callbackFunctionsSet.showLikedUsers(cardItemData._id);
+    });
+  }
   /* ------------------------------------------------------------------------------ слушатель открытия на фулскрин  ------ */
   cardItemImage.addEventListener("click", () => {
     if (cardItemImage.classList.contains("card__image__load_failure")) {
