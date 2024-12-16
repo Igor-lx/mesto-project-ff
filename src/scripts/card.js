@@ -14,13 +14,14 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   const cardLikeSection = cardItem.querySelector(".likes_section");
   const cardEditButton = cardItem.querySelector(".image__editname-button");
 
+  cardItemImage.src = cardItemData.link;
+  cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
+
+  /*
   cardLikeSection.style.display = "none";
   if (cardEditButton) {
     cardEditButton.style.display = "none";
   }
-
-  cardItemImage.src = cardItemData.link;
-  cardItemImage.alt = 'фотография: "' + cardItemData.name + '"';
 
   cardItemImage.addEventListener(
     "load",
@@ -34,6 +35,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     },
     { once: true }
   );
+  */
 
   /* ------------------------------------------------------------------------ */
   const cardDeleteButton = cardItem.querySelector(".card__delete-button");
@@ -103,7 +105,7 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     if (cardItemImage.classList.contains("card__image__load_failure")) {
       return;
     }
-    callbackFunctionsSet.openFullscreenImage(cardItemData);
+    callbackFunctionsSet.openFullscreenImage(cardItemData, cardLikeButton, cardLikesCounter );
   });
 
   /* ------------------------------------------------------------------------ Обработчик ошибки при загрузке изображения -- */

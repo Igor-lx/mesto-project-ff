@@ -4,18 +4,16 @@
   cursor: pointer;
   transition: opacity 0.3s ease;
   opacity: 1;
-
 }
 
 .likes_counter:hover {
   opacity: 0.6;
 }
 
-
 .likes_counter_fullscreen {
-  margin-top: 19px;
+  margin-top: 18px;
   align-self: flex-end;
-  font-size: 17px;
+  font-size: 19px;
   color: #000;
   transition: opacity 0.3s ease;
   opacity: 0.7;
@@ -23,5 +21,4 @@
 
 .my_like_is-active {
   color: brown;
-  
 }

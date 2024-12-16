@@ -157,6 +157,8 @@ const currentCardData = {
   link: null,
   userId: null,
   likes: null,
+  likeButtonNode: null,
+  likeCounterNode: null,
 };
 
 const newCardData = {
@@ -213,6 +215,25 @@ function refreshPage() {
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
+/* =========================================== */
+
+let intervalId;
+
+export function startInterval() {
+  if (!intervalId) {
+    intervalId = setInterval(() => {
+      refreshPage();
+    }, 3000);
+  }
+}
+
+export function stopInterval() {
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
+}
+//startInterval()
 /* ------------------------------------------------------------------------------ открытие модальных окон страницы ---------- */
 
 /* --------------------------------------------------------------- профайл*/
@@ -508,8 +529,14 @@ function changeCardName() {
 }
 
 /* ----------------------------------------------------------- открытие на фулскрин */
-function openFullscreenImage(cardItemData) {
+function openFullscreenImage(
+  cardItemData,
+  cardLikeButtonNode,
+  cardLikeCounterNode
+) {
   currentCardData.currentCardId = cardItemData._id;
+  currentCardData.likeButtonNode = cardLikeButtonNode;
+  currentCardData.likeCounterNode = cardLikeCounterNode;
 
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -518,8 +545,6 @@ function openFullscreenImage(cardItemData) {
 
   Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
     .then(([userData, initialCardsArray]) => {
-      //console.log(currentCardData.currentCardId);
-      //console.log(userData._id,);
       const matchedCard = initialCardsArray.find(
         (card) => card._id === currentCardData.currentCardId
       );
@@ -579,7 +604,7 @@ function handleDeleteCard() {
     });
 }
 
-/* --------------------------------------------------------------------- */
+/* --------------------------------------------------------------------- лайк и состояние кнопки лайка */
 
 function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
   const alreadyLiked = likes.some((like) => like._id === userId);
@@ -592,9 +617,29 @@ function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
   }
 }
 
+likeButtonFullscreen.addEventListener("click", () => {
+  handleLikeCard(
+    currentCardData.currentCardId,
+    likeButtonFullscreen,
+    currentCardData.likeCounterNode,
+    likeCounterFullscreen
+  );
+  currentCardData.likeButtonNode.classList.toggle(
+    "card__like-button_is-active"
+  );
+});
 
+function changeLikesFullscreenCounter(cardLikesCounter, likedCardData) {
+  cardLikesCounter.classList.toggle("my_like_is-active");
+  cardLikesCounter.textContent = likedCardData.likes.length;
+}
 
-function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
+function handleLikeCard(
+  cardId,
+  cardLikeButton,
+  cardLikesCounter,
+  cardLikesFullscreenCounter
+) {
   const isLiked = cardLikeButton.classList.contains(
     "card__like-button_is-active"
   );
@@ -602,6 +647,7 @@ function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
     .then((likedCardData) => {
       likeCard(cardLikeButton);
       changeLikesCounter(cardLikesCounter, likedCardData);
+      changeLikesFullscreenCounter(cardLikesFullscreenCounter, likedCardData);
     })
 
     .catch((error) => console.log(`Ошибка: ${error}`));
@@ -685,5 +731,3 @@ enableValidation(configValidation);
 //  https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 //  https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
-
-// ERROR   https://static1.tildacdn.com/tild3766-3933-4234-b161-623339353265/1.jpg

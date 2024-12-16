@@ -1,16 +1,18 @@
 //
+// import {stopInterval, startInterval} from "../index"
 
 function openModal(modalWindowElement) {
+  //  stopInterval();
   modalWindowElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", closeModalByKey);
   modalWindowElement.addEventListener("mousedown", closeModalByClick);
 }
 
 function closeModal(modalWindowElement) {
+  //   startInterval()
   modalWindowElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", closeModalByKey);
   modalWindowElement.removeEventListener("mousedown", closeModalByClick);
-  return new Promise((resolve) => { resolve()});
 }
 
 function closeModalByClick(evt) {
