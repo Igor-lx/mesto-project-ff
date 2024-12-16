@@ -152,7 +152,7 @@ const buttonTexts = {
 const currentCardData = {
   name: null,
   cardId: null,
-  currentCardElement: null,
+  cardElement: null,
   link: null,
   userId: null,
   likes: null,
@@ -452,7 +452,7 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
     buttonTexts.delete
   );
   currentCardData.cardId = cardItemData._id;
-  currentCardData.currentCardElement = cardItem;
+  currentCardData.cardElement = cardItem;
   openModal(confirmDeleteModalWindow);
 }
 
@@ -470,7 +470,7 @@ function openLikersModal(cardId) {
 
 function openChangeCardNameModal(cardItemData, cardItem) {
   currentCardData.cardId = cardItemData._id;
-  currentCardData.currentCardElement = cardItem;
+  currentCardData.cardElement = cardItem;
   currentCardData.link = cardItemData.link;
   currentCardData.name = cardItemData.name;
   changeCardNameInputfield.value = cardItemData.name;
@@ -514,11 +514,11 @@ function changeCardName() {
     addNewplace(newCardData, configAPI),
   ])
     .then(([deleteResult, addedCard]) => {
-      deleteCard(currentCardData.currentCardElement);
+      deleteCard(currentCardData.cardElement);
       renderCard(addedCard);
       closeModal(confrimUpdateModalWindow);
       currentCardData.cardId = null;
-      currentCardData.currentCardElement = null;
+      currentCardData.cardElement = null;
       currentCardData.link = null;
       newCardData.name = null;
       newCardData.link = null;
@@ -541,11 +541,12 @@ function changeCardName() {
 function openFullscreenImage(
   cardItemData,
   cardLikeButtonNode,
-  cardLikeCounterNode
+  cardLikeCounterNode, cardItem
 ) {
   currentCardData.cardId = cardItemData._id;
   currentCardData.likeButtonNode = cardLikeButtonNode;
   currentCardData.likeCounterNode = cardLikeCounterNode;
+  currentCardData.cardElement = cardItem;
 
   popupImage.src = cardItemData.link;
   popupImage.alt = 'фотография: "' + cardItemData.name + '"';
@@ -562,7 +563,8 @@ function openFullscreenImage(
         likes,
         userData._id,
         likeButtonFullscreen,
-        likeCounterFullscreen
+        likeCounterFullscreen,
+        currentCardData.cardElement
       );
       likeCounterFullscreen.textContent = likes.length;
       openModal(popupImageModalWindow);
@@ -584,10 +586,10 @@ function handleDeleteCard() {
   );
   deleteNewplace(currentCardData.cardId, configAPI)
     .then(() => {
-      deleteCard(currentCardData.currentCardElement);
+      deleteCard(currentCardData.cardElement);
       closeModal(confirmDeleteModalWindow);
       currentCardData.cardId = null;
-      currentCardData.currentCardElement = null;
+      currentCardData.cardElement = null;
     })
     .catch((error) => {
       console.log(`Ошибка: ${error}`);
@@ -605,14 +607,16 @@ function handleDeleteCard() {
 
 /* --------------------------------------------------------------------- лайк и состояние кнопки лайка */
 
-function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
+function IfAlreadyLiked(likes, userId, likeButton, likesCounter, cardItem) {
   const alreadyLiked = likes.some((like) => like._id === userId);
   if (alreadyLiked) {
     likeButton.classList.add("card__like-button_is-active");
     likesCounter.classList.add("my_like_is-active");
+    cardItem.classList.add("liked_shadow");
   } else {
     likeButton.classList.remove("card__like-button_is-active");
     likesCounter.classList.remove("my_like_is-active");
+    cardItem.classList.remove("liked_shadow");
   }
 }
 
@@ -620,11 +624,17 @@ likeButtonFullscreen.addEventListener("click", () => {
   handleLikeCard(
     currentCardData.cardId,
     currentCardData.likeButtonNode,
-    currentCardData.likeCounterNode
+    currentCardData.likeCounterNode,
+    currentCardData.cardElement
   );
 });
 
-function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
+function handleLikeCard(
+  cardId,
+  cardLikeButton,
+  cardLikesCounter,
+  cardContainer
+) {
   const isLiked = cardLikeButton.classList.contains(
     "card__like-button_is-active"
   );
@@ -634,6 +644,7 @@ function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
       likeCard(likeButtonFullscreen);
       changeLikesCounter(cardLikesCounter, likedCardData);
       changeLikesCounter(likeCounterFullscreen, likedCardData);
+      cardContainer.classList.toggle("liked_shadow");
     })
 
     .catch((error) => console.log(`Ошибка: ${error}`));

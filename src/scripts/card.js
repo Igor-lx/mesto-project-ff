@@ -64,7 +64,8 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     cardItemData.likes,
     userId,
     cardLikeButton,
-    cardLikesCounter
+    cardLikesCounter,
+    cardItem
   );
 
   /* ------------------------------------------------------------------------------  слушатель кнопки удаления ------------- */
@@ -88,7 +89,8 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
       callbackFunctionsSet.handleLikeCard(
         cardItemData._id,
         cardLikeButton,
-        cardLikesCounter
+        cardLikesCounter,
+        cardItem
       );
     });
   }
@@ -107,7 +109,8 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     callbackFunctionsSet.openFullscreenImage(
       cardItemData,
       cardLikeButton,
-      cardLikesCounter
+      cardLikesCounter,
+      cardItem
     );
   });
 
