@@ -11,12 +11,14 @@
 }
 
 .likes_counter_fullscreen {
-  margin-top: 18px;
+  margin-top: 15px;
   align-self: flex-end;
-  font-size: 19px;
+  font-size: 16px;
   color: #000;
   transition: opacity 0.3s ease;
   opacity: 0.7;
+  display: block;
+  min-width: 12px;
 }
 
 .my_like_is-active {

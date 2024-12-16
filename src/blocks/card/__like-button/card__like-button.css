@@ -21,11 +21,11 @@
 }
 
 .card__like-button_fullscreen {
-  width: 35px;
-  height: 32px;
+  width: 28px;
+  height: 25px;
   background: transparent url("../../../images/like-inactive.svg") no-repeat;
 
-  background-size: 35px 32px;
+  background-size: 28px 25px;
   border: none;
   cursor: pointer;
   padding: 0;
