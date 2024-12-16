@@ -10,6 +10,10 @@ import {
 } from "./scripts/card";
 
 import { openModal, closeModal } from "./scripts/modal";
+import {
+  showLikedUsers,
+  likersModalDomNodes,
+} from "./scripts/show_liked_users";
 
 /* --------------------------------------------------------------------------- */
 import { enableValidation, clearValidation } from "./scripts/validation";
@@ -35,7 +39,7 @@ import {
   toggleLike,
 } from "./scripts/api";
 
-const configAPI = {
+export const configAPI = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
   userDataEndpoint: "/users/me",
   userAvatarEndpoint: "/users/me/avatar",
@@ -89,11 +93,6 @@ const confirmDeleteButton =
   confirmDeleteModalWindow.querySelector(".popup__button");
 
 /* ---------------- */
-const likesModalWindow = document.querySelector(".popup_type_likes");
-const likesModalName = document.querySelector(".popup_likes_image_name");
-const likesModalAutor = document.querySelector(".popup_likes_image_autor");
-const likesModalLikersTitle = document.querySelector(".popup__title_likes");
-const likersNameList = document.querySelector(".likers-names");
 
 /* --------------------------------------------------------------------------- */
 const changeCardNameModalWindow = document.querySelector(
@@ -152,7 +151,7 @@ const buttonTexts = {
 
 const currentCardData = {
   name: null,
-  currentCardId: null,
+  cardId: null,
   currentCardElement: null,
   link: null,
   userId: null,
@@ -452,15 +451,25 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
     confirmDeleteModalWindow,
     buttonTexts.delete
   );
-  currentCardData.currentCardId = cardItemData._id;
+  currentCardData.cardId = cardItemData._id;
   currentCardData.currentCardElement = cardItem;
   openModal(confirmDeleteModalWindow);
+}
+
+/* ------------------------------------------------------------ модалка лайкнувших */
+function openLikersModal(cardId) {
+  likersModalDomNodes.imgName.textContent = "";
+  likersModalDomNodes.autor.textContent = "";
+  likersModalDomNodes.title.textContent = "";
+  likersModalDomNodes.namesList.textContent = "";
+  showLikedUsers(cardId);
+  openModal(likersModalDomNodes.modalWindow);
 }
 
 /* ---------------------------------------------------------------- обновление карточки */
 
 function openChangeCardNameModal(cardItemData, cardItem) {
-  currentCardData.currentCardId = cardItemData._id;
+  currentCardData.cardId = cardItemData._id;
   currentCardData.currentCardElement = cardItem;
   currentCardData.link = cardItemData.link;
   currentCardData.name = cardItemData.name;
@@ -501,14 +510,14 @@ function changeCardName() {
   );
 
   Promise.all([
-    deleteNewplace(currentCardData.currentCardId, configAPI),
+    deleteNewplace(currentCardData.cardId, configAPI),
     addNewplace(newCardData, configAPI),
   ])
     .then(([deleteResult, addedCard]) => {
       deleteCard(currentCardData.currentCardElement);
       renderCard(addedCard);
       closeModal(confrimUpdateModalWindow);
-      currentCardData.currentCardId = null;
+      currentCardData.cardId = null;
       currentCardData.currentCardElement = null;
       currentCardData.link = null;
       newCardData.name = null;
@@ -534,7 +543,7 @@ function openFullscreenImage(
   cardLikeButtonNode,
   cardLikeCounterNode
 ) {
-  currentCardData.currentCardId = cardItemData._id;
+  currentCardData.cardId = cardItemData._id;
   currentCardData.likeButtonNode = cardLikeButtonNode;
   currentCardData.likeCounterNode = cardLikeCounterNode;
 
@@ -546,7 +555,7 @@ function openFullscreenImage(
   Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
     .then(([userData, initialCardsArray]) => {
       const matchedCard = initialCardsArray.find(
-        (card) => card._id === currentCardData.currentCardId
+        (card) => card._id === currentCardData.cardId
       );
       const likes = matchedCard ? matchedCard.likes : [];
       IfAlreadyLiked(
@@ -561,16 +570,6 @@ function openFullscreenImage(
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* ------------------------------------------------------------ модалка лайкнувших */
-function openLikersModal() {
-  likesModalName.textContent = "";
-  likesModalAutor.textContent = "";
-  likesModalLikersTitle.textContent = "";
-  likersNameList.textContent = "";
-
-  openModal(likesModalWindow);
-}
-
 /* -- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card -- */
 
 confirmDeleteButton.addEventListener("click", handleDeleteCard);
@@ -583,11 +582,11 @@ function handleDeleteCard() {
     confirmDeleteModalWindow,
     buttonTexts.delete
   );
-  deleteNewplace(currentCardData.currentCardId, configAPI)
+  deleteNewplace(currentCardData.cardId, configAPI)
     .then(() => {
       deleteCard(currentCardData.currentCardElement);
       closeModal(confirmDeleteModalWindow);
-      currentCardData.currentCardId = null;
+      currentCardData.cardId = null;
       currentCardData.currentCardElement = null;
     })
     .catch((error) => {
@@ -619,7 +618,7 @@ function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
 
 likeButtonFullscreen.addEventListener("click", () => {
   handleLikeCard(
-    currentCardData.currentCardId,
+    currentCardData.cardId,
     likeButtonFullscreen,
     currentCardData.likeCounterNode,
     likeCounterFullscreen
@@ -690,33 +689,6 @@ function processOnLoad(
 }
 
 /* --------------------------------------------------------------------- */
-
-function showLikedUsers(cardId) {
-  getInitialCards(configAPI)
-    .then((cards) => {
-      const card = cards.find((card) => card._id === cardId);
-
-      if (card) {
-        likesModalName.textContent = `${card.name}`;
-        likesModalAutor.textContent = `Автор: ${card.owner.name}`;
-        likesModalName.classList.remove("popup__content_no_likes");
-
-        if (card.likes.length > 0) {
-          const likersNames = card.likes.map((liker) => liker.name).join(", ");
-
-          likesModalLikersTitle.textContent = "Это фото понравилось:";
-          likersNameList.textContent = likersNames;
-        } else {
-          likesModalName.textContent = "У этой карточки нет лайков";
-          likesModalName.classList.add("popup__content_no_likes");
-          likesModalAutor.textContent = "";
-        }
-      } else {
-        likesModalName.textContent = "Карточка не найдена";
-      }
-    })
-    .catch((error) => console.log(`Ошибка: ${error}`));
-}
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 

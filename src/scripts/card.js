@@ -96,8 +96,8 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   /* -------------------------------------------------------------------------  слушатель открытия модалки лайкнувших ----- */
   if (cardLikesCounter) {
     cardLikesCounter.addEventListener("click", () => {
-      callbackFunctionsSet.openLikersModal();
-      callbackFunctionsSet.showLikedUsers(cardItemData._id);
+      callbackFunctionsSet.openLikersModal(cardItemData._id);
+   //   callbackFunctionsSet.showLikedUsers(cardItemData._id);
     });
   }
   /* ------------------------------------------------------------------------------ слушатель открытия на фулскрин  ------ */

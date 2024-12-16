@@ -9,18 +9,19 @@
   padding: 34px 36px;
 }
 
-.popup__content_confirm_delete {
-  min-height: 100px;
+.popup__content_likes {
+  min-height: 240px;
+  padding: 34px 36px;
 }
 
-.popup__content_likes {
+.popup__content_confirm_delete {
   min-height: 100px;
 }
 
 .popup__content_no_likes {
   text-align: center;
   opacity: 1 !important;
-  margin-top: 35px !important;
+  margin-top: 60px !important;
 }
 
 @media screen and (max-width: 568px) {
@@ -31,4 +32,3 @@
     padding: 30px 20px;
   }
 }
-
