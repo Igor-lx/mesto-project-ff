@@ -1,5 +1,5 @@
 //
-// import {stopInterval, startInterval} from "../index"
+// import {stopInterval, startInterval} from "./scripts/refresh_page"
 
 function openModal(modalWindowElement) {
   //  stopInterval();

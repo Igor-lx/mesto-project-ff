@@ -10,11 +10,10 @@ import {
 } from "./scripts/card";
 
 import { openModal, closeModal } from "./scripts/modal";
-import {
-  showLikedUsers,
-  likersModalDomNodes,
-} from "./scripts/show_liked_users";
 
+import { showLikedUsers, likersModalNodes } from "./scripts/show_liked_users";
+
+import { refreshPage } from "./scripts/refresh_page";
 /* --------------------------------------------------------------------------- */
 import { enableValidation, clearValidation } from "./scripts/validation";
 
@@ -39,7 +38,7 @@ import {
   toggleLike,
 } from "./scripts/api";
 
-export const configAPI = {
+const configAPI = {
   baseUrl: "https://nomoreparties.co/v1/wff-cohort-28",
   userDataEndpoint: "/users/me",
   userAvatarEndpoint: "/users/me/avatar",
@@ -54,17 +53,16 @@ export const configAPI = {
 /* --------------------------------------------------------------------------- */
 
 /* ---------------- */
-const profileFormElement = document.querySelector('[name="edit-profile"]');
-const profileEditButton = document.querySelector(".profile__edit-button");
-const profileModalWindow = document.querySelector(".popup_type_edit");
-const profileInputfieldName = document.querySelector('[name="person_name"]');
-const profileInputfieldJob = document.querySelector(
-  '[name="person_description"]'
-);
-/* ---------------- */
-const profileName = document.querySelector(".profile__title");
-const profileJob = document.querySelector(".profile__description");
-const profileAvatar = document.querySelector(".profile__image");
+const profileModalNodes = {
+  editButton: document.querySelector(".profile__edit-button"),
+  modalWindow: document.querySelector(".popup_type_edit"),
+  formElement: document.querySelector('[name="edit-profile"]'),
+  inputfieldName: document.querySelector('[name="person_name"]'),
+  inputfieldJob: document.querySelector('[name="person_description"]'),
+  name: document.querySelector(".profile__title"),
+  job: document.querySelector(".profile__description"),
+  avatar: document.querySelector(".profile__image"),
+};
 
 /* ---------------- */
 const newplaceFormElement = document.querySelector('[name="new-place"]');
@@ -130,6 +128,7 @@ const likeCounterFullscreen = document.querySelector(
 
 /* --------------------------------------------------------------------------- */
 let userId = null;
+
 /* --------------------------------------------------------------------------- */
 
 const buttonTexts = {
@@ -181,9 +180,9 @@ function renderCard(cardItemData) {
 Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   .then(([userData, initialCardsArray]) => {
     userId = userData._id;
-    profileName.textContent = userData.name;
-    profileJob.textContent = userData.about;
-    profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+    profileModalNodes.name.textContent = userData.name;
+    profileModalNodes.job.textContent = userData.about;
+    profileModalNodes.avatar.style.backgroundImage = `url(${userData.avatar})`;
 
     initialCardsArray.reverse().forEach((cardItemData) => {
       renderCard(cardItemData);
@@ -192,59 +191,35 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   .catch((error) => console.log(`Ошибка: ${error}`));
 
 /* ----------------------------------------------------------------------------------------  обновление страницы ----------- */
-refreshPageButton.addEventListener("click", refreshPage);
+refreshPageButton.addEventListener("click", () =>
+  refreshPage(
+    getUserData,
+    getInitialCards,
+    configAPI,
+    userId,
+    deleteCard,
+    renderCard
+  )
+);
 
-function refreshPage() {
-  const allCardNodes = document.querySelectorAll(".places__item");
-
-  Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
-    .then(([userData, initialCardsArray]) => {
-      allCardNodes.forEach((card) => {
-        deleteCard(card);
-      });
-      userId = userData._id;
-      profileName.textContent = userData.name;
-      profileJob.textContent = userData.about;
-      profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
-
-      initialCardsArray.reverse().forEach((cardItemData) => {
-        renderCard(cardItemData);
-      });
-    })
-    .catch((error) => console.log(`Ошибка: ${error}`));
-}
-
-/* =========================================== */
-
-let intervalId;
-
-export function startInterval() {
-  if (!intervalId) {
-    intervalId = setInterval(() => {
-      refreshPage();
-    }, 3000);
-  }
-}
-
-export function stopInterval() {
-  if (intervalId) {
-    clearInterval(intervalId);
-    intervalId = null;
-  }
-}
-//startInterval()
 /* ------------------------------------------------------------------------------ открытие модальных окон страницы ---------- */
 
-/* --------------------------------------------------------------- профайл*/
-profileEditButton.addEventListener("click", openProfileModal);
+/* ------------------------------------------------------------------ профайл*/
+profileModalNodes.editButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
-  showButtonText(true, false, false, profileFormElement, buttonTexts.save);
-  profileInputfieldName.value = profileName.textContent;
-  profileInputfieldJob.value = profileJob.textContent;
-  openModal(profileModalWindow);
-  clearValidation(profileFormElement, configValidation);
-  refreshInputProfile(profileFormElement);
+  showButtonText(
+    true,
+    false,
+    false,
+    profileModalNodes.formElement,
+    buttonTexts.save
+  );
+  profileModalNodes.inputfieldName.value = profileModalNodes.name.textContent;
+  profileModalNodes.inputfieldJob.value = profileModalNodes.job.textContent;
+  openModal(profileModalNodes.modalWindow);
+  clearValidation(profileModalNodes.formElement, configValidation);
+  refreshInputProfile(profileModalNodes.formElement);
 }
 
 /* ------------------------------------------------------------ новое место*/
@@ -270,40 +245,54 @@ function openAvatarModal() {
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы профиля ------------ */
-profileFormElement.addEventListener("submit", submitProfile);
+profileModalNodes.formElement.addEventListener("submit", submitProfile);
 
 function submitProfile(evt) {
   evt.preventDefault();
 
-  newUserData.name = profileInputfieldName.value;
-  newUserData.about = profileInputfieldJob.value;
+  newUserData.name = profileModalNodes.inputfieldName.value;
+  newUserData.about = profileModalNodes.inputfieldJob.value;
 
-  const isProfileNameChanged = newUserData.name !== profileName.textContent;
-  const isProfileJobChanged = newUserData.about !== profileJob.textContent;
+  const isProfileNameChanged =
+    newUserData.name !== profileModalNodes.name.textContent;
+  const isProfileJobChanged =
+    newUserData.about !== profileModalNodes.job.textContent;
 
   if (!isProfileNameChanged && !isProfileJobChanged) {
     console.log(
       "Данные не изменились, запрос на сервер не был отправлен за ненадобностью."
     );
-    closeModal(profileModalWindow);
+    closeModal(profileModalNodes.modalWindow);
     newUserData.name = null;
     newUserData.about = null;
     return;
   }
 
-  showButtonText(false, true, false, profileFormElement, buttonTexts.save);
+  showButtonText(
+    false,
+    true,
+    false,
+    profileModalNodes.formElement,
+    buttonTexts.save
+  );
 
   editUserData(newUserData, configAPI)
     .then((updatedUserData) => {
-      profileName.textContent = updatedUserData.name;
-      profileJob.textContent = updatedUserData.about;
-      closeModal(profileModalWindow);
+      profileModalNodes.name.textContent = updatedUserData.name;
+      profileModalNodes.job.textContent = updatedUserData.about;
+      closeModal(profileModalNodes.modalWindow);
       newUserData.name = null;
       newUserData.about = null;
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
     .finally(() => {
-      showButtonText(false, false, true, profileFormElement, buttonTexts.save);
+      showButtonText(
+        false,
+        false,
+        true,
+        profileModalNodes.formElement,
+        buttonTexts.save
+      );
     });
 }
 
@@ -345,7 +334,7 @@ function submitAvatar(event) {
 
   editAvatar(avatarNewUrl, configAPI)
     .then((updatedData) => {
-      profileAvatar.style.backgroundImage = `url(${updatedData.avatar})`;
+      profileModalNodes.avatar.style.backgroundImage = `url(${updatedData.avatar})`;
       closeModal(avatarModalWindow);
     })
     .catch((error) => console.error(`Ошибка: ${error}`))
@@ -396,8 +385,8 @@ function refreshInputProfile(formElement) {
     .querySelector(".clear_form");
   clearFormButon.addEventListener("click", () => {
     clearValidation(formElement, configValidation);
-    profileInputfieldName.value = profileName.textContent;
-    profileInputfieldJob.value = profileJob.textContent;
+    profileModalNodes.inputfieldName.value = profileModalNodes.name.textContent;
+    profileModalNodes.inputfieldJob.value = profileModalNodes.job.textContent;
   });
 }
 
@@ -458,12 +447,12 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
 
 /* ------------------------------------------------------------ модалка лайкнувших */
 function openLikersModal(cardId) {
-  likersModalDomNodes.imgName.textContent = "";
-  likersModalDomNodes.autor.textContent = "";
-  likersModalDomNodes.title.textContent = "";
-  likersModalDomNodes.namesList.textContent = "";
-  showLikedUsers(cardId);
-  openModal(likersModalDomNodes.modalWindow);
+  likersModalNodes.imgName.textContent = "";
+  likersModalNodes.imgAutor.textContent = "";
+  likersModalNodes.text.textContent = "";
+  likersModalNodes.likersNames.textContent = "";
+  showLikedUsers(cardId, getInitialCards, configAPI);
+  openModal(likersModalNodes.modalWindow);
 }
 
 /* ---------------------------------------------------------------- обновление карточки */
@@ -541,7 +530,8 @@ function changeCardName() {
 function openFullscreenImage(
   cardItemData,
   cardLikeButtonNode,
-  cardLikeCounterNode, cardItem
+  cardLikeCounterNode,
+  cardItem
 ) {
   currentCardData.cardId = cardItemData._id;
   currentCardData.likeButtonNode = cardLikeButtonNode;
