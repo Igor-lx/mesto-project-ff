@@ -619,34 +619,21 @@ function IfAlreadyLiked(likes, userId, likeButton, likesCounter) {
 likeButtonFullscreen.addEventListener("click", () => {
   handleLikeCard(
     currentCardData.cardId,
-    likeButtonFullscreen,
-    currentCardData.likeCounterNode,
-    likeCounterFullscreen
-  );
-  currentCardData.likeButtonNode.classList.toggle(
-    "card__like-button_is-active"
+    currentCardData.likeButtonNode,
+    currentCardData.likeCounterNode
   );
 });
 
-function changeLikesFullscreenCounter(cardLikesCounter, likedCardData) {
-  cardLikesCounter.classList.toggle("my_like_is-active");
-  cardLikesCounter.textContent = likedCardData.likes.length;
-}
-
-function handleLikeCard(
-  cardId,
-  cardLikeButton,
-  cardLikesCounter,
-  cardLikesFullscreenCounter
-) {
+function handleLikeCard(cardId, cardLikeButton, cardLikesCounter) {
   const isLiked = cardLikeButton.classList.contains(
     "card__like-button_is-active"
   );
   toggleLike(cardId, isLiked, configAPI)
     .then((likedCardData) => {
       likeCard(cardLikeButton);
+      likeCard(likeButtonFullscreen);
       changeLikesCounter(cardLikesCounter, likedCardData);
-      changeLikesFullscreenCounter(cardLikesFullscreenCounter, likedCardData);
+      changeLikesCounter(likeCounterFullscreen, likedCardData);
     })
 
     .catch((error) => console.log(`Ошибка: ${error}`));

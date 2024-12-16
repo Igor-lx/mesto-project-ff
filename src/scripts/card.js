@@ -97,7 +97,6 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
   if (cardLikesCounter) {
     cardLikesCounter.addEventListener("click", () => {
       callbackFunctionsSet.openLikersModal(cardItemData._id);
-   //   callbackFunctionsSet.showLikedUsers(cardItemData._id);
     });
   }
   /* ------------------------------------------------------------------------------ слушатель открытия на фулскрин  ------ */
@@ -105,7 +104,11 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     if (cardItemImage.classList.contains("card__image__load_failure")) {
       return;
     }
-    callbackFunctionsSet.openFullscreenImage(cardItemData, cardLikeButton, cardLikesCounter );
+    callbackFunctionsSet.openFullscreenImage(
+      cardItemData,
+      cardLikeButton,
+      cardLikesCounter
+    );
   });
 
   /* ------------------------------------------------------------------------ Обработчик ошибки при загрузке изображения -- */
