@@ -27,7 +27,7 @@ function getUserData(config) {
   }).then(getResponse);
 }
 
-function getInitialCards(config) {
+function getCardsFromServer(config) {
   return fetch(`${config.baseUrl}${config.cardsEndpoint}`, {
     headers: config.headers,
   }).then(getResponse);
@@ -72,13 +72,20 @@ function toggleLike(cardId, isLiked, config) {
   }).then(getResponse);
 }
 
+function checkImage(url) {
+  return fetch(url, {
+    method: "HEAD",
+  });
+}
+
 /* --------------------------------------------------------------- */
 export {
   getUserData,
-  getInitialCards,
+  getCardsFromServer,
   editUserData,
   editAvatar,
   addNewplace,
   deleteNewplace,
   toggleLike,
+  checkImage,
 };

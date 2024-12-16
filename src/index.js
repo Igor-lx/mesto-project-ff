@@ -10,10 +10,10 @@ import {
 } from "./scripts/card";
 
 import { openModal, closeModal } from "./scripts/modal";
-
 import { showLikedUsers, likersModalNodes } from "./scripts/show_liked_users";
-
 import { refreshPage } from "./scripts/refresh_page";
+import { showButtonText, buttonTexts } from "./scripts/showButtonText";
+
 /* --------------------------------------------------------------------------- */
 import { enableValidation, clearValidation } from "./scripts/validation";
 
@@ -30,12 +30,13 @@ const configValidation = {
 /* --------------------------------------------------------------------------- */
 import {
   getUserData,
-  getInitialCards,
+  getCardsFromServer,
   editUserData,
   editAvatar,
   addNewplace,
   deleteNewplace,
   toggleLike,
+  checkImage,
 } from "./scripts/api";
 
 const configAPI = {
@@ -53,7 +54,7 @@ const configAPI = {
 /* --------------------------------------------------------------------------- */
 
 /* ---------------- */
-const profileModalNodes = {
+const profileNodes = {
   editButton: document.querySelector(".profile__edit-button"),
   modalWindow: document.querySelector(".popup_type_edit"),
   formElement: document.querySelector('[name="edit-profile"]'),
@@ -78,10 +79,10 @@ const popupImageAutor = document.querySelector(".popup__autor");
 const popupImageModalWindow = document.querySelector(".popup_type_image");
 
 /* ---------------- */
-const avtarFormElement = document.querySelector('[name="edit_avatar"]');
+const avatarFormElement = document.querySelector('[name="edit_avatar"]');
 const avatarEditButton = document.querySelector(".edit_avatar");
 const avatarModalWindow = document.querySelector(".popup_type_avatar");
-const avtarInputfield = document.querySelector('[name="avatar_url"]');
+const avatarInputfield = document.querySelector('[name="avatar_url"]');
 
 /* ---------------- */
 const confirmDeleteModalWindow = document.querySelector(
@@ -131,21 +132,6 @@ let userId = null;
 
 /* --------------------------------------------------------------------------- */
 
-const buttonTexts = {
-  save: {
-    loadingText: "Сохранение...",
-    completedText: "Сохранено",
-  },
-  delete: {
-    loadingText: "Удаление...",
-    completedText: "Удалено",
-  },
-  update: {
-    loadingText: "Обновление...",
-    completedText: "Обновлено",
-  },
-};
-
 /* --------------------------------------------------------------------------- */
 
 const currentCardData = {
@@ -164,7 +150,7 @@ const newCardData = {
   link: null,
 };
 
-const newUserData = {
+const updatedUserData = {
   name: null,
   about: null,
 };
@@ -177,12 +163,12 @@ function renderCard(cardItemData) {
   cardPlace.prepend(createCard(cardItemData, userId, callbackFunctionsSet));
 }
 
-Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
+Promise.all([getUserData(configAPI), getCardsFromServer(configAPI)])
   .then(([userData, initialCardsArray]) => {
     userId = userData._id;
-    profileModalNodes.name.textContent = userData.name;
-    profileModalNodes.job.textContent = userData.about;
-    profileModalNodes.avatar.style.backgroundImage = `url(${userData.avatar})`;
+    profileNodes.name.textContent = userData.name;
+    profileNodes.job.textContent = userData.about;
+    profileNodes.avatar.style.backgroundImage = `url(${userData.avatar})`;
 
     initialCardsArray.reverse().forEach((cardItemData) => {
       renderCard(cardItemData);
@@ -191,10 +177,11 @@ Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
   .catch((error) => console.log(`Ошибка: ${error}`));
 
 /* ----------------------------------------------------------------------------------------  обновление страницы ----------- */
+
 refreshPageButton.addEventListener("click", () =>
   refreshPage(
     getUserData,
-    getInitialCards,
+    getCardsFromServer,
     configAPI,
     userId,
     deleteCard,
@@ -204,25 +191,25 @@ refreshPageButton.addEventListener("click", () =>
 
 /* ------------------------------------------------------------------------------ открытие модальных окон страницы ---------- */
 
-/* ------------------------------------------------------------------ профайл*/
-profileModalNodes.editButton.addEventListener("click", openProfileModal);
+/* ----------------------------------------------------------------------- профайл*/
+profileNodes.editButton.addEventListener("click", openProfileModal);
 
 function openProfileModal() {
   showButtonText(
     true,
     false,
     false,
-    profileModalNodes.formElement,
+    profileNodes.formElement,
     buttonTexts.save
   );
-  profileModalNodes.inputfieldName.value = profileModalNodes.name.textContent;
-  profileModalNodes.inputfieldJob.value = profileModalNodes.job.textContent;
-  openModal(profileModalNodes.modalWindow);
-  clearValidation(profileModalNodes.formElement, configValidation);
-  refreshInputProfile(profileModalNodes.formElement);
+  profileNodes.inputfieldName.value = profileNodes.name.textContent;
+  profileNodes.inputfieldJob.value = profileNodes.job.textContent;
+  openModal(profileNodes.modalWindow);
+  clearValidation(profileNodes.formElement, configValidation);
+  refreshProfileInputFields(profileNodes.formElement);
 }
 
-/* ------------------------------------------------------------ новое место*/
+/* ------------------------------------------------------------------ новое место*/
 newplaceAddButton.addEventListener("click", openNewplaceModal);
 
 function openNewplaceModal() {
@@ -233,38 +220,38 @@ function openNewplaceModal() {
   clearInputFields(newplaceFormElement);
 }
 
-/* ---------------------------------------------------------------- аватар*/
+/* ----------------------------------------------------------------------- аватар*/
 avatarEditButton.addEventListener("click", openAvatarModal);
 
 function openAvatarModal() {
-  showButtonText(true, false, false, avtarFormElement, buttonTexts.save);
-  avtarFormElement.reset();
+  showButtonText(true, false, false, avatarFormElement, buttonTexts.save);
+  avatarFormElement.reset();
   openModal(avatarModalWindow);
-  clearValidation(avtarFormElement, configValidation);
-  clearInputFields(avtarFormElement);
+  clearValidation(avatarFormElement, configValidation);
+  clearInputFields(avatarFormElement);
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы профиля ------------ */
-profileModalNodes.formElement.addEventListener("submit", submitProfile);
+profileNodes.formElement.addEventListener("submit", submitProfile);
 
 function submitProfile(evt) {
   evt.preventDefault();
 
-  newUserData.name = profileModalNodes.inputfieldName.value;
-  newUserData.about = profileModalNodes.inputfieldJob.value;
+  updatedUserData.name = profileNodes.inputfieldName.value;
+  updatedUserData.about = profileNodes.inputfieldJob.value;
 
   const isProfileNameChanged =
-    newUserData.name !== profileModalNodes.name.textContent;
+    updatedUserData.name !== profileNodes.name.textContent;
   const isProfileJobChanged =
-    newUserData.about !== profileModalNodes.job.textContent;
+    updatedUserData.about !== profileNodes.job.textContent;
 
   if (!isProfileNameChanged && !isProfileJobChanged) {
     console.log(
       "Данные не изменились, запрос на сервер не был отправлен за ненадобностью."
     );
-    closeModal(profileModalNodes.modalWindow);
-    newUserData.name = null;
-    newUserData.about = null;
+    closeModal(profileNodes.modalWindow);
+    updatedUserData.name = null;
+    updatedUserData.about = null;
     return;
   }
 
@@ -272,17 +259,17 @@ function submitProfile(evt) {
     false,
     true,
     false,
-    profileModalNodes.formElement,
+    profileNodes.formElement,
     buttonTexts.save
   );
 
-  editUserData(newUserData, configAPI)
+  editUserData(updatedUserData, configAPI)
     .then((updatedUserData) => {
-      profileModalNodes.name.textContent = updatedUserData.name;
-      profileModalNodes.job.textContent = updatedUserData.about;
-      closeModal(profileModalNodes.modalWindow);
-      newUserData.name = null;
-      newUserData.about = null;
+      profileNodes.name.textContent = updatedUserData.name;
+      profileNodes.job.textContent = updatedUserData.about;
+      closeModal(profileNodes.modalWindow);
+      updatedUserData.name = null;
+      updatedUserData.about = null;
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
     .finally(() => {
@@ -290,7 +277,7 @@ function submitProfile(evt) {
         false,
         false,
         true,
-        profileModalNodes.formElement,
+        profileNodes.formElement,
         buttonTexts.save
       );
     });
@@ -323,74 +310,66 @@ function submitNewplace(evt) {
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
-avtarFormElement.addEventListener("submit", submitAvatar);
+avatarFormElement.addEventListener("submit", submitAvatar);
 
 function submitAvatar(event) {
   event.preventDefault();
 
-  const avatarNewUrl = avtarInputfield.value;
+  const avatarNewUrl = avatarInputfield.value;
 
-  showButtonText(false, true, false, avtarFormElement, buttonTexts.save);
+  showButtonText(false, true, false, avatarFormElement, buttonTexts.save);
 
-  editAvatar(avatarNewUrl, configAPI)
+  checkImage(avatarNewUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Ошибка: ${response.status}`);
+      }
+      const mimeType = response.headers.get("Content-Type");
+      if (!mimeType.startsWith("image/")) {
+        throw new Error(`Недопустимый тип файла: ${mimeType}`);
+      }
+      return avatarNewUrl; // Передаю URL в следующий then
+    })
+    .catch(() => {
+      showButtonText(false, false, true, avatarFormElement, buttonTexts.error);
+      closeModal(avatarModalWindow);
+      openModal(newplaceModalWindow);
+    })
+    .then((validUrl) => {
+      return editAvatar(validUrl, configAPI);
+    })
     .then((updatedData) => {
-      profileModalNodes.avatar.style.backgroundImage = `url(${updatedData.avatar})`;
+      profileNodes.avatar.style.backgroundImage = `url(${updatedData.avatar})`;
+      showButtonText(false, false, true, avatarFormElement, buttonTexts.save);
       closeModal(avatarModalWindow);
     })
-    .catch((error) => console.error(`Ошибка: ${error}`))
-    .finally(() => {
-      showButtonText(false, false, true, avtarFormElement, buttonTexts.save);
-    });
-}
-
-/* ------------------------------------------------------------------------------------------ showButtonText ------------- */
-
-function showButtonText(
-  ifOpened,
-  ifLoading,
-  ifCompleted,
-  formElement,
-  buttonText
-) {
-  const submitButton = formElement.querySelector(".popup__button");
-
-  if (!submitButton.dataset.originalText) {
-    submitButton.dataset.originalText = submitButton.textContent;
-  }
-
-  if (ifOpened) {
-    submitButton.textContent = submitButton.dataset.originalText;
-  } else if (ifLoading) {
-    submitButton.textContent = buttonText.loadingText;
-  } else if (ifCompleted) {
-    submitButton.textContent = buttonText.completedText;
-  }
+    .catch((error) => console.error(`Ошибка: ${error}`));
 }
 
 /* ---------------------------------------------------------------------------------- clear/refresh InputFields----------- */
 
 function clearInputFields(formElement) {
-  const clearFormButon = formElement
+  const clearFormButton = formElement
     .closest(".popup__content")
     .querySelector(".clear_form");
-  clearFormButon.addEventListener("click", () => {
+  clearFormButton.addEventListener("click", () => {
     formElement.reset();
     clearValidation(formElement, configValidation);
   });
 }
 
-function refreshInputProfile(formElement) {
+function refreshProfileInputFields(formElement) {
   const clearFormButon = formElement
     .closest(".popup__content")
     .querySelector(".clear_form");
   clearFormButon.addEventListener("click", () => {
     clearValidation(formElement, configValidation);
-    profileModalNodes.inputfieldName.value = profileModalNodes.name.textContent;
-    profileModalNodes.inputfieldJob.value = profileModalNodes.job.textContent;
+    profileNodes.inputfieldName.value = profileNodes.name.textContent;
+    profileNodes.inputfieldJob.value = profileNodes.job.textContent;
   });
 }
 
-function refreshInputChangeName(formElement, currentCardName) {
+function refreshUpdatecardInputField(formElement, currentCardName) {
   const clearFormButon = formElement
     .closest(".popup__content")
     .querySelector(".clear_form");
@@ -412,7 +391,6 @@ const callbackFunctionsSet = {
   processImgDownldError,
   openLikersModal,
   showLikedUsers,
-  processOnLoad,
 };
 
 /* --------------------------------------------------------------------- */
@@ -451,7 +429,7 @@ function openLikersModal(cardId) {
   likersModalNodes.imgAutor.textContent = "";
   likersModalNodes.text.textContent = "";
   likersModalNodes.likersNames.textContent = "";
-  showLikedUsers(cardId, getInitialCards, configAPI);
+  showLikedUsers(cardId, getCardsFromServer, configAPI);
   openModal(likersModalNodes.modalWindow);
 }
 
@@ -465,7 +443,7 @@ function openChangeCardNameModal(cardItemData, cardItem) {
   changeCardNameInputfield.value = cardItemData.name;
   openModal(changeCardNameModalWindow);
   clearValidation(changeCardNameFormElement, configValidation);
-  refreshInputChangeName(changeCardNameFormElement, cardItemData.name);
+  refreshUpdatecardInputField(changeCardNameFormElement, cardItemData.name);
 }
 
 /* ---------------------------------------------------------- подтвержждение обновления */
@@ -543,7 +521,7 @@ function openFullscreenImage(
   popupImageCaption.textContent = cardItemData.name;
   popupImageAutor.textContent = "Автор: " + cardItemData.owner.name;
 
-  Promise.all([getUserData(configAPI), getInitialCards(configAPI)])
+  Promise.all([getUserData(configAPI), getCardsFromServer(configAPI)])
     .then(([userData, initialCardsArray]) => {
       const matchedCard = initialCardsArray.find(
         (card) => card._id === currentCardData.cardId
@@ -662,7 +640,7 @@ function processImgDownldError(
   }
   cardItemImage.style.cursor = "not-allowed";
 }
-
+/*
 function processOnLoad(
   cardItemTitle,
   cardEditButton,
@@ -675,7 +653,7 @@ function processOnLoad(
   }
   cardLikeSection.style.display = "flex";
 }
-
+*/
 /* --------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------------------------------------------------- */
