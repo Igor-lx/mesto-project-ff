@@ -1,4 +1,4 @@
-export const buttonTexts = {
+export const showButtonTextParams = {
   save: {
     loadingText: "Сохранение...",
     completedText: "Сохранено",

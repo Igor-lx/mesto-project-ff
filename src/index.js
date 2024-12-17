@@ -10,9 +10,11 @@ import {
 } from "./scripts/card";
 
 import { openModal, closeModal } from "./scripts/modal";
-import { showLikedUsers, likersModalNodes } from "./scripts/show_liked_users";
-import { refreshPage } from "./scripts/refresh_page";
-import { showButtonText, buttonTexts } from "./scripts/showButtonText";
+import { showLikedUsers, likersModalNodes } from "./scripts/showLikedUsers";
+import { refreshPage } from "./scripts/refreshPage";
+import { showButtonText, showButtonTextParams } from "./scripts/showButtonText";
+import { switchModal } from "./scripts/switchModal";
+import { validateFileType } from "./scripts/validateFileType";
 
 /* --------------------------------------------------------------------------- */
 import { enableValidation, clearValidation } from "./scripts/validation";
@@ -36,7 +38,7 @@ import {
   addNewplace,
   deleteNewplace,
   toggleLike,
-  checkImage,
+  getFileType,
 } from "./scripts/api";
 
 const configAPI = {
@@ -94,25 +96,23 @@ const confirmDeleteButton =
 /* ---------------- */
 
 /* --------------------------------------------------------------------------- */
-const changeCardNameModalWindow = document.querySelector(
+const cardUpdateModalWindow = document.querySelector(
   ".popup_type_card_name_change"
 );
-const changeCardNameFormElement = document.querySelector(
-  '[name="edit_cardname"]'
-);
-const changeCardNameInputfield = document.querySelector(
+const cardUpdareFormElement = document.querySelector('[name="edit_cardname"]');
+const cardUpdateInputfield = document.querySelector(
   '[name="edit_cardname_input"]'
 );
 
-const changeCardNameModalButton =
-  changeCardNameModalWindow.querySelector(".popup__button");
+const cardUpdateModalButton =
+  cardUpdateModalWindow.querySelector(".popup__button");
 /* --------------------------------------------------------------------------- */
 
 const confrimUpdateModalWindow = document.querySelector(
   ".popup_type_update-confirm"
 );
 
-const confrimUpdateButton =
+const confrimUpdateModalButton =
   confrimUpdateModalWindow.querySelector(".popup__button");
 
 /* --------------------------------------------------------------------------- */
@@ -200,7 +200,7 @@ function openProfileModal() {
     false,
     false,
     profileNodes.formElement,
-    buttonTexts.save
+    showButtonTextParams.save
   );
   profileNodes.inputfieldName.value = profileNodes.name.textContent;
   profileNodes.inputfieldJob.value = profileNodes.job.textContent;
@@ -213,7 +213,13 @@ function openProfileModal() {
 newplaceAddButton.addEventListener("click", openNewplaceModal);
 
 function openNewplaceModal() {
-  showButtonText(true, false, false, newplaceFormElement, buttonTexts.save);
+  showButtonText(
+    true,
+    false,
+    false,
+    newplaceFormElement,
+    showButtonTextParams.save
+  );
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
   clearValidation(newplaceFormElement, configValidation);
@@ -224,7 +230,13 @@ function openNewplaceModal() {
 avatarEditButton.addEventListener("click", openAvatarModal);
 
 function openAvatarModal() {
-  showButtonText(true, false, false, avatarFormElement, buttonTexts.save);
+  showButtonText(
+    true,
+    false,
+    false,
+    avatarFormElement,
+    showButtonTextParams.save
+  );
   avatarFormElement.reset();
   openModal(avatarModalWindow);
   clearValidation(avatarFormElement, configValidation);
@@ -260,7 +272,7 @@ function submitProfile(evt) {
     true,
     false,
     profileNodes.formElement,
-    buttonTexts.save
+    showButtonTextParams.save
   );
 
   editUserData(updatedUserData, configAPI)
@@ -278,7 +290,7 @@ function submitProfile(evt) {
         false,
         true,
         profileNodes.formElement,
-        buttonTexts.save
+        showButtonTextParams.save
       );
     });
 }
@@ -293,7 +305,65 @@ function submitNewplace(evt) {
   newCardData.name = newplaceInputfieldName.value;
   newCardData.link = newplaceInputfieldLink.value;
 
-  showButtonText(false, true, false, newplaceFormElement, buttonTexts.save);
+  showButtonText(
+    false,
+    true,
+    false,
+    newplaceFormElement,
+    showButtonTextParams.save
+  );
+
+  validateFileType(getFileType, newCardData.link, "Content-Type", "image/")
+    .catch(() => {
+      showButtonText(
+        false,
+        false,
+        true,
+        newplaceFormElement,
+        showButtonTextParams.error
+      );
+      switchModal(
+        newplaceModalWindow,
+        cardUpdateModalWindow,
+        openModal,
+        closeModal
+      );
+      return Promise.reject();
+    })
+    .then(() => {
+      return addNewplace(newCardData, configAPI);
+    })
+    .then((addedCard) => {
+      renderCard(addedCard);
+      showButtonText(
+        false,
+        false,
+        true,
+        newplaceFormElement,
+        showButtonTextParams.save
+      );
+      newCardData.name = null;
+      newCardData.link = null;
+      closeModal(newplaceModalWindow);
+    })
+    .catch((error) => console.error(`Ошибка: ${error}`));
+}
+
+// https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
+/*
+function submitNewplace(evt) {
+  evt.preventDefault();
+
+  newCardData.name = newplaceInputfieldName.value;
+  newCardData.link = newplaceInputfieldLink.value;
+
+  showButtonText(
+    false,
+    true,
+    false,
+    newplaceFormElement,
+    showButtonTextParams.save
+  );
 
   addNewplace(newCardData, configAPI)
     .then((addedCard) => {
@@ -305,10 +375,16 @@ function submitNewplace(evt) {
     })
     .catch((error) => console.log(`Ошибка: ${error}`))
     .finally(() => {
-      showButtonText(false, false, true, newplaceFormElement, buttonTexts.save);
+      showButtonText(
+        false,
+        false,
+        true,
+        newplaceFormElement,
+        showButtonTextParams.save
+      );
     });
 }
-
+*/
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
 avatarFormElement.addEventListener("submit", submitAvatar);
 
@@ -317,30 +393,43 @@ function submitAvatar(event) {
 
   const avatarNewUrl = avatarInputfield.value;
 
-  showButtonText(false, true, false, avatarFormElement, buttonTexts.save);
+  showButtonText(
+    false,
+    true,
+    false,
+    avatarFormElement,
+    showButtonTextParams.save
+  );
 
-  checkImage(avatarNewUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-      const mimeType = response.headers.get("Content-Type");
-      if (!mimeType.startsWith("image/")) {
-        throw new Error(`Недопустимый тип файла: ${mimeType}`);
-      }
-      return avatarNewUrl; // Передаю URL в следующий then
-    })
+  validateFileType(getFileType, avatarNewUrl, "Content-Type", "image/")
     .catch(() => {
-      showButtonText(false, false, true, avatarFormElement, buttonTexts.error);
-      closeModal(avatarModalWindow);
-      openModal(newplaceModalWindow);
+      showButtonText(
+        false,
+        false,
+        true,
+        avatarFormElement,
+        showButtonTextParams.error
+      );
+      switchModal(
+        avatarModalWindow,
+        newplaceModalWindow,
+        openModal,
+        closeModal
+      );
+      return Promise.reject();
     })
     .then((validUrl) => {
       return editAvatar(validUrl, configAPI);
     })
     .then((updatedData) => {
       profileNodes.avatar.style.backgroundImage = `url(${updatedData.avatar})`;
-      showButtonText(false, false, true, avatarFormElement, buttonTexts.save);
+      showButtonText(
+        false,
+        false,
+        true,
+        avatarFormElement,
+        showButtonTextParams.save
+      );
       closeModal(avatarModalWindow);
     })
     .catch((error) => console.error(`Ошибка: ${error}`));
@@ -375,7 +464,7 @@ function refreshUpdatecardInputField(formElement, currentCardName) {
     .querySelector(".clear_form");
   clearFormButon.addEventListener("click", () => {
     clearValidation(formElement, configValidation);
-    changeCardNameInputfield.value = currentCardName;
+    cardUpdateInputfield.value = currentCardName;
   });
 }
 
@@ -416,7 +505,7 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
     false,
     false,
     confirmDeleteModalWindow,
-    buttonTexts.delete
+    showButtonTextParams.delete
   );
   currentCardData.cardId = cardItemData._id;
   currentCardData.cardElement = cardItem;
@@ -440,32 +529,37 @@ function openChangeCardNameModal(cardItemData, cardItem) {
   currentCardData.cardElement = cardItem;
   currentCardData.link = cardItemData.link;
   currentCardData.name = cardItemData.name;
-  changeCardNameInputfield.value = cardItemData.name;
-  openModal(changeCardNameModalWindow);
-  clearValidation(changeCardNameFormElement, configValidation);
-  refreshUpdatecardInputField(changeCardNameFormElement, cardItemData.name);
+  cardUpdateInputfield.value = cardItemData.name;
+  openModal(cardUpdateModalWindow);
+  clearValidation(cardUpdareFormElement, configValidation);
+  refreshUpdatecardInputField(cardUpdareFormElement, cardItemData.name);
 }
 
-/* ---------------------------------------------------------- подтвержждение обновления */
+/* ---------------------------------------------------------- подтвержждение обновления карточки */
 
-changeCardNameModalButton.addEventListener("click", openConfrimUpdateModal);
+cardUpdateModalButton.addEventListener("click", openConfrimUpdateModal);
 
 function openConfrimUpdateModal() {
-  closeModal(changeCardNameModalWindow);
-  openModal(confrimUpdateModalWindow);
+  switchModal(
+    cardUpdateModalWindow,
+    confrimUpdateModalWindow,
+    openModal,
+    closeModal
+  );
+
   showButtonText(
     true,
     false,
     false,
     confrimUpdateModalWindow,
-    buttonTexts.update
+    showButtonTextParams.update
   );
 }
 
-confrimUpdateButton.addEventListener("click", changeCardName);
+confrimUpdateModalButton.addEventListener("click", changeCardName);
 
 function changeCardName() {
-  newCardData.name = changeCardNameInputfield.value;
+  newCardData.name = cardUpdateInputfield.value;
   newCardData.link = currentCardData.link;
 
   showButtonText(
@@ -473,7 +567,7 @@ function changeCardName() {
     true,
     false,
     confrimUpdateModalWindow,
-    buttonTexts.update
+    showButtonTextParams.update
   );
 
   Promise.all([
@@ -499,7 +593,7 @@ function changeCardName() {
         false,
         true,
         confrimUpdateModalWindow,
-        buttonTexts.update
+        showButtonTextParams.update
       );
     });
 }
@@ -540,7 +634,7 @@ function openFullscreenImage(
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* -- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card -- */
+/* --------------------------------------------- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card -- */
 
 confirmDeleteButton.addEventListener("click", handleDeleteCard);
 
@@ -550,7 +644,7 @@ function handleDeleteCard() {
     true,
     false,
     confirmDeleteModalWindow,
-    buttonTexts.delete
+    showButtonTextParams.delete
   );
   deleteNewplace(currentCardData.cardId, configAPI)
     .then(() => {
@@ -568,7 +662,7 @@ function handleDeleteCard() {
         false,
         true,
         confirmDeleteModalWindow,
-        buttonTexts.delete
+        showButtonTextParams.delete
       );
     });
 }

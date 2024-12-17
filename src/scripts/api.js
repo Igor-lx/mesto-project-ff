@@ -72,7 +72,7 @@ function toggleLike(cardId, isLiked, config) {
   }).then(getResponse);
 }
 
-function checkImage(url) {
+function getFileType(url) {
   return fetch(url, {
     method: "HEAD",
   });
@@ -87,5 +87,5 @@ export {
   addNewplace,
   deleteNewplace,
   toggleLike,
-  checkImage,
+  getFileType,
 };
