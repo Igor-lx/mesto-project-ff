@@ -127,6 +127,8 @@ const likeCounterFullscreen = document.querySelector(
   ".likes_counter_fullscreen"
 );
 
+/*-----------------------------------------------------------------------------*/
+const errorModalWindow = document.querySelector(".popup_type_error");
 /* --------------------------------------------------------------------------- */
 let userId = null;
 
@@ -282,15 +284,22 @@ function submitProfile(evt) {
       closeModal(profileNodes.modalWindow);
       updatedUserData.name = null;
       updatedUserData.about = null;
-    })
-    .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() => {
       showButtonText(
         false,
         false,
         true,
         profileNodes.formElement,
         showButtonTextParams.save
+      );
+    })
+    .catch((error) => {
+      console.log(`Ошибка: ${error}`);
+      showButtonText(
+        false,
+        false,
+        true,
+        profileNodes.formElement,
+        showButtonTextParams.error
       );
     });
 }
@@ -322,12 +331,7 @@ function submitNewplace(evt) {
         newplaceFormElement,
         showButtonTextParams.error
       );
-      switchModal(
-        newplaceModalWindow,
-        cardUpdateModalWindow,
-        openModal,
-        closeModal
-      );
+      switchModal(newplaceModalWindow, errorModalWindow, openModal, closeModal);
       return Promise.reject(error);
     })
     .then(() => {
@@ -346,9 +350,17 @@ function submitNewplace(evt) {
       newCardData.link = null;
       closeModal(newplaceModalWindow);
     })
-    .catch((error) => console.error(`Ошибка: ${error}`));
+    .catch((error) => {
+      console.error(`Ошибка: ${error}`);
+      showButtonText(
+        false,
+        false,
+        true,
+        newplaceFormElement,
+        showButtonTextParams.error
+      );
+    });
 }
-
 
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
 avatarFormElement.addEventListener("submit", submitAvatar);
@@ -375,12 +387,7 @@ function submitAvatar(event) {
         avatarFormElement,
         showButtonTextParams.error
       );
-      switchModal(
-        avatarModalWindow,
-        newplaceModalWindow,
-        openModal,
-        closeModal
-      );
+      switchModal(avatarModalWindow, errorModalWindow, openModal, closeModal);
       return Promise.reject(error);
     })
     .then((validUrl) => {
@@ -397,7 +404,16 @@ function submitAvatar(event) {
       );
       closeModal(avatarModalWindow);
     })
-    .catch((error) => console.error(`Ошибка: ${error}`));
+    .catch((error) => {
+      console.error(`Ошибка: ${error}`);
+      showButtonText(
+        false,
+        false,
+        true,
+        avatarFormElement,
+        showButtonTextParams.error
+      );
+    });
 }
 
 /* ---------------------------------------------------------------------------------- clear/refresh InputFields----------- */
@@ -548,11 +564,6 @@ function changeCardName() {
       currentCardData.link = null;
       newCardData.name = null;
       newCardData.link = null;
-    })
-    .catch((error) => {
-      console.log(`Ошибка: ${error}`);
-    })
-    .finally(() => {
       showButtonText(
         false,
         false,
@@ -560,6 +571,16 @@ function changeCardName() {
         confrimUpdateModalWindow,
         showButtonTextParams.update
       );
+    })
+    .catch((error) => {
+      showButtonText(
+        false,
+        false,
+        true,
+        confrimUpdateModalWindow,
+        showButtonTextParams.error
+      );
+      console.log(`Ошибка: ${error}`);
     });
 }
 
@@ -617,11 +638,6 @@ function handleDeleteCard() {
       closeModal(confirmDeleteModalWindow);
       currentCardData.cardId = null;
       currentCardData.cardElement = null;
-    })
-    .catch((error) => {
-      console.log(`Ошибка: ${error}`);
-    })
-    .finally(() => {
       showButtonText(
         false,
         false,
@@ -629,6 +645,16 @@ function handleDeleteCard() {
         confirmDeleteModalWindow,
         showButtonTextParams.delete
       );
+    })
+    .catch((error) => {
+      showButtonText(
+        false,
+        false,
+        true,
+        confirmDeleteModalWindow,
+        showButtonTextParams.error
+      );
+      console.log(`Ошибка: ${error}`);
     });
 }
 

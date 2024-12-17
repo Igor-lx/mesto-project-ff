@@ -54,3 +54,20 @@
 
   font-size: 21px;
 }
+
+.popup_wrong_link {
+  text-align: center;
+  opacity: 0.7;
+  font-size: 20px;
+  display: block;
+  font-weight: 700;
+}
+
+.popup_404 {
+  color: brown;
+  opacity: 0.7;
+  font-weight: 700;
+  font-size: 70px;
+  margin: 25px 0 60px;
+  text-align: center;
+}

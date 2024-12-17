@@ -12,7 +12,6 @@ export const showButtonTextParams = {
     completedText: "Обновлено",
   },
   error: {
-    loadingText: "Сохранение...",
     completedText: "Ошибка",
   },
 };
