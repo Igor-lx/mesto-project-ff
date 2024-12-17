@@ -314,7 +314,7 @@ function submitNewplace(evt) {
   );
 
   validateFileType(getFileType, newCardData.link, "Content-Type", "image/")
-    .catch(() => {
+    .catch((error) => {
       showButtonText(
         false,
         false,
@@ -328,7 +328,7 @@ function submitNewplace(evt) {
         openModal,
         closeModal
       );
-      return Promise.reject();
+      return Promise.reject(error);
     })
     .then(() => {
       return addNewplace(newCardData, configAPI);
@@ -349,42 +349,7 @@ function submitNewplace(evt) {
     .catch((error) => console.error(`Ошибка: ${error}`));
 }
 
-// https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
-/*
-function submitNewplace(evt) {
-  evt.preventDefault();
 
-  newCardData.name = newplaceInputfieldName.value;
-  newCardData.link = newplaceInputfieldLink.value;
-
-  showButtonText(
-    false,
-    true,
-    false,
-    newplaceFormElement,
-    showButtonTextParams.save
-  );
-
-  addNewplace(newCardData, configAPI)
-    .then((addedCard) => {
-      renderCard(addedCard);
-      closeModal(newplaceModalWindow);
-
-      newCardData.name = null;
-      newCardData.link = null;
-    })
-    .catch((error) => console.log(`Ошибка: ${error}`))
-    .finally(() => {
-      showButtonText(
-        false,
-        false,
-        true,
-        newplaceFormElement,
-        showButtonTextParams.save
-      );
-    });
-}
-*/
 /* ----------------------------------------------------------------------------------- сабмит формы аватара ---------- */
 avatarFormElement.addEventListener("submit", submitAvatar);
 
@@ -402,7 +367,7 @@ function submitAvatar(event) {
   );
 
   validateFileType(getFileType, avatarNewUrl, "Content-Type", "image/")
-    .catch(() => {
+    .catch((error) => {
       showButtonText(
         false,
         false,
@@ -416,7 +381,7 @@ function submitAvatar(event) {
         openModal,
         closeModal
       );
-      return Promise.reject();
+      return Promise.reject(error);
     })
     .then((validUrl) => {
       return editAvatar(validUrl, configAPI);
