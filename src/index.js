@@ -725,20 +725,7 @@ function processImgDownldError(
   }
   cardItemImage.style.cursor = "not-allowed";
 }
-/*
-function processOnLoad(
-  cardItemTitle,
-  cardEditButton,
-  cardLikeSection,
-  cardItemData
-) {
-  cardItemTitle.textContent = cardItemData.name;
-  if (cardEditButton) {
-    cardEditButton.style.display = "block";
-  }
-  cardLikeSection.style.display = "flex";
-}
-*/
+
 /* --------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------------------------------------------------- */

@@ -41,7 +41,6 @@ export function showLikedUsers(cardId, likeCounterNode, getCards, configApi) {
       } else {
         likersModalNodes.imgName.textContent = "Карточка не найдена";
       }
-      return card.likes.length;
     })
 
     .catch((error) => console.log(`Ошибка: ${error}`));
