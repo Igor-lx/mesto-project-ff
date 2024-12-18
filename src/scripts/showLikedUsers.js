@@ -8,10 +8,17 @@ export const likersModalNodes = {
   likersNames: document.querySelector(".likers-names"),
 };
 
+export function clearLikersModalTextcontent(modalNodesObject) {
+  Object.keys(modalNodesObject)
+    .slice(1)
+    .forEach((key) => {
+      modalNodesObject[key].textContent = "";
+    });
+}
 /* -------------------------------------------------------------------------------------------------*/
 
-export function showLikedUsers(cardId, getCards, configApi) {
-  getCards(configApi)
+export function showLikedUsers(cardId, likeCounterNode, getCards, configApi) {
+  return getCards(configApi)
     .then((cards) => {
       const card = cards.find((card) => card._id === cardId);
 
@@ -21,6 +28,7 @@ export function showLikedUsers(cardId, getCards, configApi) {
         likersModalNodes.imgName.classList.remove("popup__content_no_likes");
 
         if (card.likes.length > 0) {
+          likeCounterNode.textContent = card.likes.length;
           const likersNames = card.likes.map((liker) => liker.name).join(", ");
 
           likersModalNodes.text.textContent = "Это фото понравилось:";
@@ -33,6 +41,8 @@ export function showLikedUsers(cardId, getCards, configApi) {
       } else {
         likersModalNodes.imgName.textContent = "Карточка не найдена";
       }
+      return card.likes.length;
     })
+
     .catch((error) => console.log(`Ошибка: ${error}`));
 }

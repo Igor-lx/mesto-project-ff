@@ -10,7 +10,11 @@ import {
 } from "./scripts/card";
 
 import { openModal, closeModal } from "./scripts/modal";
-import { showLikedUsers, likersModalNodes } from "./scripts/showLikedUsers";
+import {
+  showLikedUsers,
+  clearLikersModalTextcontent,
+  likersModalNodes,
+} from "./scripts/showLikedUsers";
 import { refreshPage } from "./scripts/refreshPage";
 import { showButtonText, showButtonTextParams } from "./scripts/showButtonText";
 import { switchModal } from "./scripts/switchModal";
@@ -106,8 +110,8 @@ const cardUpdateInputfield = document.querySelector(
 
 const cardUpdateModalButton =
   cardUpdateModalWindow.querySelector(".popup__button");
-/* --------------------------------------------------------------------------- */
 
+/* --------------------------------------------------------------------------- */
 const confrimUpdateModalWindow = document.querySelector(
   ".popup_type_update-confirm"
 );
@@ -129,13 +133,11 @@ const likeCounterFullscreen = document.querySelector(
 
 /*-----------------------------------------------------------------------------*/
 const errorModalWindow = document.querySelector(".popup_type_error");
+
 /* --------------------------------------------------------------------------- */
 let userId = null;
 
 /* --------------------------------------------------------------------------- */
-
-/* --------------------------------------------------------------------------- */
-
 const currentCardData = {
   name: null,
   cardId: null,
@@ -157,6 +159,11 @@ const updatedUserData = {
   about: null,
 };
 
+function clearObjectValues(object) {
+  Object.keys(object).forEach((key) => {
+    object[key] = null;
+  });
+}
 /* ----------------------------------------------------------------------------- INITIAL получение с сервера и  рендер ------ */
 
 const cardPlace = document.querySelector(".places__list");
@@ -264,8 +271,8 @@ function submitProfile(evt) {
       "Данные не изменились, запрос на сервер не был отправлен за ненадобностью."
     );
     closeModal(profileNodes.modalWindow);
-    updatedUserData.name = null;
-    updatedUserData.about = null;
+    clearObjectValues(updatedUserData);
+
     return;
   }
 
@@ -282,8 +289,7 @@ function submitProfile(evt) {
       profileNodes.name.textContent = updatedUserData.name;
       profileNodes.job.textContent = updatedUserData.about;
       closeModal(profileNodes.modalWindow);
-      updatedUserData.name = null;
-      updatedUserData.about = null;
+      clearObjectValues(updatedUserData);
       showButtonText(
         false,
         false,
@@ -346,8 +352,7 @@ function submitNewplace(evt) {
         newplaceFormElement,
         showButtonTextParams.save
       );
-      newCardData.name = null;
-      newCardData.link = null;
+      clearObjectValues(newCardData);
       closeModal(newplaceModalWindow);
     })
     .catch((error) => {
@@ -490,17 +495,15 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   );
   currentCardData.cardId = cardItemData._id;
   currentCardData.cardElement = cardItem;
+
   openModal(confirmDeleteModalWindow);
 }
 
 /* ------------------------------------------------------------ модалка лайкнувших */
-function openLikersModal(cardId) {
-  likersModalNodes.imgName.textContent = "";
-  likersModalNodes.imgAutor.textContent = "";
-  likersModalNodes.text.textContent = "";
-  likersModalNodes.likersNames.textContent = "";
-  showLikedUsers(cardId, getCardsFromServer, configAPI);
+function openLikersModal(cardId, cardLikesCounter) {
+  clearLikersModalTextcontent(likersModalNodes);
   openModal(likersModalNodes.modalWindow);
+  showLikedUsers(cardId, cardLikesCounter, getCardsFromServer, configAPI);
 }
 
 /* ---------------------------------------------------------------- обновление карточки */
@@ -511,6 +514,7 @@ function openChangeCardNameModal(cardItemData, cardItem) {
   currentCardData.link = cardItemData.link;
   currentCardData.name = cardItemData.name;
   cardUpdateInputfield.value = cardItemData.name;
+
   openModal(cardUpdateModalWindow);
   clearValidation(cardUpdareFormElement, configValidation);
   refreshUpdatecardInputField(cardUpdareFormElement, cardItemData.name);
@@ -559,11 +563,7 @@ function changeCardName() {
       deleteCard(currentCardData.cardElement);
       renderCard(addedCard);
       closeModal(confrimUpdateModalWindow);
-      currentCardData.cardId = null;
-      currentCardData.cardElement = null;
-      currentCardData.link = null;
-      newCardData.name = null;
-      newCardData.link = null;
+      clearObjectValues(currentCardData);
       showButtonText(
         false,
         false,
@@ -616,6 +616,7 @@ function openFullscreenImage(
       );
       likeCounterFullscreen.textContent = likes.length;
       openModal(popupImageModalWindow);
+      cardLikeCounterNode.textContent = likes.length;
     })
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
@@ -636,8 +637,7 @@ function handleDeleteCard() {
     .then(() => {
       deleteCard(currentCardData.cardElement);
       closeModal(confirmDeleteModalWindow);
-      currentCardData.cardId = null;
-      currentCardData.cardElement = null;
+      clearObjectValues(currentCardData);
       showButtonText(
         false,
         false,
