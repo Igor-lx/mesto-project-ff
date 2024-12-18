@@ -59,7 +59,11 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
 
   if (cardNamechangeButton) {
     cardNamechangeButton.addEventListener("click", () => {
-      callbackFunctionsSet.openChangeCardNameModal(cardItemData, cardItem);
+      callbackFunctionsSet.openCardUpdateModal(
+        cardItemData,
+        cardItem,
+        cardItemTitle
+      );
     });
   }
 
@@ -110,18 +114,6 @@ function createCard(cardItemData, userId, callbackFunctionsSet) {
     { once: true }
   );
 
-  /*
-  cardItemImage.onerror = () => {
-    callbackFunctionsSet.processImgDownldError(
-      cardItemImage,
-      cardItemTitle,
-      cardItemDescription,
-      cardLikeSection,
-      cardEditButton
-    );
-  };
-  */
-
   /* ---------------- */
   return cardItem;
 }
@@ -141,5 +133,23 @@ function changeLikesCounter(cardLikesCounter, likedCardData) {
   cardLikesCounter.textContent = likedCardData.likes.length;
 }
 
+function showButtonsOnCard(
+  cardItemData,
+  userId,
+  cardDeleteButton,
+  cardUpdateButton
+) {
+  if (cardItemData.owner._id !== userId) {
+    cardDeleteButton.remove();
+    cardUpdateButton.remove();
+  }
+}
+
 /* ------------------------------------------------------------------------ */
-export { createCard, deleteCard, likeCard, changeLikesCounter };
+export {
+  createCard,
+  deleteCard,
+  likeCard,
+  changeLikesCounter,
+  showButtonsOnCard,
+};

@@ -1,4 +1,8 @@
-function clearInputFields(formElement, clearValidation, configValidation) {
+export function clearInputFields(
+  formElement,
+  clearValidation,
+  configValidation
+) {
   const clearFormButton = formElement
     .closest(".popup__content")
     .querySelector(".clear_form");
@@ -8,8 +12,7 @@ function clearInputFields(formElement, clearValidation, configValidation) {
   });
 }
 
-
-function refreshInputFields(
+export function refreshInputFields(
   formElement,
   { inputField1, inputField2, valueSource1, valueSource2 },
   clearValidation,

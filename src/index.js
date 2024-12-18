@@ -7,6 +7,7 @@ import {
   deleteCard,
   likeCard,
   changeLikesCounter,
+  showButtonsOnCard,
 } from "./scripts/card";
 
 import { openModal, closeModal } from "./scripts/modal";
@@ -16,9 +17,14 @@ import {
   likersModalNodes,
 } from "./scripts/showLikedUsers";
 import { refreshPage } from "./scripts/refreshPage";
+import {
+  refreshInputFields,
+  clearInputFields,
+} from "./scripts/refreshInputfields";
 import { showButtonText, showButtonTextParams } from "./scripts/showButtonText";
-import { switchModal } from "./scripts/switchModal";
+import { switchModal, clearObjectValues } from "./scripts/support";
 import { validateFileType } from "./scripts/validateFileType";
+import { processImgDownldError } from "./scripts/imgDnldError";
 
 /* --------------------------------------------------------------------------- */
 import { enableValidation, clearValidation } from "./scripts/validation";
@@ -98,8 +104,6 @@ const confirmDeleteButton =
   confirmDeleteModalWindow.querySelector(".popup__button");
 
 /* ---------------- */
-
-/* --------------------------------------------------------------------------- */
 const cardUpdateModalWindow = document.querySelector(
   ".popup_type_card_name_change"
 );
@@ -111,7 +115,7 @@ const cardUpdateInputfield = document.querySelector(
 const cardUpdateModalButton =
   cardUpdateModalWindow.querySelector(".popup__button");
 
-/* --------------------------------------------------------------------------- */
+/* ---------------- */
 const confrimUpdateModalWindow = document.querySelector(
   ".popup_type_update-confirm"
 );
@@ -119,10 +123,10 @@ const confrimUpdateModalWindow = document.querySelector(
 const confrimUpdateModalButton =
   confrimUpdateModalWindow.querySelector(".popup__button");
 
-/* --------------------------------------------------------------------------- */
+/* ---------------- */
 const refreshPageButton = document.querySelector(".refresh-card_button");
 
-/* --------------------------------------------------------------------------- */
+/* ---------------- */
 const likeButtonFullscreen = document.querySelector(
   ".card__like-button_fullscreen"
 );
@@ -131,7 +135,7 @@ const likeCounterFullscreen = document.querySelector(
   ".likes_counter_fullscreen"
 );
 
-/*-----------------------------------------------------------------------------*/
+/* ---------------- */
 const errorModalWindow = document.querySelector(".popup_type_error");
 
 /* --------------------------------------------------------------------------- */
@@ -159,11 +163,6 @@ const updatedUserData = {
   about: null,
 };
 
-function clearObjectValues(object) {
-  Object.keys(object).forEach((key) => {
-    object[key] = null;
-  });
-}
 /* ----------------------------------------------------------------------------- INITIAL получение с сервера и  рендер ------ */
 
 const cardPlace = document.querySelector(".places__list");
@@ -215,7 +214,20 @@ function openProfileModal() {
   profileNodes.inputfieldJob.value = profileNodes.job.textContent;
   openModal(profileNodes.modalWindow);
   clearValidation(profileNodes.formElement, configValidation);
-  refreshProfileInputFields(profileNodes.formElement);
+
+  refreshInputFields(
+    profileNodes.formElement,
+    {
+      inputField1: profileNodes.inputfieldName,
+      inputField2: profileNodes.inputfieldJob,
+      valueSource1: profileNodes.name,
+      valueSource2: profileNodes.job,
+    },
+    clearValidation,
+    configValidation
+  );
+
+  //refreshProfileInputFields(profileNodes.formElement);
 }
 
 /* ------------------------------------------------------------------ новое место*/
@@ -232,7 +244,7 @@ function openNewplaceModal() {
   newplaceFormElement.reset();
   openModal(newplaceModalWindow);
   clearValidation(newplaceFormElement, configValidation);
-  clearInputFields(newplaceFormElement);
+  clearInputFields(newplaceFormElement, clearValidation, configValidation);
 }
 
 /* ----------------------------------------------------------------------- аватар*/
@@ -249,7 +261,7 @@ function openAvatarModal() {
   avatarFormElement.reset();
   openModal(avatarModalWindow);
   clearValidation(avatarFormElement, configValidation);
-  clearInputFields(avatarFormElement);
+  clearInputFields(avatarFormElement, clearValidation, configValidation);
 }
 
 /* ----------------------------------------------------------------------------------- сабмит формы профиля ------------ */
@@ -421,69 +433,23 @@ function submitAvatar(event) {
     });
 }
 
-/* ---------------------------------------------------------------------------------- clear/refresh InputFields----------- */
-
-function clearInputFields(formElement) {
-  const clearFormButton = formElement
-    .closest(".popup__content")
-    .querySelector(".clear_form");
-  clearFormButton.addEventListener("click", () => {
-    formElement.reset();
-    clearValidation(formElement, configValidation);
-  });
-}
-
-function refreshProfileInputFields(formElement) {
-  const clearFormButon = formElement
-    .closest(".popup__content")
-    .querySelector(".clear_form");
-  clearFormButon.addEventListener("click", () => {
-    clearValidation(formElement, configValidation);
-    profileNodes.inputfieldName.value = profileNodes.name.textContent;
-    profileNodes.inputfieldJob.value = profileNodes.job.textContent;
-  });
-}
-
-function refreshUpdatecardInputField(formElement, currentCardName) {
-  const clearFormButon = formElement
-    .closest(".popup__content")
-    .querySelector(".clear_form");
-  clearFormButon.addEventListener("click", () => {
-    clearValidation(formElement, configValidation);
-    cardUpdateInputfield.value = currentCardName;
-  });
-}
-
 /* ---------------------------------------------------------------------------------------- Callback Functions ---------- */
 
 const callbackFunctionsSet = {
-  showButtonsOnCard,
   openConfirmDeleteModal,
-  openChangeCardNameModal,
+  openLikersModal,
+  openCardUpdateModal,
+  openFullscreenImage,
   IfAlreadyLiked,
   handleLikeCard,
-  openFullscreenImage,
-  processImgDownldError,
-  openLikersModal,
-  showLikedUsers,
+  showButtonsOnCard, //import
+  processImgDownldError, //import
+  showLikedUsers, //import
 };
 
-/* --------------------------------------------------------------------- */
-function showButtonsOnCard(
-  cardItemData,
-  userId,
-  cardDeleteButton,
-  cardNamechangeButton
-) {
-  if (cardItemData.owner._id !== userId) {
-    cardDeleteButton.remove();
-    cardNamechangeButton.remove();
-  }
-}
+/* ----------------------- открытие модальных окон карточки (листнеры в карточке) ---- */
 
-/* -------------------- открытие модальных окон карточки (листнеры в карточке) ---- */
-
-/* ----------------------------------------------------------------------- удаление */
+/* -------------------------------------------------------------------------- удаление */
 
 function openConfirmDeleteModal(cardItemData, cardItem) {
   showButtonText(
@@ -499,16 +465,16 @@ function openConfirmDeleteModal(cardItemData, cardItem) {
   openModal(confirmDeleteModalWindow);
 }
 
-/* ------------------------------------------------------------ модалка лайкнувших */
+/* ----------------------------------------------------------------- модалка лайкнувших */
 function openLikersModal(cardId, cardLikesCounter) {
   clearLikersModalTextcontent(likersModalNodes);
   openModal(likersModalNodes.modalWindow);
   showLikedUsers(cardId, cardLikesCounter, getCardsFromServer, configAPI);
 }
 
-/* ---------------------------------------------------------------- обновление карточки */
+/* ----------------------------------------------------------------- обновление карточки */
 
-function openChangeCardNameModal(cardItemData, cardItem) {
+function openCardUpdateModal(cardItemData, cardItem, cardNameNode) {
   currentCardData.cardId = cardItemData._id;
   currentCardData.cardElement = cardItem;
   currentCardData.link = cardItemData.link;
@@ -517,10 +483,20 @@ function openChangeCardNameModal(cardItemData, cardItem) {
 
   openModal(cardUpdateModalWindow);
   clearValidation(cardUpdareFormElement, configValidation);
-  refreshUpdatecardInputField(cardUpdareFormElement, cardItemData.name);
+  refreshInputFields(
+    cardUpdareFormElement,
+    {
+      inputField1: cardUpdateInputfield,
+      inputField2: null,
+      valueSource1: cardNameNode,
+      valueSource2: null,
+    },
+    clearValidation,
+    configValidation
+  );
 }
 
-/* ---------------------------------------------------------- подтвержждение обновления карточки */
+// подтвержждение обновления карточки
 
 cardUpdateModalButton.addEventListener("click", openConfrimUpdateModal);
 
@@ -584,7 +560,7 @@ function changeCardName() {
     });
 }
 
-/* ----------------------------------------------------------- открытие на фулскрин */
+/* ---------------------------------------------------------------- открытие на фулскрин */
 function openFullscreenImage(
   cardItemData,
   cardLikeButtonNode,
@@ -621,7 +597,56 @@ function openFullscreenImage(
     .catch((error) => console.log(`Ошибка: ${error}`));
 }
 
-/* --------------------------------------------- не сallback. слушатель кнопки подтверждения удаления + handle Delete Card -- */
+/* --------------------------------------------------------------------- лайк и состояние кнопки лайка */
+
+function IfAlreadyLiked(likes, userId, likeButton, likesCounter, cardItem) {
+  const alreadyLiked = likes.some((like) => like._id === userId);
+  if (alreadyLiked) {
+    likeButton.classList.add("card__like-button_is-active");
+    likesCounter.classList.add("my_like_is-active");
+    cardItem.classList.add("liked_shadow");
+  } else {
+    likeButton.classList.remove("card__like-button_is-active");
+    likesCounter.classList.remove("my_like_is-active");
+    cardItem.classList.remove("liked_shadow");
+  }
+}
+
+// лайк на фулскрине
+
+likeButtonFullscreen.addEventListener("click", () => {
+  handleLikeCard(
+    currentCardData.cardId,
+    currentCardData.likeButtonNode,
+    currentCardData.likeCounterNode,
+    currentCardData.cardElement
+  );
+});
+
+// like handler
+
+function handleLikeCard(
+  cardId,
+  cardLikeButton,
+  cardLikesCounter,
+  cardContainer
+) {
+  const isLiked = cardLikeButton.classList.contains(
+    "card__like-button_is-active"
+  );
+  toggleLike(cardId, isLiked, configAPI)
+    .then((likedCardData) => {
+      likeCard(cardLikeButton);
+      likeCard(likeButtonFullscreen);
+      changeLikesCounter(cardLikesCounter, likedCardData);
+      changeLikesCounter(likeCounterFullscreen, likedCardData);
+      cardContainer.classList.toggle("liked_shadow");
+    })
+
+    .catch((error) => console.log(`Ошибка: ${error}`));
+}
+
+/* -------------------------------------------------------- слушатель кнопки подтверждения удаления + handle Delete Card -- */
 
 confirmDeleteButton.addEventListener("click", handleDeleteCard);
 
@@ -658,79 +683,11 @@ function handleDeleteCard() {
     });
 }
 
-/* --------------------------------------------------------------------- лайк и состояние кнопки лайка */
-
-function IfAlreadyLiked(likes, userId, likeButton, likesCounter, cardItem) {
-  const alreadyLiked = likes.some((like) => like._id === userId);
-  if (alreadyLiked) {
-    likeButton.classList.add("card__like-button_is-active");
-    likesCounter.classList.add("my_like_is-active");
-    cardItem.classList.add("liked_shadow");
-  } else {
-    likeButton.classList.remove("card__like-button_is-active");
-    likesCounter.classList.remove("my_like_is-active");
-    cardItem.classList.remove("liked_shadow");
-  }
-}
-
-likeButtonFullscreen.addEventListener("click", () => {
-  handleLikeCard(
-    currentCardData.cardId,
-    currentCardData.likeButtonNode,
-    currentCardData.likeCounterNode,
-    currentCardData.cardElement
-  );
-});
-
-function handleLikeCard(
-  cardId,
-  cardLikeButton,
-  cardLikesCounter,
-  cardContainer
-) {
-  const isLiked = cardLikeButton.classList.contains(
-    "card__like-button_is-active"
-  );
-  toggleLike(cardId, isLiked, configAPI)
-    .then((likedCardData) => {
-      likeCard(cardLikeButton);
-      likeCard(likeButtonFullscreen);
-      changeLikesCounter(cardLikesCounter, likedCardData);
-      changeLikesCounter(likeCounterFullscreen, likedCardData);
-      cardContainer.classList.toggle("liked_shadow");
-    })
-
-    .catch((error) => console.log(`Ошибка: ${error}`));
-}
-
-/* --------------------------------------------------------------------- */
-function processImgDownldError(
-  cardItemImage,
-  cardItemTitle,
-  cardItemDescription,
-  cardLikeSection,
-  cardEditButton
-) {
-  cardItemImage.classList.add(
-    "card__image__load_failure__textstile",
-    "card__image__load_failure"
-  );
-  cardItemTitle.classList.add("card__image__load_failure__textstile");
-  cardItemTitle.textContent =
-    "Упс! Изображение не найдено, но мы уже отправили за ним поисковую команду.";
-  cardItemDescription.classList.add("card__image__load_failure__description");
-  cardLikeSection.style.display = "none";
-  if (cardEditButton) {
-    cardEditButton.style.display = "none";
-  }
-  cardItemImage.style.cursor = "not-allowed";
-}
-
-/* --------------------------------------------------------------------- */
-
 /* --------------------------------------------------------------------------------------------------------------------- */
-
 enableValidation(configValidation);
+//
+//
+//
 
 /* ==================================================================================================================== */
 /* ==================================================================================================================== */
