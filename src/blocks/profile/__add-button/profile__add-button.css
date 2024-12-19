@@ -17,7 +17,8 @@
 }
 
 .profile__add-button:hover,
-.refresh-card_button:hover {
+.refresh-card_button:hover,
+.most-liked_card_button:hover {
   opacity: 0.6;
 }
 
@@ -54,4 +55,23 @@
   cursor: pointer;
   margin-bottom: 15px;
   margin-left: 3px;
+}
+
+.most-liked_card_button {
+  width: 35px;
+  height: 35px;
+  background: transparent url("../../../images/most-liked.svg") center no-repeat;
+  background-size: 20px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  border: 1px solid #fff;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+  cursor: pointer;
+  margin-bottom: 15px;
+  margin-left: 10px;
 }

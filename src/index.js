@@ -698,3 +698,59 @@ enableValidation(configValidation);
 //  https://avatars.mds.yandex.net/i?id=37aafcd53e9cf8ef041cff42bae62e44_l-5341511-images-thumbs&n=13
 //  https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg
 //  https://img.goodfon.ru/original/1600x900/9/ca/fable-dzhek-iz-teni-maska.jpg
+
+function getmostLikedCard() {
+  return getCardsFromServer(configAPI)
+    .then((initialCardsArray) => {
+      const mostLikedCard = initialCardsArray.reduce((maxCard, currentCard) => {
+        return currentCard.likes.length > maxCard.likes.length
+          ? currentCard
+          : maxCard;
+      });
+
+      const now = new Date();
+      const createdAt = new Date(mostLikedCard.createdAt);
+      const timeDiff = Math.abs(now - createdAt);
+      const hoursAgo = Math.floor(timeDiff / (1000 * 60 * 60));
+      const minutesAgo = Math.floor(
+        (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
+      );
+
+      return {
+        cardName: mostLikedCard.name,
+        owner: mostLikedCard.owner.name,
+        avatar: mostLikedCard.owner.avatar,
+        likes: mostLikedCard.likes.length,
+        hrsAgo: hoursAgo,
+        mntAgo: minutesAgo,
+        link: mostLikedCard.link,
+      };
+    })
+    .catch((error) => {
+      console.log(`Ошибка: ${error}`);
+    });
+}
+
+const mostLikedCardButton = document.querySelector(".most-liked_card_button");
+const mostLikedCardModalWindow = document.querySelector(
+  ".popup_type_most_liked"
+);
+const imgWinnerSection = document.querySelector(".img_section");
+const winnerAvatar = document.querySelector(".winner_avatar");
+const winnerName = document.querySelector(".winner_name");
+const maxLikesCounter = document.querySelector(".max_likes_counter");
+const winnerImgName = document.querySelector(".winner_img_name");
+
+mostLikedCardButton.addEventListener("click", showMostLikedCard);
+
+function showMostLikedCard() {
+  getmostLikedCard().then((winnerData) => {
+    console.log(winnerData.link);
+    openModal(mostLikedCardModalWindow);
+    imgWinnerSection.style.backgroundImage = `url(${winnerData.link})`;
+    maxLikesCounter.textContent = winnerData.likes;
+    winnerAvatar.style.backgroundImage = `url(${winnerData.avatar})`;
+    winnerName.textContent = winnerData.owner;
+    winnerImgName.textContent = `Фото: ${winnerData.cardName}`;
+  });
+}

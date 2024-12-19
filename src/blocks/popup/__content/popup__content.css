@@ -1,12 +1,12 @@
 .popup__content {
-  max-width: 430px;
-  width: 100%;
-  min-height: 330px;
-  background-color: #fff;
-  border-radius: 10px;
   position: relative;
   box-sizing: border-box;
+  width: 100%;
+  max-width: 430px;
+  min-height: 330px;
+  border-radius: 10px;
   padding: 34px 36px;
+  background-color: #fff;
 }
 
 .popup__content_likes {
@@ -19,9 +19,9 @@
 }
 
 .popup__content_no_likes {
-  text-align: center;
-  opacity: 1 !important;
   margin-top: 60px !important;
+  opacity: 1 !important;
+  text-align: center;
 }
 
 @media screen and (max-width: 568px) {
@@ -31,4 +31,90 @@
     margin-top: 40px;
     padding: 30px 20px;
   }
+}
+
+.popup__content.popup__content_most_liked {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 950px;
+  min-height: 550px;
+  margin-top: 60px;
+  padding: 40px 30px;
+}
+
+.user_section {
+  width: 305px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  padding: 60px 20px;
+  box-shadow: 4px 4px 4px rgba(170, 170, 170);
+  background-color: rgba(230, 230, 230, 0.3);
+}
+
+.img_section {
+  flex-grow: 1;
+  border-radius: 6px;
+  box-shadow: 4px 4px 4px rgba(80, 80, 80);
+  background-position: center;
+  background-size: cover;
+}
+
+
+.winner_title {
+  opacity: 0.9;
+  font-weight: 400;
+  font-size: 19px;
+}
+
+.max_likes_section {
+  margin-left: 7px;
+  display: flex;
+  align-items: center;
+  gap: 45px;
+  margin-top: 75px;
+}
+
+.max_likes_heart {
+  width: 50px;
+  height: 50px;
+  background: transparent url("../../../images/like-active.svg") center
+    no-repeat;
+  background-size: 50px;
+}
+
+.max_likes_counter {
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.winner_section {
+  display: flex;
+  align-items: center;
+  margin-top: 35px;
+}
+
+.winner_avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+}
+
+.winner_data{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 35px;
+}
+
+.winner_name {
+  font-weight: 700;
+  font-size: 26px;
+  opacity: 0.8;
+}
+
+.winner_img_name{
+  font-size: 19px;
 }

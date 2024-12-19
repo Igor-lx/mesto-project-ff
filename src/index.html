@@ -55,6 +55,11 @@
             type="button"
             aria-label="обновить все карточки"
           ></button>
+          <button
+            class="most-liked_card_button"
+            type="button"
+            aria-label="самая популярная карточка"
+          ></button>
           <ul class="places__list"></ul>
         </section>
         <!-- ============================  -->
@@ -177,8 +182,7 @@
           <div class="popup__section">
             <h3 class="popup__caption"></h3>
             <p class="popup__autor"></p>
-            <!-- ******************************************************************************** -->
-
+            <!-- ***************************************** -->
             <div class="likes_fullscreen_block">
               <button
                 type="button"
@@ -187,7 +191,7 @@
               <span class="likes_counter_fullscreen">0</span>
             </div>
 
-            <!-- ********************************************************************************-->
+            <!-- *******************************************-->
           </div>
         </div>
       </div>
@@ -323,7 +327,7 @@
           </div>
         </div>
       </div>
-      <!-- ------------------------------------------------------------------------------МОДАЛКА ERROR ---------- -->
+      <!-- ------------------------------------------------------------------------------ МОДАЛКА ERROR ---------- -->
 
       <div class="popup popup_type_likes popup_is-animated popup_type_error">
         <div class="popup__content popup__content_likes">
@@ -336,6 +340,33 @@
             <h3 class="popup__title popup_404">404</h3>
             <span class="popup__title popup_wrong_link">неверная ссылка</span>
           </div>
+        </div>
+      </div>
+      <!-- ---------------------------------------------------------------------------- МОДАЛКА  MOST LIKED--------- -->
+
+      <div class="popup popup_is-animated popup_type_most_liked">
+        <div class="popup__content popup__content_most_liked">
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="закрыть окно"
+          ></button>
+
+          <div class="user_section">
+            <span class="winner_title">наибольшее количество лайков:</span>
+            <div class="max_likes_section">
+            <div class="max_likes_heart"></div>
+            <span class="max_likes_counter"></span>
+          </div>
+            <div class="winner_section"> 
+            <div class="winner_avatar"></div>
+            <div class="winner_data"> 
+            <span class="winner_name"></span>
+            <span class="winner_img_name"></span>
+          </div>
+          </div>
+          </div>
+          <div class="img_section"></div>
         </div>
       </div>
       <!-- ------------------------------------------------------------------------------------------------------- -->
